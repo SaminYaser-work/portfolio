@@ -12,6 +12,11 @@ export default defineConfig({
   integrations: [mdx(), tailwind({
     applyBaseStyles: false
   }), compress(), react()],
+  vite: {
+    ssr: {
+      noExternal: ["react-icons"],
+    },
+  },
   output: "server",
   adapter: vercel()
 });

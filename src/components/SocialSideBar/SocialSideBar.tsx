@@ -1,8 +1,10 @@
 import { TiSocialLinkedinCircular } from "react-icons/ti";
 import { FaGithub } from "react-icons/fa";
-// import { AiFillTwitterCircle } from "react-icons/ai";
+import { AiFillTwitterCircle } from "react-icons/ai";
 import { BsPersonCircle } from "react-icons/bs";
 import { Tooltip } from "react-tooltip";
+
+import githubLogo from '../../assets/img/github.svg';
 
 const iconSize = 30;
 
@@ -23,7 +25,7 @@ const data = [
         hover: "Check Out My Work"
     },
     {
-        icon: <FaGithub size={iconSize} />,
+        icon: <AiFillTwitterCircle size={iconSize} />,
         link: "https://twitter.com/RealSaminYaser",
         hover: "Follow Me"
     }
