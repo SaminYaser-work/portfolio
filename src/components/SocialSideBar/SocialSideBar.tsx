@@ -4,8 +4,6 @@ import { AiFillTwitterCircle } from "react-icons/ai";
 import { BsPersonCircle } from "react-icons/bs";
 import { Tooltip } from "react-tooltip";
 
-import githubLogo from '../../assets/img/github.svg';
-
 const iconSize = 30;
 
 const data = [
