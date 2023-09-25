@@ -4,6 +4,7 @@
   "version": "3.0.0",
   "author": "Mark Teekman",
   "homepage": "https://accessible-astro.netlify.app/",
+  "type": "module",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
