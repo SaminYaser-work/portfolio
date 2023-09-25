@@ -1,0 +1,94 @@
+---
+import DefaultLayout from '../layouts/DefaultLayout.astro'
+// import Hero from '../components/Hero.astro'
+import Hero from '../components/Hero/Hero'
+import Feature from '../components/Feature.astro'
+import EducationCard from '../components/EducationCard.astro'
+import Counter from '../components/Counter.astro'
+import ContentMedia from '../components/ContentMedia.astro'
+import '@fontsource-variable/jetbrains-mono';
+import SocialSideBar from "../components/SocialSideBar/SocialSideBar";
+import Terminal from "../components/Terminal/Terminal.astro";
+import SectionHeader from "../components/SectionHeader.astro"
+import {jobInfo, educationInfo} from "../data";
+
+
+---
+
+<DefaultLayout title="Home">
+    <Terminal />
+    <Hero client:idle/>
+    <SocialSideBar client:media="(min-width: 768px)"/>
+    <section class="my-64">
+        <div class="container">
+            <SectionHeader title="Experience" />
+            <div class="grid grid-cols-1 gap-14">
+                {
+                    jobInfo.map(job => {
+                        return (
+                                <Feature icon={job.icon} title={job.title} subtitle={job.subtitle}
+                                         timeline={job.timeline}>
+                                    <ul class="list-disc text-justify">
+                                        {
+                                            job.description.map(desc => {
+                                                return (
+                                                        <li>{desc}</li>
+                                                )
+                                            })
+                                        }
+                                    </ul>
+                                </Feature>
+                        )
+                    })
+                }
+            </div>
+        </div>
+    </section>
+    <section class="my-64">
+        <div class="container">
+            <SectionHeader title="Education" />
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-14">
+                {
+                    educationInfo.map(education => {
+                        return (
+                                <EducationCard icon={education.icon} title={education.title} subtitle={education.subtitle}
+                                         timeline={education.timeline}/>
+                        )
+                    })
+                }
+            </div>
+        </div>
+    </section>
+    <ContentMedia imgSrc="/accessible-components.webp">
+        <h2>Accessible Components</h2>
+        <p class="text-2xl">
+            This theme provides plenty of tried and tested Accessible Astro Components. Some are native to this
+            theme and a
+            lot of others are integrated using a <a
+                href="https://github.com/markteekman/accessible-astro-components"
+        >separate package</a
+        >. They'll get you up and running in building an accessible solution for your visitors.
+        </p>
+    </ContentMedia>
+    <ContentMedia imgSrc="/wcag-compliant.webp" reverseImg={true}>
+        <h2>WCAG 2.1 AA Compliant</h2>
+        <p class="text-2xl">
+            Using semantic HTML, landmarks, skip links, screen reader friendly content, aria-labels, keyboard
+            accessible
+            navigation and components, clear outlines and tab indicators and the right color contrast, you're more
+            certain of
+            reaching WCAG AA compliance.
+        </p>
+    </ContentMedia>
+    <section class="mt-64 mb-32">
+        <div class="container">
+            <h2 class="mb-16 text-6xl">Counters</h2>
+            <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 md:grid-cols-4">
+                <Counter count="130" title="Stars" sub="On GitHub"/>
+                <Counter count="17" title="Accessible" sub="Components"/>
+                <Counter count="500" title="Commits" sub="Merged"/>
+                <Counter count="18+" title="Months" sub="Since launch"/>
+            </div>
+        </div>
+    </section>
+</DefaultLayout>

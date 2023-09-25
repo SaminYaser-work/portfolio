@@ -1,0 +1,77 @@
+---
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+import {getCollection, CollectionEntry} from 'astro:content';
+import {Breadcrumbs, BreadcrumbsItem} from 'accessible-astro-components'
+
+export async function getStaticPaths({paginate}) {
+    const allBlogPosts = await getCollection('blog');
+    return allBlogPosts.map(post => ({
+        params: {
+            slug: post.slug
+        },
+        props: {
+            post: post
+        }
+    }))
+}
+
+const {post} = Astro.props;
+const {Content} = await post.render()
+
+const wpm = 225;
+const words = post.body.trim().split(/\s+/).length;
+const time = Math.ceil(words / wpm);
+---
+
+<DefaultLayout
+        title="Blog"
+        description="description"
+>
+    <section class="my-12">
+        <div class="container">
+            <Breadcrumbs>
+                <BreadcrumbsItem
+                        href="/"
+                        label="Home"
+                />
+                <BreadcrumbsItem
+                        href="/blog"
+                        label="Blog"
+                />
+                <BreadcrumbsItem
+                        currentPage={true}
+                        label={post.slug}
+                />
+            </Breadcrumbs>
+        </div>
+    </section>
+    <section class="my-12">
+        <div class="container">
+            <Content date={post.data.date.toLocaleDateString("en-US", {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })}
+                     time={time}
+            />
+        </div>
+    </section>
+</DefaultLayout>
+
+<style lang="scss">
+  ul {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 4rem;
+
+    @media (min-width: 550px) {
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 2rem;
+    }
+
+    @media (min-width: 950px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+</style>

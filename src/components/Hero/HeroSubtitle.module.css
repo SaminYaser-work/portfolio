@@ -1,0 +1,19 @@
+.cursor::after {
+    content: "";
+    display: inline-block;
+    width: 2px;
+    height: 1em;
+    /* background-color:#abb2bf; */
+    background-color:white;
+    transform: translateY(6px);
+    animation: .5s steps(2) infinite alternate myAnim;
+}
+
+@keyframes myAnim {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
+}
