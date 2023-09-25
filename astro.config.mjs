@@ -14,8 +14,8 @@ export default defineConfig({
   }), compress(), react()],
   vite: {
     ssr: {
-      noExternal: ["react-icons"],
-    },
+      noExternal: ["react-icons"]
+    }
   },
   output: "server",
   adapter: vercel()
