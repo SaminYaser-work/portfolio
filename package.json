@@ -4,7 +4,6 @@
   "version": "3.0.0",
   "author": "Samin Yaser",
   "homepage": "",
-  "type": "module",
   "scripts": {
     "dev": "astro dev",
     "start": "astro dev",
