@@ -3,6 +3,7 @@ import DefaultLayout from '../../layouts/DefaultLayout.astro'
 import {getCollection} from 'astro:content';
 import {Card, Pagination} from 'accessible-astro-components'
 
+export const prerender = true;
 export async function getStaticPaths({paginate}) {
     const blogs = await getCollection('blog', (blog) => blog.data.draft !== true);
     return paginate(blogs, {pageSize: 6});
