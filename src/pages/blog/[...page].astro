@@ -27,6 +27,7 @@ const {page} = Astro.props
                                         url={'/blog/' + post.slug}
                                         title={post.data.title}
                                         footer={"this is a footer"}
+                                        img={post.data.image}
                                 >
                                     {
                                         post.data.description
