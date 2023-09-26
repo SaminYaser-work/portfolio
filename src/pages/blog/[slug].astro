@@ -1,11 +1,11 @@
 ---
 import DefaultLayout from '../../layouts/DefaultLayout.astro'
-import {getCollection, CollectionEntry} from 'astro:content';
+import {getCollection, CollectionEntry, getEntry} from 'astro:content';
 import {Breadcrumbs, BreadcrumbsItem} from 'accessible-astro-components'
 
 export async function getStaticPaths({paginate}) {
     const allBlogPosts = await getCollection('blog');
-    return allBlogPosts.map(post => ({
+    const test = allBlogPosts.map(post => ({
         params: {
             slug: post.slug
         },
@@ -13,13 +13,18 @@ export async function getStaticPaths({paginate}) {
             post: post
         }
     }))
+    console.log(test)
+    return test
 }
 
-export const prerender = true;
+export interface Props {
+    post: CollectionEntry<'blog'>
+}
 
 const {slug} = Astro.params;
-const {post} = Astro.props;
-// const {Content} = await post.render()
+console.log(slug)
+const post = await getEntry('blog', slug)
+const {Content} = await post.render()
 
 const wpm = 225;
 const words = post.body.trim().split(/\s+/).length;
@@ -50,15 +55,14 @@ const time = Math.ceil(words / wpm);
     </section>
     <section class="my-12">
         <div class="container">
-            {slug}
-            <!--<Content date={post.data.date.toLocaleDateString("en-US", {-->
-            <!--    weekday: 'long',-->
-            <!--    year: 'numeric',-->
-            <!--    month: 'long',-->
-            <!--    day: 'numeric'-->
-            <!--})}-->
-            <!--         time={time}-->
-            <!--/>-->
+            <Content date={post.data.date.toLocaleDateString("en-US", {
+                weekday: 'long',
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric'
+            })}
+                     time={time}
+            />
         </div>
     </section>
 </DefaultLayout>
