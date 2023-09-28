@@ -62,8 +62,8 @@ export default function Subtitle() {
     }, []);
 
     return (
-        <h2 className="text-lg font-bold text-center text-md md:text-2xl xl:text-4xl">
-            <code>
+        <h2 className="text-lg font-bold text-center text-md md:text-2xl lg:text-4xl">
+            <div>
                 <span className="text-onelightred">console</span>.
                 <span className="text-oneblue">log</span>(
                 <span className={"text-onegreen"}>
@@ -72,7 +72,7 @@ export default function Subtitle() {
                     &rdquo;
         </span>
                 );
-            </code>
+            </div>
         </h2>
     );
 }

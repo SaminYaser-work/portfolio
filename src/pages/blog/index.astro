@@ -10,8 +10,6 @@ blogs.sort(
     Math.floor(new Date(b.data.date).getTime() / 1000) -
     Math.floor(new Date(a.data.date).getTime() / 1000)
 );
-
-console.log(blogs);
 ---
 
 <DefaultLayout
@@ -21,6 +19,7 @@ console.log(blogs);
   <section class="my-12">
     <div class="container">
       <!--<p class="text-sm"><em>Post {page.start + 1} through {page.end + 1} of {page.total} total posts</em></p>-->
+      <h1 class="text-4xl font-bold mb-6">Blog Posts</h1>
       <ul class="my-3">
         {
           blogs.map((blog) => (

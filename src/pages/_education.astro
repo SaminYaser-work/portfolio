@@ -1,0 +1,17 @@
+---
+import { educationInfo } from "../data";
+import Section from "../components/Section.astro";
+import EducationCard from "../components/EducationCard.astro";
+---
+<Section title="Education">
+  <div class="grid grid-cols-1 md:grid-cols-3 gap-14">
+    {
+      educationInfo.map(education => {
+        return (
+          <EducationCard icon={education.icon} title={education.title} subtitle={education.subtitle}
+                         timeline={education.timeline} />
+        );
+      })
+    }
+  </div>
+</Section>

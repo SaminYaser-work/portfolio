@@ -22,8 +22,12 @@ export interface Props {
 }
 
 const {slug} = Astro.params;
-console.log(slug)
 const post = await getEntry('blog', slug)
+
+if (!post) {
+    return Astro.redirect('/404')
+}
+
 const {Content} = await post.render()
 
 const wpm = 225;

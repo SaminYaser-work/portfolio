@@ -1,94 +1,50 @@
 ---
-import DefaultLayout from '../layouts/DefaultLayout.astro'
-// import Hero from '../components/Hero.astro'
-import Hero from '../components/Hero/Hero'
-import Feature from '../components/Feature.astro'
-import EducationCard from '../components/EducationCard.astro'
-import Counter from '../components/Counter.astro'
-import ContentMedia from '../components/ContentMedia.astro'
-import '@fontsource-variable/jetbrains-mono';
+import DefaultLayout from "../layouts/DefaultLayout.astro";
+import Hero from "../components/Hero/Hero";
+import "@fontsource-variable/jetbrains-mono";
 import SocialSideBar from "../components/SocialSideBar/SocialSideBar";
 import Terminal from "../components/Terminal/Terminal.astro";
-import SectionHeader from "../components/SectionHeader.astro"
-import {jobInfo, educationInfo} from "../data";
 
+import AboutMe from './_about-me.astro';
+import Experience from './_experience.astro';
+import Education from './_education.astro';
+import Projects from './_projects.astro';
+import LatestPosts from './_blogs.astro';
+
+import aboutMePic from "../assets/img/about_me_pic.webp";
 
 ---
 
 <DefaultLayout title="Home">
-    <Terminal />
-    <Hero client:idle/>
-    <SocialSideBar client:media="(min-width: 768px)"/>
-    <section class="my-64">
-        <div class="container">
-            <SectionHeader title="Experience" />
-            <div class="grid grid-cols-1 gap-14">
-                {
-                    jobInfo.map(job => {
-                        return (
-                                <Feature icon={job.icon} title={job.title} subtitle={job.subtitle}
-                                         timeline={job.timeline}>
-                                    <ul class="list-disc text-justify">
-                                        {
-                                            job.description.map(desc => {
-                                                return (
-                                                        <li>{desc}</li>
-                                                )
-                                            })
-                                        }
-                                    </ul>
-                                </Feature>
-                        )
-                    })
-                }
-            </div>
-        </div>
-    </section>
-    <section class="my-64">
-        <div class="container">
-            <SectionHeader title="Education" />
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-14">
-                {
-                    educationInfo.map(education => {
-                        return (
-                                <EducationCard icon={education.icon} title={education.title} subtitle={education.subtitle}
-                                         timeline={education.timeline}/>
-                        )
-                    })
-                }
-            </div>
-        </div>
-    </section>
-    <ContentMedia imgSrc="/accessible-components.webp">
-        <h2>Accessible Components</h2>
-        <p class="text-2xl">
-            This theme provides plenty of tried and tested Accessible Astro Components. Some are native to this
-            theme and a
-            lot of others are integrated using a <a
-                href="https://github.com/markteekman/accessible-astro-components"
-        >separate package</a
-        >. They'll get you up and running in building an accessible solution for your visitors.
-        </p>
-    </ContentMedia>
-    <ContentMedia imgSrc="/wcag-compliant.webp" reverseImg={true}>
-        <h2>WCAG 2.1 AA Compliant</h2>
-        <p class="text-2xl">
-            Using semantic HTML, landmarks, skip links, screen reader friendly content, aria-labels, keyboard
-            accessible
-            navigation and components, clear outlines and tab indicators and the right color contrast, you're more
-            certain of
-            reaching WCAG AA compliance.
-        </p>
-    </ContentMedia>
-    <section class="mt-64 mb-32">
-        <div class="container">
-            <h2 class="mb-16 text-6xl">Counters</h2>
-            <div class="grid grid-cols-1 gap-12 sm:grid-cols-2 md:grid-cols-4">
-                <Counter count="130" title="Stars" sub="On GitHub"/>
-                <Counter count="17" title="Accessible" sub="Components"/>
-                <Counter count="500" title="Commits" sub="Merged"/>
-                <Counter count="18+" title="Months" sub="Since launch"/>
-            </div>
-        </div>
-    </section>
+  <Terminal />
+  <Hero client:idle />
+  <SocialSideBar client:media="(min-width: 768px)" />
+
+  <!--<AboutMe/>-->
+
+  <Projects/>
+
+  <Experience/>
+
+  <!--<Education/>-->
+
+  <LatestPosts/>
+
 </DefaultLayout>
+
+<style lang="scss" is:global>
+  .cta-button1 {
+    $grad_color: #c678dd;
+
+    background: {
+      image: linear-gradient(45deg, $grad_color 50%, transparent 50%);
+      position: 100%;
+      size: 400%;
+    }
+    transition: background 300ms ease-in-out;
+
+    &:hover {
+      background-position: 0;
+    }
+  }
+</style>

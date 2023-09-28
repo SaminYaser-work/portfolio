@@ -1,0 +1,36 @@
+---
+import aboutMePic from "../assets/img/about_me_pic.webp";
+import { Image } from "astro:assets";
+import SectionHeader from "../components/SectionHeader.astro";
+---
+<section class="my-32">
+  <div class="container">
+    <SectionHeader title="About Me" />
+    <div class="grid grid-cols-1 md:grid-cols-2 align-top gap-6">
+      <div class="order-2 md:order-1">
+        <p class="text-justify mb-5">
+          I'm a devoted and enthusiastic <b>full-stack web developer</b> with a creative mind and a strong dedication
+          to transforming ideas into wonderfully functional websites and applications. My web development adventure
+          began when I started my study for Computer Science degree. Since then, I've been on a never-ending drive to
+          broaden my knowledge and improve my talents. I've had the pleasure of working on a wide range of projects,
+          all of which have contributed to my development as a developer. I am also into <b>machine
+          learning</b> and <b>deep learning</b> related works and research as well as <b>blockchain and Web3-based</b>
+          technologies. In my free time, I enjoy learning about new technologies. I
+          also enjoy reading books about Computer Science and Islamic history and sciences.
+        </p>
+        <!--<p class="text-justify">-->
+        <!--  Choosing to work with me means working with a dynamic technologist who combines technical competence with-->
+        <!--  innovative problem-solving abilities. I am a diligent worker who thrives under pressure and excels at-->
+        <!--  dealing with complicated issues in a calm and imaginative manner. My agility keeps me ahead of developing-->
+        <!--  technology, and my strong work ethic ensures that I fulfil deadlines and provide great outcomes.-->
+        <!--  Collaboration is central to my work, and I approach each project with a visionary mindset, striving not just-->
+        <!--  to address urgent demands but also to create long-term value. When you collaborate with me, you receive a-->
+        <!--  partner that is committed to pushing limits, solving issues, and ensuring the success of your project.-->
+        <!--</p>-->
+      </div>
+      <div class="order-1 md:order-2">
+        <Image src={aboutMePic} alt="About Me" width="200" height="150" />
+      </div>
+    </div>
+  </div>
+</section>

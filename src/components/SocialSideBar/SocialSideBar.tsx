@@ -50,10 +50,10 @@ export default function SocialSideBar() {
                             {item.icon}
                         </a>
                         <Tooltip anchorSelect={"#d_" + index.toString()} place={"right"}
+                                 border={"1px solid #fff"}
                                  style={{
                                      backgroundColor: "#1f2937",
                                      color: "#fff",
-                                     border: "1px solid #fff",
                                      borderRadius: "5px",
                                      fontSize: "1rem"
                                  }}

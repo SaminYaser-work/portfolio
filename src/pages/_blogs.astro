@@ -1,0 +1,49 @@
+---
+import Section from "../components/Section.astro";
+import { Card } from "accessible-astro-components";
+import { getCollection } from "astro:content";
+
+const latestBlogs = await getCollection("blog", (blog) => !blog.data.draft);
+latestBlogs.sort((a, b) => new Date(b.data.date) - new Date(a.data.date)).slice(0, 3);
+---
+<Section title="Latest Posts">
+  <ul id="blogs" class="my-3">
+    {
+      latestBlogs.map((blog) => (
+        <Card
+          title={blog.data.title}
+          description={blog.data.description}
+          img={blog.data.image}
+          url={`/blog/${blog.slug}`}
+        />
+      ))
+    }
+  </ul>
+  <div class="w-full mt-16">
+    <a
+      href="/blog"
+      class="float-right !no-underline ml-auto py-2 px-4 border border-onemagenta  rounded-lg cursor-pointer font-bold group cta-button1">
+        <span
+          class="!text-oneblack dark:!text-onewhite group-hover:!text-oneblack transition-colors duration-200 ease-in-out">
+          See All Blog Posts &rarr;
+        </span>
+    </a>
+  </div>
+</Section>
+
+<style lang="scss">
+    #blogs {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-gap: 4rem;
+
+        @media (min-width: 550px) {
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 2rem;
+        }
+
+        @media (min-width: 950px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
+    }
+</style>
