@@ -1,0 +1,47 @@
+---
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
+import Hero from "../../components/Hero/Hero";
+import "@fontsource-variable/jetbrains-mono";
+import SocialSideBar from "../../components/SocialSideBar/SocialSideBar";
+
+import AboutMe from './_about-me.astro';
+import Experience from './_experience.astro';
+import Education from './_education.astro';
+import Projects from './_projects.astro';
+import LatestPosts from './_blogs.astro';
+import CallToAction from '../../components/CallToAction.astro';
+
+import aboutMePic from "../assets/img/about_me_pic.webp";
+
+---
+
+<DefaultLayout title="Home">
+  <Hero client:load />
+  <SocialSideBar client:media="(min-width: 1280px)" />
+
+  <AboutMe/>
+  <Experience/>
+
+  <Projects/>
+  <!--<Education/>-->
+  <LatestPosts />
+  <CallToAction />
+
+</DefaultLayout>
+
+<style lang="scss" is:global>
+  .cta-button1 {
+    $grad_color: #c678dd;
+
+    background: {
+      image: linear-gradient(45deg, $grad_color 50%, transparent 50%);
+      position: 100%;
+      size: 400%;
+    }
+    transition: background 300ms ease-in-out;
+
+    &:hover {
+      background-position: 0;
+    }
+  }
+</style>

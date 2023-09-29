@@ -7,7 +7,7 @@ import logo from "../assets/img/logo2.svg"
 
 <div id="main-navigation" class="is-desktop py-8">
   <div class="container">
-    <a href="/" class="flex items-center gap-2 !no-underline">
+    <a href="/home" class="flex items-center gap-2 !no-underline">
       <Image src={logo} alt="Your Logo" width="47" height="37" />
       <!--<span class="font-bold">Samin Yaser</span>-->
     </a>
@@ -46,7 +46,7 @@ import logo from "../assets/img/logo2.svg"
         if (currenPathname.includes(menuItem.pathname.replaceAll('/', '')) && menuItem.textContent !== 'Home') {
           menuItem.classList.add('is-active')
           menuItem.setAttribute('aria-current', 'page')
-        } else if (menuItem.textContent === 'Home' && currenPathname === '/') {
+        } else if (menuItem.textContent === 'Home' && currenPathname === '/home') {
           menuItem.classList.add('is-active')
           menuItem.setAttribute('aria-current', 'page')
         }

@@ -3,9 +3,9 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
 import { getCollection } from "astro:content";
 import { Breadcrumbs, BreadcrumbsItem, Card, Pagination } from "accessible-astro-components";
 
-let blogs = await getCollection("blog", (blog) => !blog.data.draft);
+let projects = await getCollection("project", (project) => !project.data.draft);
 
-blogs.sort(
+projects.sort(
   (a, b) =>
     Math.floor(new Date(b.data.date).getTime() / 1000) -
     Math.floor(new Date(a.data.date).getTime() / 1000)
@@ -13,8 +13,8 @@ blogs.sort(
 ---
 
 <DefaultLayout
-  title="Blog"
-  description="An example of a blog with dynamic content fetched from JSONPlaceholder using the title, body and userId."
+  title="Projects"
+  description="A list of all my projects"
 >
   <section class="my-12">
     <div class="container">
@@ -24,8 +24,8 @@ blogs.sort(
           label="Home"
         />
         <BreadcrumbsItem
-          href="/blog"
-          label="Blog"
+          href="/project"
+          label="Projects"
         />
       </Breadcrumbs>
     </div>
@@ -34,15 +34,15 @@ blogs.sort(
   <section class="my-12">
     <div class="container">
       <!--<p class="text-sm"><em>Post {page.start + 1} through {page.end + 1} of {page.total} total posts</em></p>-->
-      <h1 class="text-4xl font-bold mb-6">Blog Posts</h1>
+      <h1 class="text-4xl font-bold mb-6">My Projects</h1>
       <ul class="my-3">
         {
-          blogs.map((blog) => (
+          projects.map((project) => (
             <Card
-              title={blog.data.title}
-              description={blog.data.description}
-              img={blog.data.image}
-              url={`/blog/${blog.slug}`}
+              title={project.data.title}
+              description={project.data.description}
+              img={project.data.image}
+              url={`/project/${project.slug}`}
             />
           ))
         }

@@ -3,14 +3,25 @@ import '@astrojs/tailwind/base.css'
 import '../assets/scss/globals.scss'
 import SiteMeta from '../components/SiteMeta.astro'
 import Header from '../components/Header.astro'
-import Footer from '../components/Footer.astro'
+// import Footer from '../components/Footer.astro'
+import Footer from '../components/Footer.tsx'
+
+export interface Props {
+  title?: string
+  description?: string
+  url?: string
+  image?: string
+  author?: string
+  showFooter?: boolean
+}
 
 const {
   title = "Samin Yaser's Portfolio & Blog",
   description = 'Samin Yaser is a software engineer and a tech enthusiast.',
-  url,
+  url = 'https://yaser-dev.vercel.app',
   image = '/social-preview-image.png',
   author = 'Samin Yaser',
+  showFooter = true,
 } = Astro.props
 ---
 
@@ -21,7 +32,7 @@ const {
     <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
     <!-- favicon -->
-    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="icon" type="image/svg+xml" href="/favicon2.svg" />
 
     <SiteMeta
       title={title}
@@ -32,13 +43,17 @@ const {
       image={image}
       author={author}
     />
+
+    <slot name="in-head"/>
   </head>
   <body>
     <Header />
     <main id="main-content">
       <slot />
     </main>
-    <Footer />
+    {
+      showFooter && <Footer client:visible/>
+    }
     <style lang="scss" is:global>
       // theme settings
       :root {

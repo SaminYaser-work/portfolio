@@ -40,13 +40,7 @@ export default function Subtitle() {
             } else done = true;
         };
 
-        if (localStorage.getItem('first_load')) {
-            typeWriter(data[it], 0);
-        } else {
-            setTimeout(() => {
-                typeWriter(data[it], 0);
-            }, 8000);
-        }
+        typeWriter(data[it], 0);
 
         const interval = setInterval(() => {
             if (done) {

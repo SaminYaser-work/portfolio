@@ -1,35 +1,12 @@
 ---
 import DefaultLayout from "../layouts/DefaultLayout.astro";
-import Hero from "../components/Hero/Hero";
 import "@fontsource-variable/jetbrains-mono";
-import SocialSideBar from "../components/SocialSideBar/SocialSideBar";
 import Terminal from "../components/Terminal/Terminal.astro";
-
-import AboutMe from './_about-me.astro';
-import Experience from './_experience.astro';
-import Education from './_education.astro';
-import Projects from './_projects.astro';
-import LatestPosts from './_blogs.astro';
-
-import aboutMePic from "../assets/img/about_me_pic.webp";
 
 ---
 
-<DefaultLayout title="Home">
+<DefaultLayout title="loading..." showFooter={false}>
   <Terminal />
-  <Hero client:idle />
-  <SocialSideBar client:media="(min-width: 768px)" />
-
-  <!--<AboutMe/>-->
-
-  <Projects/>
-
-  <Experience/>
-
-  <!--<Education/>-->
-
-  <LatestPosts/>
-
 </DefaultLayout>
 
 <style lang="scss" is:global>

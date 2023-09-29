@@ -1,0 +1,74 @@
+---
+import SectionHeader from '../../components/SectionHeader.astro'
+import { skills } from '../../data'
+---
+
+<section class="my-32">
+  <div class="container">
+    <SectionHeader title="About Me" />
+    <div class="grid grid-cols-1 gap-6 align-top md:grid-cols-2">
+      <div class="order-2 self-center md:order-1">
+        <p class="about-me-p">
+          I'm a devoted and enthusiastic <b>full-stack web developer</b> with a creative mind and a strong dedication to
+          transforming ideas into wonderfully functional websites and applications.
+        </p>
+        <p class="about-me-p">
+          My web development adventure began when I started my study for Computer Science degree. Since then, I've been
+          on a never-ending drive to broaden my knowledge and improve my talents. I've had the pleasure of working on a
+          wide range of projects, all of which have contributed to my development as a developer. I am also into <b
+            >machine learning</b
+          > and <b>deep learning</b> related works and research as well as <b>blockchain and Web3-based</b>
+          technologies.
+        </p>
+        <p class="about-me-p">
+          In my free time, I enjoy learning about new technologies and trends. I also enjoy reading books about CS-related topics
+          and Islamic sciences and history.
+        </p>
+      </div>
+      <div id="myCanvasContainer" class="order-1 justify-self-center md:order-2">
+        <canvas id="myCanvas" width="700px" height="400px" style="width: 100%; overflow-x: visible;">
+          <p>Anything in here will be replaced on browsers that support the canvas element</p>
+          <ul>
+            {
+              skills.map((item) => (
+                <li>
+                  <a href="/" onclick="return false;" class="cursor-default">
+                    {item}
+                  </a>
+                </li>
+              ))
+            }
+          </ul>
+        </canvas>
+      </div>
+    </div>
+  </div>
+</section>
+
+<style lang="scss">
+  .about-me-p {
+    text-align: justify;
+    text-justify: inter-word;
+    @apply leading-relaxed mb-2;
+  }
+</style>
+
+<script src="/tagCanvas.min.js" type="text/javascript"></script>
+<script>
+  window.onload = function () {
+    try {
+      TagCanvas.initial = [0.1, -0.1]
+      TagCanvas.outlineMethod = 'none'
+      TagCanvas.textFont = 'Jetbrains Mono Variable'
+      TagCanvas.fadeIn = 800
+      TagCanvas.depth = 0.97
+      TagCanvas.wheelZoom = false
+      TagCanvas.shadowOffset = [1, 1]
+      TagCanvas.stretchX = 1.7
+      TagCanvas.shuffleTags = true
+      TagCanvas.Start('myCanvas')
+    } catch (e) {
+      document.getElementById('myCanvasContainer').style.display = 'none'
+    }
+  }
+</script>

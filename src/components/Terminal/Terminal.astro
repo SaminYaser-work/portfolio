@@ -1,233 +1,233 @@
 ---
 ---
 
+<script is:inline>
+  const skipToHome = localStorage.getItem('first_load')
+  if(skipToHome) window.location.href = '/home'
+</script>
+
 <div id="container" class="hidden">
-    <div id="terminal">
-        <!-- Terminal Bar -->
-        <section id="terminal__bar">
-            <div id="bar__buttons">
-                <button class="bar__button" id="bar__button--exit">&#10005;</button>
-                <button class="bar__button">&#9472;</button>
-                <button class="bar__button">&#9723;</button>
-            </div>
-            <p id="bar__user">sam@work: ~</p>
-        </section>
-        <!-- Terminal Body -->
-        <section id="terminal__body" class="md:text-2xl lg:text-5xl pl-3">
-            <div id="terminal__prompt" class="mt-5">
-                <span id="terminal__prompt--user">sam@work:</span>
-                <span id="terminal__prompt--location">~</span>
-                <span id="terminal__prompt--bling">$&nbsp;</span>
-                <span id="terminal__prompt--text"></span>
-                <span id="terminal__prompt--cursor"></span>
-            </div>
-            <div class="hidden my-8" id="terminal__body--output1">
-                <p> > @portfolio/samin@1.0 dev </p>
-                <p> > astro dev </p>
-            </div>
-            <div class="hidden my-8" id="terminal__body--output2">
-                <div class="">
-                    <p class="mb-6">
-                        <span class="px-1 py-0.5 bg-green-400 text-black">DONE</span> Compiled successfully in 0.508ms</p>
-                    <p>Enjoy!!</p>
-                </div>
-            </div>
-        </section>
-    </div>
+  <div id="terminal">
+    <!-- Terminal Bar -->
+    <section id="terminal__bar">
+      <div id="bar__buttons">
+        <button class="bar__button" id="bar__button--exit">&#10005;</button>
+        <button class="bar__button">&#9472;</button>
+        <button class="bar__button">&#9723;</button>
+      </div>
+      <p id="bar__user">sam@work: ~</p>
+    </section>
+    <!-- Terminal Body -->
+    <section id="terminal__body" class="pl-3 md:text-2xl lg:text-5xl">
+      <div id="terminal__prompt" class="mt-5">
+        <span id="terminal__prompt--user">sam@work:</span>
+        <span id="terminal__prompt--location">~</span>
+        <span id="terminal__prompt--bling">$&nbsp;</span>
+        <span id="terminal__prompt--text"></span>
+        <span id="terminal__prompt--cursor"></span>
+      </div>
+      <div class="my-8 hidden" id="terminal__body--output1">
+        <p>> @portfolio/samin@1.0 dev</p>
+        <p>> astro dev</p>
+      </div>
+      <div class="my-8 hidden" id="terminal__body--output2">
+        <div class="">
+          <p class="mb-6">
+            <span class="bg-green-400 px-1 py-0.5 text-black">DONE</span> Compiled successfully in 0.508ms
+          </p>
+          <p>Enjoy!!</p>
+        </div>
+      </div>
+    </section>
+  </div>
 </div>
 
 <script>
-    const container = document.getElementById('container') as HTMLDivElement;
-    if (!localStorage.getItem('first_load') || true) {
-        const text = "npm run dev";
-        const prompt = document.getElementById('terminal__prompt--text') as HTMLSpanElement;
-        const cursor = document.getElementById('terminal__prompt--cursor') as HTMLSpanElement;
-        const output1 = document.getElementById('terminal__body--output1') as HTMLDivElement;
-        const output2 = document.getElementById('terminal__body--output2') as HTMLDivElement;
-        container.style.display = 'block';
 
-        (async function () {
-            await new Promise(resolve => setTimeout(resolve, 500));
+  const container = document.getElementById('container') as HTMLDivElement
+  const text = 'npm run dev'
+  const prompt = document.getElementById('terminal__prompt--text') as HTMLSpanElement
+  const cursor = document.getElementById('terminal__prompt--cursor') as HTMLSpanElement
+  const output1 = document.getElementById('terminal__body--output1') as HTMLDivElement
+  const output2 = document.getElementById('terminal__body--output2') as HTMLDivElement
+  container.style.display = 'block'
 
-            for (let i = 0; i < text.length; i++) {
-                await new Promise(resolve => setTimeout(resolve, 140));
-                prompt.textContent += text[i];
-            }
-            await new Promise(resolve => setTimeout(resolve, 800));
-            cursor.style.display = 'none';
+  ;(async function () {
+    await new Promise((resolve) => setTimeout(resolve, 500))
 
-            await new Promise(resolve => setTimeout(resolve, 1000));
-            output1.classList.remove('hidden');
-
-            await new Promise(resolve => setTimeout(resolve, 1200));
-            output2.classList.remove('hidden');
-
-            await new Promise(resolve => setTimeout(resolve, 2000));
-            container.style.animation = 'fadeinout 1s linear forwards';
-
-            // localStorage.setItem('first_load', 'true');
-
-        })();
-    } else {
-        container.style.display = 'none';
+    for (let i = 0; i < text.length; i++) {
+      await new Promise((resolve) => setTimeout(resolve, 140))
+      prompt.textContent += text[i]
     }
+    await new Promise((resolve) => setTimeout(resolve, 800))
+    cursor.style.display = 'none'
+
+    await new Promise((resolve) => setTimeout(resolve, 1000))
+    output1.classList.remove('hidden')
+
+    await new Promise((resolve) => setTimeout(resolve, 1200))
+    output2.classList.remove('hidden')
+
+    await new Promise((resolve) => setTimeout(resolve, 2000))
+    container.style.animation = 'fadeinout 1s linear forwards'
+
+    localStorage.setItem('first_load', 'true')
+    window.location.href = '/home'
+  })()
 </script>
 
 <style type="text/css">
+  #container {
+    //background: linear-gradient(45deg, #57003f 0%, #f57453 100%); background: theme('colors.oneblack'); width: 100%;
+    height: 100%;
+    z-index: 99;
+    position: fixed;
+    top: 0;
+    left: 0;
+  }
 
-    #container {
-        //background: linear-gradient(45deg, #57003f 0%, #f57453 100%);
-        background: theme('colors.oneblack');
-        width: 100%;
-        height: 100%;
-        z-index: 99;
-        position: fixed;
-        top: 0;
-        left: 0;
+  #terminal {
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    position: fixed;
+    width: 70vw;
+    height: 65vh;
+    box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.5);
+  }
+
+  #terminal__bar {
+    display: flex;
+    width: 100%;
+    height: 30px;
+    align-items: center;
+    padding: 0 8px;
+    box-sizing: border-box;
+    border-top-left-radius: 5px;
+    border-top-right-radius: 5px;
+    background: linear-gradient(#504b45 0%, #3c3b37 100%);
+  }
+
+  #bar__buttons {
+    display: flex;
+    align-items: center;
+  }
+
+  .bar__button {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 0;
+    margin-right: 5px;
+    font-size: 8px;
+    height: 12px;
+    width: 12px;
+    box-sizing: border-box;
+    border: none;
+    border-radius: 100%;
+    background: linear-gradient(#7d7871 0%, #595953 100%);
+    text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2);
+    box-shadow: 0px 0px 1px 0px #41403a, 0px 1px 1px 0px #474642;
+  }
+
+  .bar__button:hover {
+    cursor: pointer;
+  }
+
+  .bar__button:focus {
+    outline: none;
+  }
+
+  #bar__button--exit {
+    background: linear-gradient(#f37458 0%, #de4c12 100%);
+    background-clip: padding-box;
+  }
+
+  #bar__user {
+    color: #d5d0ce;
+    margin-left: 6px;
+    font-size: 14px;
+    line-height: 15px;
+  }
+
+  #terminal__body {
+    background: rgba(56, 4, 40, 0.9);
+    font-family: 'JetBrains Mono Variable', monospace;
+    height: calc(100% - 30px);
+    padding-top: 2px;
+    margin-top: -1px;
+  }
+
+  #terminal__prompt {
+    display: flex;
+    align-items: center;
+  }
+
+  #terminal__prompt--user {
+    color: #7eda28;
+  }
+
+  #terminal__prompt--location {
+    color: #4878c0;
+  }
+
+  #terminal__prompt--bling {
+    color: #dddddd;
+  }
+
+  #terminal__prompt--cursor {
+    display: block;
+    height: 1rem;
+    width: 8px;
+    margin-left: 9px;
+    animation: blink 600ms linear infinite;
+  }
+
+  @keyframes blink {
+    0% {
+      background: #ffffff;
     }
+    49% {
+      background: #ffffff;
+    }
+    60% {
+      background: transparent;
+    }
+    99% {
+      background: transparent;
+    }
+    100% {
+      background: #ffffff;
+    }
+  }
 
+  @keyframes fadeinout {
+    50% {
+      opacity: 1;
+    }
+    100% {
+      opacity: 0;
+      display: none;
+    }
+  }
+
+  @media (max-width: 600px) {
     #terminal {
-        top: 50%;
-        left: 50%;
-        transform: translate(-50%, -50%);
-        position: fixed;
-        width: 70vw;
-        height: 65vh;
-        box-shadow: 2px 4px 10px rgba(0, 0, 0, 0.5);
+      max-height: 90%;
+      width: 90%;
     }
+  }
 
-    #terminal__bar {
-        display: flex;
-        width: 100%;
-        height: 30px;
-        align-items: center;
-        padding: 0 8px;
-        box-sizing: border-box;
-        border-top-left-radius: 5px;
-        border-top-right-radius: 5px;
-        background: linear-gradient(#504b45 0%, #3c3b37 100%);
-    }
-
-    #bar__buttons {
-        display: flex;
-        align-items: center;
-    }
-
-    .bar__button {
-        display: flex;
-        justify-content: center;
-        align-items: center;
-        padding: 0;
-        margin-right: 5px;
-        font-size: 8px;
-        height: 12px;
-        width: 12px;
-        box-sizing: border-box;
-        border: none;
-        border-radius: 100%;
-        background: linear-gradient(#7d7871 0%, #595953 100%);
-        text-shadow: 0px 1px 0px rgba(255, 255, 255, 0.2);
-        box-shadow: 0px 0px 1px 0px #41403A, 0px 1px 1px 0px #474642;
-    }
-
-    .bar__button:hover {
-        cursor: pointer;
-    }
-
-    .bar__button:focus {
-        outline: none;
-    }
-
-    #bar__button--exit {
-        background: linear-gradient(#f37458 0%, #de4c12 100%);
-        background-clip: padding-box;
-    }
-
-    #bar__user {
-        color: #d5d0ce;
-        margin-left: 6px;
-        font-size: 14px;
-        line-height: 15px;
-    }
-
-    #terminal__body {
-        background: rgba(56, 4, 40, 0.9);
-        font-family: 'JetBrains Mono Variable', monospace;
-        height: calc(100% - 30px);
-        padding-top: 2px;
-        margin-top: -1px;
-    }
-
-    #terminal__prompt {
-        display: flex;
-        align-items: center;
-    }
-
-    #terminal__prompt--user {
-        color: #7eda28;
-    }
-
-    #terminal__prompt--location {
-        color: #4878c0;
-    }
-
-    #terminal__prompt--bling {
-        color: #dddddd;
-    }
-
+  @media (min-width: 768px) {
     #terminal__prompt--cursor {
-        display: block;
-        height: 1rem;
-        width: 8px;
-        margin-left: 9px;
-        animation: blink 600ms linear infinite;
+      height: 1.5rem;
     }
+  }
 
-    @keyframes blink {
-        0% {
-            background: #ffffff;
-        }
-        49% {
-            background: #ffffff;
-        }
-        60% {
-            background: transparent;
-        }
-        99% {
-            background: transparent;
-        }
-        100% {
-            background: #ffffff;
-        }
+  @media (min-width: 1024px) {
+    #terminal__prompt--cursor {
+      height: 3rem;
+      width: 16px;
     }
-
-    @keyframes fadeinout {
-        50% {
-            opacity: 1;
-        }
-        100% {
-            opacity: 0;
-            display: none;
-        }
-    }
-
-    @media (max-width: 600px) {
-        #terminal {
-            max-height: 90%;
-            width: 90%;
-        }
-    }
-
-    @media (min-width: 768px) {
-        #terminal__prompt--cursor {
-            height: 1.5rem;
-        }
-    }
-
-    @media (min-width: 1024px) {
-        #terminal__prompt--cursor {
-            height: 3rem;
-            width: 16px;
-        }
-    }
+  }
 </style>

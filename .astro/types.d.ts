@@ -201,13 +201,6 @@ declare module 'astro:content' {
 } & { render(): Render[".mdx"] };
 };
 "project": {
-"project1.mdx": {
-	id: "project1.mdx";
-  slug: "project1";
-  body: string;
-  collection: "project";
-  data: InferEntrySchema<"project">
-} & { render(): Render[".mdx"] };
 "project2.mdx": {
 	id: "project2.mdx";
   slug: "project2";
@@ -225,6 +218,13 @@ declare module 'astro:content' {
 "project4.mdx": {
 	id: "project4.mdx";
   slug: "project4";
+  body: string;
+  collection: "project";
+  data: InferEntrySchema<"project">
+} & { render(): Render[".mdx"] };
+"traffichain.mdx": {
+	id: "traffichain.mdx";
+  slug: "traffichain";
   body: string;
   collection: "project";
   data: InferEntrySchema<"project">

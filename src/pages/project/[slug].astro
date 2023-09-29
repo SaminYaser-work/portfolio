@@ -4,7 +4,7 @@ import {getCollection, CollectionEntry, getEntry} from 'astro:content';
 import {Breadcrumbs, BreadcrumbsItem} from 'accessible-astro-components'
 
 export async function getStaticPaths({paginate}) {
-    const allBlogPosts = await getCollection('blog');
+    const allBlogPosts = await getCollection('project');
     return allBlogPosts.map(post => ({
         params: {
             slug: post.slug
@@ -16,11 +16,11 @@ export async function getStaticPaths({paginate}) {
 }
 
 export interface Props {
-    post: CollectionEntry<'blog'>
+    post: CollectionEntry<'project'>
 }
 
 const {slug} = Astro.params;
-const post = await getEntry('blog', slug)
+const post = await getEntry('project', slug)
 
 if (!post) {
     return Astro.redirect('/404')
@@ -45,8 +45,8 @@ const time = Math.ceil(words / wpm);
                         label="Home"
                 />
                 <BreadcrumbsItem
-                        href="/blog"
-                        label="Blog"
+                        href="/project"
+                        label="Projects"
                 />
                 <BreadcrumbsItem
                         currentPage={true}
@@ -63,8 +63,7 @@ const time = Math.ceil(words / wpm);
                 month: 'long',
                 day: 'numeric'
             })}
-                     data={post.data}
-                      time={time}
+                     time={time}
             />
         </div>
     </section>

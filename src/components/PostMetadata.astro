@@ -1,0 +1,40 @@
+---
+import {Image} from 'astro:assets'
+
+export interface Props {
+  time: string
+  date: string
+  heroImage?: any,
+  description: string
+}
+
+const {
+  time,
+  date,
+  heroImage,
+  description,
+} = Astro.props
+
+---
+
+<div class={"my-3"}>
+  <p class={"text-slate-300 text-lg"}>Samin Yaser</p>
+  <span class={"text-onewhite"}>{time} minute read</span>
+  <span class={"text-slate-300 text-sm"}> · {date}</span>
+</div>
+
+<br/>
+
+<Image
+  src={heroImage}
+  alt="test image"
+  className={"rounded-lg"}
+/>
+
+<br/>
+
+<div class={"my-3"}>
+  <p>{description}</p>
+</div>
+
+<hr class={"h-[1px] mb-3"} />

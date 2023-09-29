@@ -1,41 +1,27 @@
 ---
-
 title: 'Test Blog'
 date: '2023-10-10'
 draft: false
 description: 'This is a test blog'
 tags: ['test']
 image: /src/assets/img/test.jpg
-
 ---
 
-import heroImage from '../../assets/img/test.jpg'
-import {Image} from 'astro:assets';
 
-# Hello World
-<>
-    <p className={"text-slate-300 text-sm"}>By Samin Yaser · {props.time} minute read</p>
-    <p className={"text-slate-300 text-sm"}>{props.date}</p>
-</>
+import heroImage from "../../assets/img/test.jpg";
+import { Image } from "astro:assets";
+import PostMetadata from "../../components/PostMetadata.astro";
 
+# {props.data.title}
 
-
-<br/>
-
-<Image
-    src={heroImage}
-    alt="test image"
-    width="1600"
-    height="900"
-    decoding="async"
-    loading="lazy"
+<PostMetadata
+  time={props.time}
+  date={props.date}
+  heroImage={heroImage}
+  description={props.data.description}
 />
 
-<br/>
 
-Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.
-
-<hr className={"h-1 my-3"}/>
 
 ```python
 print("Hello World!") # prints Hello World!

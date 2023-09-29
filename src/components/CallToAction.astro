@@ -1,7 +1,13 @@
+---
+import { callToActionText } from "../data";
+---
+
+<div class="h-32 bg-transparent"></div>
 <div class="container">
-  <div class="call-to-action mt-24 mb-32 flex flex-col items-center gap-12 rounded-xl p-12 md:p-24">
-    <h2 class="text-center text-3xl md:text-5xl">Get this theme on GitHub</h2>
-    <a href="https://github.com/markteekman/accessible-astro-starter" class="text-center text-lg"> Use this theme</a>
+  <div class="call-to-action  flex flex-col items-center gap-12 rounded-xl p-12">
+    <h2 class="text-center text-3xl md:text-5xl">Get in Touch</h2>
+    <p class="text-center text-lg">{ callToActionText }</p>
+    <a href="mailto:saminyaserwork@gmail.com?Body=Hello%20Samin%2C" class="text-center text-lg">Say Hello</a>
   </div>
 </div>
 
