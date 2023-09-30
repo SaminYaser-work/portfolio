@@ -13,24 +13,25 @@ export default function SocialSideBar() {
               href={item.link}
               target="_blank"
               rel="noreferrer"
+              aria-label={item.hover}
               className={'duration-300 ease-in-out hover:text-oneblue'}
             >
               {item.icon}
+              <Tooltip
+                anchorSelect={'#d_' + index.toString()}
+                place={'right'}
+                border={'1px solid #fff'}
+                delayShow={200}
+                style={{
+                  backgroundColor: '#1f2937',
+                  color: '#fff',
+                  borderRadius: '5px',
+                  fontSize: '1rem',
+                }}
+              >
+                {item.hover}
+              </Tooltip>
             </a>
-            <Tooltip
-              anchorSelect={'#d_' + index.toString()}
-              place={'right'}
-              border={'1px solid #fff'}
-              delayShow={200}
-              style={{
-                backgroundColor: '#1f2937',
-                color: '#fff',
-                borderRadius: '5px',
-                fontSize: '1rem',
-              }}
-            >
-              {item.hover}
-            </Tooltip>
           </li>
         ))}
       </ul>

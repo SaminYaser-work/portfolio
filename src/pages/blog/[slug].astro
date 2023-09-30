@@ -77,7 +77,7 @@ const time = Math.ceil(words / wpm)
 
 <script>
   document.addEventListener('DOMContentLoaded', () => {
-    const links = document.querySelectorAll('a')
+    const links = document.querySelectorAll('article a') as HTMLAnchorElement[]
     links.forEach((link) => (link.target = '_blank'))
   })
 </script>

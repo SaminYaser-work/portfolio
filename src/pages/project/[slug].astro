@@ -2,6 +2,7 @@
 import DefaultLayout from '../../layouts/DefaultLayout.astro'
 import {getCollection, CollectionEntry, getEntry} from 'astro:content';
 import {Breadcrumbs, BreadcrumbsItem} from 'accessible-astro-components'
+import '../../../public/mdx-styles.css'
 
 export async function getStaticPaths({paginate}) {
     const allBlogPosts = await getCollection('project');
