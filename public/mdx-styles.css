@@ -1,0 +1,32 @@
+/*article {*/
+/*    @apply prose md:prose-xl xl:prose-2xl dark:prose-invert !container*/
+/*}*/
+
+h2, h3, h4, h5, h6 {
+    @apply mt-10 mb-3 prose dark:prose-invert md:prose-xl lg:prose-2xl text-onemagenta
+}
+
+a {
+    @apply outline-2 outline-offset-1 focus-visible:no-underline focus-visible:outline-dashed;
+}
+
+
+p {
+    @apply prose md:prose-xl lg:prose-2xl dark:prose-invert
+}
+
+p {
+    max-width: 100% !important;
+}
+
+pre {
+    @apply my-5
+}
+
+code {
+    @apply prose md:prose-xl lg:prose-2xl dark:prose-invert
+}
+
+img {
+    @apply prose md:prose-xl lg:prose-2xl mx-auto rounded-3xl
+}

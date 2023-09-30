@@ -6,28 +6,35 @@ interface Props {
   img?: string
   title?: string
   footer: string
+  tags?: string[]
   children?: HTMLElement | HTMLElement[]
 }
 
-const { url = '#', img = 'https://fakeimg.pl/640x360', title = 'Default title', footer = 'Your name' } = Astro.props
+const { url = '#', img = 'https://fakeimg.pl/640x360', title = 'Default title', footer = 'Your name' , tags} = Astro.props
 ---
 
+<a href={url} class="!no-underline">
 <div class="card">
   <div class="card__image">
     <Image src={img} alt="blog image" />
   </div>
   <div class="card__content">
-    <h3>
-      <a href={url}>{title}</a>
+    <div class="flex flex-wrap gap-2 items-start">
+      {tags && tags.map((tag) => (
+        <span class="!inline-block !bg-gray-200 !rounded-full !px-3 !py-1 !text-sm !font-semibold !text-gray-700 !mr-2 dark:!bg-slate-700 dark:!text-gray-100">
+          {tag}
+        </span>
+      ))}
+    </div>
+    <h3 class="leading-tight mt-3">
+      {title}
     </h3>
     <p>
-      <slot>Default description.</slot>
+      <slot />
     </p>
-    <small>
-      {footer}
-    </small>
   </div>
 </div>
+</a>
 
 <style is:global>
     .card {

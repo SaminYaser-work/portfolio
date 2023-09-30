@@ -1,7 +1,7 @@
 ---
 import Section from "../../components/Section.astro";
-import { Card } from "accessible-astro-components";
 import { getCollection } from "astro:content";
+import CustomCard from "../../components/CustomCard.astro";
 
 const latestBlogs = await getCollection("blog", (blog) => !blog.data.draft);
 latestBlogs.sort((a, b) => new Date(b.data.date) - new Date(a.data.date)).slice(0, 3);
@@ -10,11 +10,12 @@ latestBlogs.sort((a, b) => new Date(b.data.date) - new Date(a.data.date)).slice(
   <ul id="blogs" class="my-3">
     {
       latestBlogs.map((blog) => (
-        <Card
+        <CustomCard
           title={blog.data.title}
           description={blog.data.description}
           img={blog.data.image}
           url={`/blog/${blog.slug}`}
+          tags={blog.data.tags}
         />
       ))
     }

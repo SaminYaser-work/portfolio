@@ -1,7 +1,8 @@
 ---
 import DefaultLayout from "../../layouts/DefaultLayout.astro";
 import { getCollection } from "astro:content";
-import { Breadcrumbs, BreadcrumbsItem, Card, Pagination } from "accessible-astro-components";
+import { Breadcrumbs, BreadcrumbsItem, Pagination } from "accessible-astro-components";
+import CustomCard from "../../components/CustomCard.astro";
 
 let blogs = await getCollection("blog", (blog) => !blog.data.draft);
 
@@ -38,11 +39,12 @@ blogs.sort(
       <ul class="my-3">
         {
           blogs.map((blog) => (
-            <Card
+            <CustomCard
               title={blog.data.title}
               description={blog.data.description}
               img={blog.data.image}
               url={`/blog/${blog.slug}`}
+              tags={blog.data.tags}
             />
           ))
         }

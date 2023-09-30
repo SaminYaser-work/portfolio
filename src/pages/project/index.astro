@@ -2,6 +2,7 @@
 import DefaultLayout from "../../layouts/DefaultLayout.astro";
 import { getCollection } from "astro:content";
 import { Breadcrumbs, BreadcrumbsItem, Card, Pagination } from "accessible-astro-components";
+import CustomCard from "../../components/CustomCard.astro";
 
 let projects = await getCollection("project", (project) => !project.data.draft);
 
@@ -38,11 +39,12 @@ projects.sort(
       <ul class="my-3">
         {
           projects.map((project) => (
-            <Card
+            <CustomCard
               title={project.data.title}
               description={project.data.description}
               img={project.data.image}
               url={`/project/${project.slug}`}
+              tags={project.data.tags}
             />
           ))
         }

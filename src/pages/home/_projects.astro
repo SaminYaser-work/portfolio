@@ -11,9 +11,10 @@ const featuredProjects = await getCollection("project", (project) => project.dat
     <div class="flex flex-col justify-center gap-32 mx-auto w-fit">
       {
         featuredProjects.map((project, idx) => (
-          <ContentMedia imgSrc="/accessible-components.webp"
+          <ContentMedia imgSrc={project.data.image}
                         url={'/project/' + project.slug}
                         title={project.data.title}
+                        tags={project.data.tags}
           >
             <p class="text-2xl">
               {

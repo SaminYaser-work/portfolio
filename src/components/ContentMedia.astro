@@ -1,22 +1,34 @@
 ---
-import { Media } from 'accessible-astro-components'
+import {Image} from 'astro:assets'
 
-const { imgSrc, reverseImg = false, url = '#', title = 'Title goes here' } = Astro.props
+const { imgSrc, reverseImg = false, url = '#', title = 'Title goes here', tags } = Astro.props
+// {reverseImg ? <Media class="rounded-lg" src={imgSrc} /> : ''}
 ---
 
 <div class="grid grid-cols-1 gap-12 md:grid-cols-2 md:gap-24">
   {
     !reverseImg ? (
-      <a href={url}>
-        <Media class="rounded-lg !no-underline" src={imgSrc} />
+      <a href={url} class="justify-self-center self-center !no-underline">
+        <Image src={imgSrc} alt="" />
       </a>
     ) : (
       ''
     )
   }
-  <div class="space-content flex flex-col justify-center self-start">
+  <div class="space-content flex flex-col justify-center self-center justify-self-center">
     <a href={url} class="!no-underline"><h2>{title}</h2></a>
+    <div class="flex flex-wrap items-start gap-2">
+      {tags && tags.map((tag) => (
+        <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 dark:bg-slate-700 dark:text-gray-100">{tag}</span>
+      ))}
+    </div>
     <slot />
   </div>
-  {reverseImg ? <Media class="rounded-lg" src={imgSrc} /> : ''}
 </div>
+
+
+<style>
+  img {
+      border-radius: 1.5rem;
+  }
+</style>

@@ -185,43 +185,15 @@ declare module 'astro:content' {
 
 	type ContentEntryMap = {
 		"blog": {
-"test.mdx": {
-	id: "test.mdx";
-  slug: "test";
-  body: string;
-  collection: "blog";
-  data: InferEntrySchema<"blog">
-} & { render(): Render[".mdx"] };
-"test2.mdx": {
-	id: "test2.mdx";
-  slug: "test2";
+"Generating Word Cloud from Bengali Text using Python.mdx": {
+	id: "Generating Word Cloud from Bengali Text using Python.mdx";
+  slug: "generating-word-cloud-from-bengali-text-using-python";
   body: string;
   collection: "blog";
   data: InferEntrySchema<"blog">
 } & { render(): Render[".mdx"] };
 };
 "project": {
-"project2.mdx": {
-	id: "project2.mdx";
-  slug: "project2";
-  body: string;
-  collection: "project";
-  data: InferEntrySchema<"project">
-} & { render(): Render[".mdx"] };
-"project3.mdx": {
-	id: "project3.mdx";
-  slug: "project3";
-  body: string;
-  collection: "project";
-  data: InferEntrySchema<"project">
-} & { render(): Render[".mdx"] };
-"project4.mdx": {
-	id: "project4.mdx";
-  slug: "project4";
-  body: string;
-  collection: "project";
-  data: InferEntrySchema<"project">
-} & { render(): Render[".mdx"] };
 "traffichain.mdx": {
 	id: "traffichain.mdx";
   slug: "traffichain";

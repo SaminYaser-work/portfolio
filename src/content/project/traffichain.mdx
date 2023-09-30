@@ -1,13 +1,34 @@
 ---
-
-title: 'TraffiChain'
+title: 'TraffiChain - Blockchain based Traffic Ticket Management System'
 date: '2022-12-14'
 draft: false
 description: 'Award Wining Smart Traffic Ticket Management System with Smart Contracts powered by Blockchain'
-tags: ['laravel']
-image: ../../assets/img/test.jpg
+tags: ['laravel', 'react', 'tailwindcss', 'blockchain']
+image: /src/assets/img/project/traffichain/t1.png
 featured: true
 ---
 
-# TraffiChain
-The goal of this project is to introduce a transparent, corruption-free and trustless method in issuing traffic tickets. A police officer can issue a traffic ticket which is represented as a smart contract. Authorized parties like the driver and the court can interact with the contract to dismiss it by paying or fighting it. Whatever the choices are, the ticket can manage its own state. It can keep track of deadlines, introduce late fees and can even cancel driver license if the need arises. Immutibility of the blockchain ensures security and prevents man-in-the-middle attacks.
+
+import PostMetadata from "../../components/PostMetadata.astro";
+
+# {props.data.title}
+
+<PostMetadata
+  time={props.time}
+  date={props.date}
+  description={props.data.description}
+/>
+
+## Introduction
+The goal of this project is to introduce a transparent, corruption-free and trust-less method in issuing traffic tickets. A police officer can issue a traffic ticket which is represented as a smart contract. Authorized parties like the driver and the court can interact with the contract to dismiss it by paying or fighting it. Whatever the choices are, the ticket can manage its own state. It can keep track of deadlines, introduce late fees and can even cancel driver license if the need arises. Immutibility of the blockchain ensures security and prevents man-in-the-middle attacks.
+
+
+## Demo
+Here is a video of the project in action:
+
+<div className={"w-fit mx-auto"}>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/rQKR1OpysRg?si=xuzyzxmDB152a-wG"
+          title="YouTube video player" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen></iframe>
+</div>

@@ -1,73 +1,61 @@
 ---
 import DefaultLayout from '../../layouts/DefaultLayout.astro'
-import {getCollection, CollectionEntry, getEntry} from 'astro:content';
-import {Breadcrumbs, BreadcrumbsItem} from 'accessible-astro-components'
+import { getCollection, CollectionEntry, getEntry } from 'astro:content'
+import { Breadcrumbs, BreadcrumbsItem } from 'accessible-astro-components'
+import '../../../public/mdx-styles.css'
 
-export async function getStaticPaths({paginate}) {
-    const allBlogPosts = await getCollection('blog');
-    return allBlogPosts.map(post => ({
-        params: {
-            slug: post.slug
-        },
-        props: {
-            post: post
-        }
-    }))
+export async function getStaticPaths({ paginate }) {
+  const allBlogPosts = await getCollection('blog')
+  return allBlogPosts.map((post) => ({
+    params: {
+      slug: post.slug,
+    },
+    props: {
+      post: post,
+    },
+  }))
 }
 
 export interface Props {
-    post: CollectionEntry<'blog'>
+  post: CollectionEntry<'blog'>
 }
 
-const {slug} = Astro.params;
+const { slug } = Astro.params
 const post = await getEntry('blog', slug)
 
 if (!post) {
-    return Astro.redirect('/404')
+  return Astro.redirect('/404')
 }
 
-const {Content} = await post.render()
+const { Content } = await post.render()
 
-const wpm = 225;
-const words = post.body.trim().split(/\s+/).length;
-const time = Math.ceil(words / wpm);
+const wpm = 225
+const words = post.body.trim().split(/\s+/).length
+const time = Math.ceil(words / wpm)
 ---
 
-<DefaultLayout
-        title="Blog"
-        description="description"
->
-    <section class="my-12">
-        <div class="container">
-            <Breadcrumbs>
-                <BreadcrumbsItem
-                        href="/"
-                        label="Home"
-                />
-                <BreadcrumbsItem
-                        href="/blog"
-                        label="Blog"
-                />
-                <BreadcrumbsItem
-                        currentPage={true}
-                        label={post.slug}
-                />
-            </Breadcrumbs>
-        </div>
-    </section>
-    <section class="my-12">
-        <div class="container">
-            <Content date={post.data.date.toLocaleDateString("en-US", {
-                weekday: 'long',
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric'
-            })}
-                     data={post.data}
-                      time={time}
-            />
-        </div>
-    </section>
+<DefaultLayout title="Blog" description="description">
+  <section class="my-12">
+    <div class="container">
+      <Breadcrumbs>
+        <BreadcrumbsItem href="/" label="Home" />
+        <BreadcrumbsItem href="/blog" label="Blog" />
+        <BreadcrumbsItem currentPage={true} label={post.slug} />
+      </Breadcrumbs>
+    </div>
+  </section>
+  <article class="container my-12">
+    <Content
+      date={post.data.date.toLocaleDateString('en-US', {
+        weekday: 'long',
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+      })}
+      data={post.data}
+      time={time}
+    />
+  </article>
 </DefaultLayout>
 
 <style lang="scss">
@@ -86,3 +74,10 @@ const time = Math.ceil(words / wpm);
     }
   }
 </style>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const links = document.querySelectorAll('a')
+    links.forEach((link) => (link.target = '_blank'))
+  })
+</script>

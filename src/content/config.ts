@@ -2,27 +2,29 @@ import { defineCollection, z } from 'astro:content'
 
 const blogCollection = defineCollection({
   type: 'content',
-  schema: z.object({
-    title: z.string(),
-    tags: z.array(z.string()),
-    image: z.string().optional(),
-    description: z.string(),
-    date: z.coerce.date(),
-    draft: z.boolean().optional().default(true),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      tags: z.array(z.string()),
+      image: image().optional(),
+      description: z.string(),
+      date: z.coerce.date(),
+      draft: z.boolean().optional().default(true),
+    }),
 })
 
 const projectCollection = defineCollection({
   type: 'content',
-  schema: z.object({
-    title: z.string(),
-    tags: z.array(z.string()),
-    image: z.string().optional(),
-    description: z.string(),
-    date: z.coerce.date(),
-    draft: z.boolean().optional().default(true),
-    featured: z.boolean().default(false),
-  }),
+  schema: ({ image }) =>
+    z.object({
+      title: z.string(),
+      tags: z.array(z.string()),
+      image: image().optional(),
+      description: z.string(),
+      date: z.coerce.date(),
+      draft: z.boolean().optional().default(true),
+      featured: z.boolean().default(false),
+    }),
 })
 
 export const collections = {
