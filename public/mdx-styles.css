@@ -11,12 +11,17 @@ a {
 }
 
 
-p {
+p, ul, li {
     @apply prose md:prose-xl lg:prose-2xl dark:prose-invert
 }
 
-p {
+p, ul, li {
     max-width: 100% !important;
+}
+
+article li::before {
+    content: '➤ ';
+    color: theme('colors.onemagenta');
 }
 
 pre {

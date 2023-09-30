@@ -8,8 +8,11 @@ image: /src/assets/img/project/traffichain/t1.png
 featured: true
 ---
 
-
 import PostMetadata from "../../components/PostMetadata.astro";
+import ImageWithCaption from "../../components/ImageWithCaption.astro";
+import t1 from "../../assets/img/project/traffichain/t1.png";
+import t2 from "../../assets/img/project/traffichain/t2.png";
+import t3 from "../../assets/img/project/traffichain/t3.png";
 
 # {props.data.title}
 
@@ -19,8 +22,48 @@ import PostMetadata from "../../components/PostMetadata.astro";
   description={props.data.description}
 />
 
+<ImageWithCaption
+  src={t1}
+  caption="TraffiChain homepage"
+/>
+
 ## Introduction
-The goal of this project is to introduce a transparent, corruption-free and trust-less method in issuing traffic tickets. A police officer can issue a traffic ticket which is represented as a smart contract. Authorized parties like the driver and the court can interact with the contract to dismiss it by paying or fighting it. Whatever the choices are, the ticket can manage its own state. It can keep track of deadlines, introduce late fees and can even cancel driver license if the need arises. Immutibility of the blockchain ensures security and prevents man-in-the-middle attacks.
+The goal of this project is to introduce a transparent, corruption-free and trust-less method in issuing traffic tickets.
+A police officer can issue a traffic ticket which is represented as a smart contract.
+Authorized parties like the driver and the court can interact with the contract to dismiss it by paying or fighting it.
+Whatever the choices are, the ticket can manage its own state.
+It can keep track of deadlines, introduce late fees and can even cancel driver license if the need arises.
+Immutability of the blockchain ensures security and prevents man-in-the-middle attacks.
+<br/>
+**This project was nominated to the Top 10 final round of CTO Innovation Hackathon 2022**
+
+<ImageWithCaption
+  src={t2}
+  caption="Registration page"
+/>
+
+## How it Works
+* A database residing in blockchain contains information of the driver.
+* All the entities (Police, driver etc.) have their own wallet address acting as a unique identifier.
+* A traffic officer can easily query those information with any device.
+* Permissions are put into place to restrict access to data to certain parties to protect privacy.
+* Traffic officer issues a ticket which is, under the hood, a smart contract.
+* This allows seamless interaction with the ticket between interested parties.
+* Alleged rule breaker (driver/owner) can easily pay the fines or even decide to fight it in court.
+* The ticket can handle these situations and change its state accordingly.
+* Similarly, the ticket can also track its due date and incur late fees, and even deploy arrest warrants.
+* All of these are achievable for the smart contract while being secure, reliable, transparent and without any human interventions.
+
+<ImageWithCaption
+  src={t3}
+  caption="Password-less login with MetaMask"
+/>
+
+## Benefits
+1. Blockchain technology saves money by minimizing the need for human intervention.
+2. It accelerates the payment mechanism immensely compared to the current system without any extra costs.
+3. The blockchain system saves energy due to the recent advancements by Proof of Stake.
+4. Decentralized database guarantees zero data loss.
 
 
 ## Demo
