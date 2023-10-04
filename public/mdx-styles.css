@@ -35,3 +35,11 @@ code {
 img {
     @apply prose md:prose-xl lg:prose-2xl mx-auto rounded-3xl
 }
+
+li > p {
+    display: inline !important;
+}
+
+blockquote p {
+    @apply !italic !text-gray-500 dark:!text-gray-400
+}

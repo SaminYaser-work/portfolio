@@ -194,6 +194,13 @@ declare module 'astro:content' {
 } & { render(): Render[".mdx"] };
 };
 "project": {
+"agrosmart.mdx": {
+	id: "agrosmart.mdx";
+  slug: "agrosmart";
+  body: string;
+  collection: "project";
+  data: InferEntrySchema<"project">
+} & { render(): Render[".mdx"] };
 "traffichain.mdx": {
 	id: "traffichain.mdx";
   slug: "traffichain";

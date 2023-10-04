@@ -22,6 +22,8 @@ const projectCollection = defineCollection({
       image: image().optional(),
       description: z.string(),
       date: z.coerce.date(),
+      ghUrl: z.string(),
+      liveUrl: z.string().optional(),
       draft: z.boolean().optional().default(true),
       featured: z.boolean().default(false),
     }),

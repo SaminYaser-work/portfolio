@@ -12,9 +12,9 @@ const typeToIcon = {
 };
 
 const typeToColor = {
-  info: "onelightblue",
+  info: "oneblue",
   warning: "onelightyellow",
-  success: "onelightgreen",
+  success: "onegreen",
 };
 
 const {type} = Astro.props
@@ -23,9 +23,7 @@ const {type} = Astro.props
 <>
 <blockquote class={`border-l-4 border-dashed border-l-${typeToColor[type]}`}>
   <Icon name={typeToIcon[type]} size="3rem" class={"text-" + typeToColor[type]} />
-  <p>
-    <slot />
-  </p>
+    <slot class="!italic !text-sm !text-onegrey1" />
 </blockquote>
 </>
 

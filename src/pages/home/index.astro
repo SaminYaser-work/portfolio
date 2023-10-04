@@ -2,7 +2,6 @@
 import DefaultLayout from "../../layouts/DefaultLayout.astro";
 import Hero from "../../components/Hero/Hero";
 import "@fontsource-variable/jetbrains-mono";
-import SocialSideBar from "../../components/SocialSideBar/SocialSideBar";
 
 import AboutMe from './_about-me.astro';
 import Experience from './_experience.astro';
@@ -10,14 +9,10 @@ import Education from './_education.astro';
 import Projects from './_projects.astro';
 import LatestPosts from './_blogs.astro';
 import CallToAction from '../../components/CallToAction.astro';
-
-import aboutMePic from "../assets/img/about_me_pic.webp";
-
 ---
 
 <DefaultLayout title="Home">
   <Hero client:load />
-  <SocialSideBar client:media="(min-width: 1280px)" />
 
   <AboutMe/>
   <Experience/>
