@@ -4,6 +4,9 @@ import Section from "../../components/Section.astro";
 import ContentMedia from "../../components/ContentMedia.astro";
 
 const featuredProjects = await getCollection("project", (project) => project.data.featured);
+featuredProjects.sort((a, b) => {
+  return new Date(b.data.date) - new Date(a.data.date);
+});
 ---
 <Section title="Projects">
   <div class="w-fit mx-auto">

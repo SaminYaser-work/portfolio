@@ -1,0 +1,57 @@
+---
+title: 'Instaclone'
+date: '2022-12-10'
+draft: false
+description: 'A clone of Instagram with authentication, all CRUD operations, and Image uploading and real-time updates with Firebase'
+ghUrl: 'https://github.com/SaminYaser-work/instaclone'
+liveUrl: 'https://instaclone-samin.vercel.app/'
+tags: ['nextjs', 'tailwindcss', 'typescript', 'firebase']
+image: /src/assets/img/project/instaclone/i1.png
+featured: true
+---
+
+import Blockquote from "../../components/Blockquote.astro";
+import PostMetadata from "../../components/PostMetadata.astro";
+import ImageWithCaption from "../../components/ImageWithCaption.astro";
+import i1 from "../../assets/img/project/instaclone/i1.png";
+import i2 from "../../assets/img/project/instaclone/i2.png";
+import i3 from "../../assets/img/project/instaclone/i3.png";
+
+# {props.data.title}
+
+<PostMetadata
+  time={props.time}
+  date={props.date}
+  description={props.data.description}
+  ghUrl={props.data.ghUrl}
+  liveUrl={props.data.liveUrl}
+/>
+
+<ImageWithCaption
+  src={i1}
+  caption="Instaclone Login Page"
+/>
+
+<Blockquote type="info">
+  The live version may not be accessible due to firebase project expiring.
+</Blockquote>
+
+## Introduction
+The project aims to develop a web application that replicates the core features of Instagram, a popular social media platform. This Instagram clone will provide users with the ability to create accounts, authenticate themselves, perform CRUD (Create, Read, Update, Delete) operations on posts, and upload images. Additionally, the application will incorporate real-time updates using Firebase, enhancing the user experience with seamless and interactive content sharing.
+
+<ImageWithCaption
+  src={i2}
+  caption="Instaclone Home Page"
+/>
+
+## Key Features
+- **User Registration & Login**: Users can sign up for an account by providing their email, username, and password. It has two step onboarding process where user first register with email and then set their username and profile picture. The application will validate the user’s email and password to ensure that they meet the requirements. The application will also check if the username is already taken. If the user’s credentials are valid, the application will create an account for the user and redirect them to the login page. The user can then log in using their credentials to access the platform.
+- **CRUD Operations**: Developed functionality for users to create, read, update, and delete posts, fostering user engagement and content management.
+- **Content**: Enabled users to upload images, attaching them to their posts, to share visual content with others, comment on others post etc.
+- **Real-time Updates**: Utilized Firebase's real-time database capabilities to provide instant updates and notifications for actions such as likes, comments, and new posts.
+- **Mobile-Friendly Interface**: Ensured that the application is responsive and provides an excellent user experience on mobile devices, including smartphones and tablets.
+
+<ImageWithCaption
+  src={i3}
+  caption="Fully Mobile Responsive"
+/>

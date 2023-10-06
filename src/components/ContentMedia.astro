@@ -16,7 +16,7 @@ const { imgSrc, reverseImg = false, url = '#', title = 'Title goes here', tags }
     )
   }
   <div class="space-content flex flex-col justify-center self-center justify-self-center">
-    <a href={url} class="!no-underline"><h2>{title}</h2></a>
+    <a href={url} class="!no-underline"><h2 class="!leading-tight">{title}</h2></a>
     <div class="flex flex-wrap items-start gap-2">
       {tags && tags.map((tag) => (
         <span class="inline-block bg-gray-200 rounded-full px-3 py-1 text-sm font-semibold text-gray-700 mr-2 mb-2 dark:bg-slate-700 dark:text-gray-100">{tag}</span>

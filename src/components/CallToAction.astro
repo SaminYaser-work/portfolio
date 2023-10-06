@@ -5,7 +5,7 @@ import { callToActionText } from "../data";
 <div class="h-32 bg-transparent"></div>
 <div class="container">
   <div class="call-to-action  flex flex-col items-center gap-12 rounded-xl p-12">
-    <h2 class="text-center text-3xl md:text-5xl">Get in Touch</h2>
+    <h2 class="text-center text-3xl md:text-5xl text-oneblack font-mono font-bold">Get in Touch</h2>
     <p class="text-center text-lg font-mono font-bold">{ callToActionText }</p>
     <a href="mailto:saminyaserwork@gmail.com?Body=Hello%20Samin%2C" class="text-center text-lg !rounded-lg !no-underline">Say Hello</a>
   </div>
@@ -15,7 +15,7 @@ import { callToActionText } from "../data";
   .call-to-action {
     color: var(--neutral-900);
     /*background-image: linear-gradient(40deg, var(--primary-100), var(--secondary-200));*/
-    @apply bg-gradient-to-br from-onedarkred to-oneblue;
+    @apply bg-gradient-to-br from-onelightyellow to-onemagenta;
   }
 
   .call-to-action a:not(button),

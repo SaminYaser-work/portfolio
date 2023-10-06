@@ -1,4 +1,5 @@
 import Subtitle from "./HeroSubtitle"
+import { cv_link } from "../../data.tsx";
 // import { RxDoubleArrowDown } from "react-icons/rx";
 
 export default function Hero() {
@@ -24,7 +25,7 @@ export default function Hero() {
                     </h1>
                     <Subtitle/>
                     <a
-                        href="https://www.google.com"
+                        href={cv_link}
                         target="_blank"
                         referrerPolicy="no-referrer"
                         className="cursor-pointer relative mt-10 inline-flex items-center justify-center p-0.5 mb-2 mr-2 overflow-hidden text-xl font-medium !text-oneblack dark:!text-onewhite !no-underline rounded-lg group bg-gradient-to-br from-onedarkred to-oneblue group-hover:from-onedarkred group-hover:to-oneblue hover:!text-white dark:hover:!text-oneblack focus:ring-4 focus:outline-none focus:ring-onelightred"

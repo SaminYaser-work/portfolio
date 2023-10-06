@@ -7,6 +7,8 @@ import { TfiLinkedin } from 'react-icons/tfi'
 
 const iconSize = 30
 
+export const cv_link = 'https://drive.google.com/file/d/1cA0XccyOyc-fKfOWOqHMIiBwakpa63iY/view?usp=sharing'
+
 export const getSocialLinks = (iconSize: number) => [
   {
     icon: <SiMaildotru size={iconSize} />,
@@ -15,7 +17,7 @@ export const getSocialLinks = (iconSize: number) => [
   },
   {
     icon: <FaRegAddressBook size={iconSize} />,
-    link: 'https://samin-yaser.vercel.app/',
+    link: cv_link,
     hover: 'Download My Resume',
   },
   {
@@ -53,7 +55,7 @@ export const jobInfo = [
     subtitle: 'ETech Solutions Ltd.',
     timeline: 'April, 2023 - September, 2023',
     description: [
-      'Aquired in-depth knowledge about AWS EC2, S3, RDS, Lambda, CloudWatch, Elastic Beanstalk, Azure App Service and Flexible Database.',
+      'Acquired in-depth knowledge about AWS EC2, S3, RDS, Lambda, CloudWatch, Elastic Beanstalk, Azure App Service and Flexible Database.',
       'Successfully completed an extensive course on cloud computing and have acquired the corresponding certification.',
       'The full-stack application was effectively deployed to the cloud infrastructure.',
     ],

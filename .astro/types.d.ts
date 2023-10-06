@@ -201,6 +201,13 @@ declare module 'astro:content' {
   collection: "project";
   data: InferEntrySchema<"project">
 } & { render(): Render[".mdx"] };
+"instaclone.mdx": {
+	id: "instaclone.mdx";
+  slug: "instaclone";
+  body: string;
+  collection: "project";
+  data: InferEntrySchema<"project">
+} & { render(): Render[".mdx"] };
 "traffichain.mdx": {
 	id: "traffichain.mdx";
   slug: "traffichain";
