@@ -1,0 +1,72 @@
+---
+title: 'NewsFlash - RSS Feed Aggregator'
+date: '2022-08-12'
+draft: false
+description: 'A RSS feed aggregator built with C# Windows Forms'
+ghUrl: 'https://github.com/SaminYaser-work/NewsFlash'
+tags: ['C#']
+image: /src/assets/img/project/newsflash/main.png
+featured: false
+---
+
+
+import PostMetadata from "../../components/PostMetadata.astro";
+import ImageWithCaption from "../../components/ImageWithCaption.astro";
+import main from "../../assets/img/project/newsflash/main.png";
+
+# {props.data.title}
+
+<PostMetadata
+  time={props.time}
+  date={props.date}
+  description={props.data.description}
+  ghUrl={props.data.ghUrl}
+/>
+
+<ImageWithCaption
+  src={main}
+  caption="NewsFlash Main Window"
+/>
+
+## Project Overview
+The system will be made as a Windows Form Application with .NET Framework. The
+system consists of a collection of forms which passes necessary data to each other to work in
+harmony. System also fetched data from the internet periodically or at the will of the user. So
+a stable internet connection is required to operate this application successfully. The proposed
+system will only work on Windows operating system.
+The application will save necessary data for example, email, name, password in the
+database as well as the preferences of the user like settings, custom news sources, favourite
+links etc.
+To get the updated news, the system will utilize RSS technology. In detail, the
+application will download the XML file that a news service provides and parse it properly to
+get the title, publication date, summary, associated images etc. and display it to the user via a
+GUI application in a meaningful and intuitive way.
+
+## Features
+**General Features**:
+- Read news from pre-added websites.
+- Sharing news on social media.
+- Highlight unread news.
+- Open the article in a browser.
+- Copy the article link to the clipboard.
+
+**Primary Features**:
+These features are tied to specific user accounts.
+- Add or remove new RSS links.
+- Favorite article link to save it or read later.
+- Change and save settings.
+
+**Miscellaneous Features**:
+- Change the color theme of the application.
+- Slick and modern look of the app that is easy on the eyes, minimal and not distracting.
+
+
+## Demo
+Here is a video of the project in action:
+
+<div className={"w-fit mx-auto"}>
+  <iframe width="560" height="315" src="https://www.youtube.com/embed/0HQHLu1FU2s?si=LuYNQkNVK7a5FIdC"
+          title="YouTube video player" frameborder="0"
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+          allowfullscreen></iframe>
+</div>

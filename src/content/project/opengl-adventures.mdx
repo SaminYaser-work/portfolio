@@ -1,0 +1,65 @@
+---
+title: 'OpenGL Adventures - Endless Runner in OpenGL'
+date: '2023-06-01'
+draft: false
+description: 'Chrome Dino 🦖 like game made with OpenGL (freeglut) and C++'
+ghUrl: 'https://github.com/SaminYaser-work/OpenGL-Adventures'
+tags: ['c++', 'opengl']
+image: /src/assets/img/project/opengl-adventures/g1.png
+featured: false
+---
+
+
+import PostMetadata from "../../components/PostMetadata.astro";
+import ImageWithCaption from "../../components/ImageWithCaption.astro";
+import g1 from "../../assets/img/project/opengl-adventures/g1.png";
+
+# {props.data.title}
+
+<PostMetadata
+  time={props.time}
+  date={props.date}
+  description={props.data.description}
+  ghUrl={props.data.ghUrl}
+/>
+
+<ImageWithCaption
+  src={g1}
+  caption="OpenGL Adventures"
+/>
+
+## Project Overview
+Simple endless runner game made with C++ with openGL API and freeglut library. The absolute pain of working with C++ and
+decade-old freeglut library was worth it. I learned a lot about OpenGL and C++ in the process. I wish I could make it look more
+good... but we tried our best not to use any external library.
+
+## Challenges
+The most challenging part of this project was to make the Synthwave-ish background. I had to use a lot of math and trigonometry
+to make it work. I also had to use a lot of math to make the player jump and fall in a realistic way. The discussed game is a 2D endless runner game. Due to this, the background scenery must
+scroll in a direction to give the impression that the player is moving forward. In addition, it must
+also scroll infinitely until the game comes to an end. The major challenge faced when
+implementing a scrolling background is ensuring the loop is seamless. It is important to hide the
+fact that one single image is being used to portray the background scenery. In this case, a seamless
+loop is essential to create an illusion that the background is scrolling infinitely. If it is the contrary,
+where the loop is not seamless and the player can spot the obvious joints, it would ruin the illusion
+and make apparent that the same image is being scrolled in a loop.
+To seamlessly animate the stars, the field, and the road, the game updates the value of the
+X-axis (distance of the object from the left edge of the screen) of each individual object when
+rendering each frame, instead of creating new objects. This makes the game performance-friendly
+and reduces the stress on the CPU (instantiating new objects). The X-axis coordinate value resets
+when the object reaches the furthest left side of the image. To emulate depth perception or the
+parallax effect, these three things must move at different speeds. It generates the illusion that the
+road is closer to the player than the field, and finally, the stars are the most distant. The sun is
+intentionally kept still since large celestial objects in the sky don’t seem to move in the real world
+when viewing while moving.
+The lines in the field are generated with a loop. For the horizontal lines, the distance
+between them decreases gradually. These types of lines are not animated. For the vertical lines,
+they are initially backward leaning when on the right portion of the screen. When moving from
+right to left, the lines smoothly get straight in the middle and finally forward-leaning when on the
+left side. This is done by X coordinates of the top-end of the line differently than the bottom-end
+of a line. With the combination of the vertical and the horizontal lines, it gives the impression of a
+3-dimensional open space, which is in fact, drawn with 2D shapes on a 2D plane.
+
+<br/>
+
+Please check out the [full report](https://www.academia.edu/78715394/OpenGL_Adventures?source=swp_share) for more details.

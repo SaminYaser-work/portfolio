@@ -215,6 +215,20 @@ declare module 'astro:content' {
   collection: "project";
   data: InferEntrySchema<"project">
 } & { render(): Render[".mdx"] };
+"newsflash.mdx": {
+	id: "newsflash.mdx";
+  slug: "newsflash";
+  body: string;
+  collection: "project";
+  data: InferEntrySchema<"project">
+} & { render(): Render[".mdx"] };
+"opengl-adventures.mdx": {
+	id: "opengl-adventures.mdx";
+  slug: "opengl-adventures";
+  body: string;
+  collection: "project";
+  data: InferEntrySchema<"project">
+} & { render(): Render[".mdx"] };
 "traffichain.mdx": {
 	id: "traffichain.mdx";
   slug: "traffichain";
