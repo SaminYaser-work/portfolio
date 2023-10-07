@@ -12,7 +12,7 @@ a {
 
 
 p, ul, li {
-    @apply prose md:prose-xl lg:prose-2xl dark:prose-invert
+    @apply prose md:prose-xl lg:prose-2xl dark:prose-invert text-justify
 }
 
 p, ul, li {
@@ -42,4 +42,29 @@ li > p {
 
 blockquote p {
     @apply !italic !text-gray-500 dark:!text-gray-400
+}
+
+table {
+    @apply table-auto border-collapse border border-gray-200 dark:border-gray-700
+}
+
+th, td {
+    @apply border border-gray-200 dark:border-gray-700 px-4 py-2
+}
+
+th {
+    @apply bg-gray-50 dark:bg-onegrey1
+}
+
+td {
+    @apply bg-gray-100 dark:bg-gray-900
+}
+
+/* Katex fix */
+html, body {
+    height: auto;
+}
+
+#latex-eq {
+    @apply text-2xl my-5
 }

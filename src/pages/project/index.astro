@@ -3,6 +3,8 @@ import DefaultLayout from "../../layouts/DefaultLayout.astro";
 import { getCollection } from "astro:content";
 import { Breadcrumbs, BreadcrumbsItem, Card, Pagination } from "accessible-astro-components";
 import CustomCard from "../../components/CustomCard.astro";
+import Alert from "../../components/Alert.astro";
+import {gh} from "../../data.tsx";
 
 let projects = await getCollection("project", (project) => !project.data.draft);
 
@@ -19,6 +21,11 @@ projects.sort(
 >
   <section class="my-12">
     <div class="container">
+
+     <Alert>
+       I am currently in the process of migrating my projects from my old website to this one. Please visit my <a target="_blank" href={gh}>GitHub</a> in the meantime for a full list of my projects.
+     </Alert>
+
       <Breadcrumbs>
         <BreadcrumbsItem
           href="/"

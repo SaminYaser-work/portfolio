@@ -157,6 +157,11 @@ def plot_world_cloud(text):
 plot_world_cloud(' '.join([i[0] for i in most_common_words]))
 ```
 
+<ImageWithCaption
+  src={wc3}
+  caption="Word Cloud with Custom Shape"
+/>
+
 <Blockquote type="warning">
   Passing `regex = r"&#40;[\S]+&#41;"` to the `wordcloud` function is **crucial**. Otherwise, your output image might look something like this where conjunctive letters are broken.
 </Blockquote>

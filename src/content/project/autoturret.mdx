@@ -1,0 +1,177 @@
+---
+title: 'Auto-Turret'
+date: '2023-10-01'
+draft: false
+description: 'A turret that automatically detects and shoots targets'
+ghUrl: 'https://github.com/SaminYaser-work/AutoTurret'
+tags: ['arduino', 'computer vision']
+image: /src/assets/img/project/autoturret/a1.jpeg
+featured: false
+---
+
+
+import Blockquote from "../../components/Blockquote.astro";
+import PostMetadata from "../../components/PostMetadata.astro";
+import ImageWithCaption from "../../components/ImageWithCaption.astro";
+import Latex from "../../components/Latex.astro";
+import a1 from "../../assets/img/project/autoturret/a1.jpeg";
+import f1 from "../../assets/img/project/autoturret/f1.png";
+import f2 from "../../assets/img/project/autoturret/f2.png";
+import f3 from "../../assets/img/project/autoturret/f3.png";
+import real1 from "../../assets/img/project/autoturret/real1.png";
+import real2 from "../../assets/img/project/autoturret/real2.png";
+import m1 from "../../assets/img/project/autoturret/1.png";
+import m2 from "../../assets/img/project/autoturret/2.png";
+
+# {props.data.title}
+
+<PostMetadata
+  time={props.time}
+  date={props.date}
+  description={props.data.description}
+  ghUrl={props.data.ghUrl}
+/>
+
+<ImageWithCaption
+  src={a1}
+  caption="Arduino Powered Auto-Turret"
+/>
+
+## Project Overview
+The security of individuals and communities has become increasingly important in recent times. This project
+aimed to design and build an automated laser turret to enhance security measures in various settings, using
+computer vision and an Arduino microcontroller. The laser turret is capable of detecting human poses and aiming
+at potential threats, while also incorporating a "surrender" mode to prevent unnecessary harm. The project was
+designed with the belief that security is of paramount importance in modern society, and that technological
+advancements can help to improve safety measures. The laser turret was designed using servos and lasers, and the
+computer vision aspect was achieved through the implementation of OpenCV software. The project was tested
+and refined to improve accuracy and speed, resulting in a successful final product. The survey conducted as part
+of this project aimed to gather information on the most important features of a laser turret, its potential uses, and
+the public perception of such a technology. The survey results indicated that accuracy, cost, and range were the
+most important factors, while the legality and privacy concerns of the technology were also deemed significant.
+Overall, this project presents a viable solution for security purposes, incorporating advanced technology while
+also considering societal and cultural factors. The laser turret has the potential to enhance security measures in
+various settings, including election centers, public areas, and other locations where security is a concern.
+
+## Features
+The automated turret system is designed to detect and track human targets using computer vision and laser diode
+technology. The system operates using the following step-by-step working principle:
+- **Human detection**: The system uses computer vision algorithms to detect and locate human targets within
+its field of view. This is achieved by analyzing the video stream from a camera mounted on the turret
+system.
+- **Human pose analysis**: The system performs human pose analysis to determine whether the detected
+human is in a surrender pose or not. This is done to avoid unnecessary use of force and ensure the safety
+of non-threatening individuals.
+- **Target tracking**: Once a human target is detected and identified as a potential threat, the system tracks
+the target's movements using servo motors to adjust the position of the camera and laser diode.
+- **Laser aiming**: The laser diode is used to aim at the detected human target. This is done by adjusting the
+position of the laser using the servo motors to ensure that the laser is pointing directly at the target.
+- **Warning countdown**: The system issues a warning countdown to the detected human target, giving them
+an opportunity to surrender and avoid the use of force.
+- **Shooting**: If the detected human target does not comply with the warning countdown, the system can be
+programmed to automatically shoot the laser diode at the target.
+
+The flowchart below describes the overall process of the auto-targeting turret. The pre-defined
+processes in the flowchart are discussed in detail in the upcoming sections. In general, the automated turret system
+uses computer vision and laser diode technologies to detect, track, and possibly eliminate human threats. The use
+of servo motors to modify the position of the camera and laser diode in the system allows for precision aiming,
+while the warning countdown function allows the system to avoid the application of superfluous force
+
+<ImageWithCaption
+  src={f1}
+  caption="Flowchart of the Auto-Turret System"
+/>
+
+## Auto-Aiming
+The turret receives video feed from a stationary camera. Each frame of the video feed are analyzed to detect
+intruders and move the servo accordingly so that the lasers can be aimed at the target. This process is visualized
+in Figure 4. But a single frame is in pixel values. To calculate the servo degrees from the pixel values, we first
+need to determine the range of the servo motor or the Field-of-View (FOV). The field of view of the camera is the
+area that the camera can see. This is determined by the camera lens and sensor size. Once we know the field of
+view, we can calculate the number of pixels per degree of rotation. This value will be unique for each camera and
+lens combination. In this experiment, we figured it out by manually moving the servos in a controlled manner.
+
+<ImageWithCaption
+  src={f2}
+  caption="Pixel to Degree Conversion"
+/>
+
+Then, when the camera detects a human target, it calculates the position of the target within the image in terms of
+the pixel values. These pixel values are then converted into degrees of rotation for the servo motor using the
+previously calculated pixels per degree value. From the figure above, we get the following equations.
+
+export const eq1 = '\\tan(\\alpha) = \\frac{a}{d} \\implies d = \\frac{a}{\\tan(\\alpha)}'
+export const eq2 = '\\tan(\\alpha) = \\frac{b}{d} \\implies d = \\frac{b}{\\tan(\\alpha)}'
+
+<Latex formula={eq1}/>
+<Latex formula={eq2}/>
+
+Since, “d” is common, we can get the value of β by the following equations:
+
+export const eq3 = '\\tan(\\beta) = \\frac{b \\times \\tan(\\alpha)}{a}'
+export const eq4 = '\\therefore \\beta = \\tan^{-1}(\\frac{b \\times \\tan(\\alpha)}{a})'
+
+<Latex formula={eq3}/>
+<Latex formula={eq4}/>
+
+This β is the number of degrees the servos need to move to aim at the target. This calculated degree is fed to the
+servo motors so that it can accurately point the lasers at the target. In similar fashion, vertical movement is also
+calculated. These two calculations are done for every frame, giving the turret the ability to automatically aim at
+any intruder visible in the camera feed.
+
+## Measuring Distance & Firing Effect
+To measure the distance to a human target, we use a method called shoulder width calculation. This
+involves measuring the width of the target's shoulders in pixels within the camera image, and using this
+measurement to estimate their distance from the turret.
+To begin, we use the landmark detection method described earlier to identify the target's shoulders within the
+camera image. Once we have identified the shoulder landmarks, we calculate the distance between them in pixels.
+Next, we use the known width of an average human shoulder to estimate the actual distance to the target. This is
+based on the assumption that the target's shoulder width will be proportional to their actual distance from the
+turret.
+By continuously measuring the target's shoulder width as they move within the camera's field of view, we can
+track their distance and adjust the aim of the turret accordingly. This allows the system to accurately target human
+subjects at a distance and respond appropriately to their movements.
+Although the turret does not actually fire bullets, we can simulate the shooting of a gun by alternating the laser
+light and playing sound effects.
+
+<ImageWithCaption
+  src={f3}
+  caption="Misc. Flowcharts"
+/>
+
+## Final Product
+
+<ImageWithCaption
+  src={real1}
+  caption="Final Product (Front)"
+/>
+
+<ImageWithCaption
+  src={real2}
+  caption="Final Product (Back)"
+/>
+
+<ImageWithCaption
+  src={m1}
+  caption="Tracking a Human Target 1"
+/>
+
+<ImageWithCaption
+  src={m2}
+  caption="Detecting Pose"
+/>
+
+## Cost
+| Item                           | Quantity | Cost (BDT) |
+|--------------------------------|----------|------------|
+| Arduino Uno                    | 1        | 950        |
+| Camera mount with Servo Motors | 2        | 850        |
+| Laser Diode                    | 2        | 52         |
+| Jumper Wires                   | 1        | 150        |
+| Breadboard                     | 1        | 100        |
+| **Total**                      |          | 2102       |
+
+## Conclusion
+I had a lot of fun working on this project. Partly because I got to work with something tangible, rather than some pixel on
+a screen. I also learned a lot about computer vision and how to use it in real life applications.
+
