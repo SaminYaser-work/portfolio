@@ -9,7 +9,7 @@ import Feature from "../../components/Feature.astro";
       jobInfo.map(job => {
         return (
           <Feature icon={job.icon} title={job.title} subtitle={job.subtitle}
-                   timeline={job.timeline}>
+                   timeline={job.timeline} skills={job.skills}>
             <ul class="list-disc text-justify">
               {
                 job.description.map(desc => {

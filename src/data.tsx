@@ -50,6 +50,21 @@ export const jobInfo = [
       'Work with a variety of different languages, platforms, frameworks, and IoT-related technologies such as Sprint Boot, Laravel, AngularJS, Apache Kafka, MQTT, etc.',
       'Gather a deep understanding of system architecture, leading the effort to create comprehensive system documentation and deployment on remote servers.',
     ],
+    skills : [
+      'Java',
+      'Spring Boot',
+      'Laravel',
+      'AngularJS',
+      'Apache Kafka',
+      'MQTT',
+      'MySQL',
+      'PostgreSQL',
+      'NGINX',
+      'Docker',
+      'Bash',
+      'AWS',
+      'ELK',
+    ]
   },
   {
     icon: 'ic:baseline-person',
@@ -61,6 +76,12 @@ export const jobInfo = [
       'Successfully completed an extensive course on cloud computing and have acquired the corresponding certification.',
       'The full-stack application was effectively deployed to the cloud infrastructure.',
     ],
+    skills : [
+      'AWS',
+      'Azure',
+      'Docker',
+      'Laravel',
+    ]
   },
 ]
 
