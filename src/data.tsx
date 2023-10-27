@@ -7,7 +7,7 @@ import { TfiLinkedin } from 'react-icons/tfi'
 
 const iconSize = 30
 
-export const cv_link = 'https://drive.google.com/file/d/13zOTPyH_Ce82Wzr6ai1rq-KDKfcjKwcJ/view?usp=sharing'
+export const cv_link = 'https://drive.google.com/file/d/1rk1Gz1D9vmN2NfAGTafvFaSg_gU3FRkE/view?usp=sharing'
 export const gh = 'https://github.com/SaminYaser-work'
 
 
