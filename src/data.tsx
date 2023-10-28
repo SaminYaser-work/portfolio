@@ -153,7 +153,7 @@ export const skills = [
 ]
 
 export const callToActionText =
-  "I'm currently looking for new opportunities in research work in the field of SWE, ML/DL or Blockchain with a team that has a strong determination to publish good papers. Whether you have a proposition or just want to say hi, I'll try my best to get back to you!"
+  "I'm currently looking for new opportunities. Whether you have a proposition or just want to say hi, I'll try my best to get back to you!"
 
 /*
 

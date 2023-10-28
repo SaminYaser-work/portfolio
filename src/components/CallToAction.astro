@@ -1,13 +1,16 @@
 ---
-import { callToActionText } from "../data";
+import { callToActionText } from '../data'
 ---
 
 <div class="h-32 bg-transparent"></div>
 <div class="container">
-  <div class="call-to-action  flex flex-col items-center gap-12 rounded-xl p-12">
-    <h2 class="text-center text-3xl md:text-5xl text-oneblack font-mono font-bold">Get in Touch</h2>
-    <p class="text-center text-lg font-mono font-bold">{ callToActionText }</p>
-    <a href="mailto:saminyaserwork@gmail.com?Body=Hello%20Samin%2C" class="text-center text-lg !rounded-lg !no-underline">Say Hello</a>
+  <div class="call-to-action flex flex-col items-center gap-12 rounded-xl p-12">
+    <h2 class="text-center font-mono text-3xl font-bold text-oneblack md:text-5xl">Get in Touch</h2>
+    <p class="text-center font-mono text-2xl font-bold">{callToActionText}</p>
+    <a
+      href="mailto:saminyaserwork@gmail.com?Body=Hello%20Samin%2C"
+      class="!rounded-lg text-center text-lg !no-underline">Say Hello</a
+    >
   </div>
 </div>
 
