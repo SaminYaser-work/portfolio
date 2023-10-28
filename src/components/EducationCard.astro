@@ -1,28 +1,23 @@
 ---
-import {Icon} from 'astro-icon'
+import { Icon } from 'astro-icon'
 
-const {
-    icon = 'mdi:rocket',
-    title = 'Title',
-    subtitle = 'Subtitle',
-    timeline = '2021-01-01',
-} = Astro.props
+const { icon = 'mdi:rocket', title = 'Title', subtitle = 'Subtitle', timeline = '2021-01-01' } = Astro.props
 ---
 
-<div class="feature flex flex-col gap-4 items-center">
-    <Icon name={icon}/>
-    <div class="content">
-        <h4>{title}</h4>
-        <h6>
-                    <span class="italic">
-                      {subtitle}
-                    </span>
-            <br/>
-            <span class="text-neutral-500 font-bold">
-                        {timeline}
-                    </span>
-        </h6>
-    </div>
+<div class="feature flex flex-col items-start gap-4">
+  <Icon name={icon} />
+  <div class="content">
+    <h4>{title}</h4>
+    <h6>
+      <span class="italic">
+        {subtitle}
+      </span>
+      <br />
+      <span class="font-bold text-neutral-500">
+        {timeline}
+      </span>
+    </h6>
+  </div>
 </div>
 
 <style lang="scss">

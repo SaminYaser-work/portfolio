@@ -1,27 +1,26 @@
 ---
-import DefaultLayout from "../../layouts/DefaultLayout.astro";
-import Hero from "../../components/Hero/Hero";
-import "@fontsource-variable/jetbrains-mono";
+import DefaultLayout from '../../layouts/DefaultLayout.astro'
+import Hero from '../../components/Hero/Hero'
+import '@fontsource-variable/jetbrains-mono'
 
-import AboutMe from './_about-me.astro';
-import Experience from './_experience.astro';
-import Education from './_education.astro';
-import Projects from './_projects.astro';
-import LatestPosts from './_blogs.astro';
-import CallToAction from '../../components/CallToAction.astro';
+import AboutMe from './_about-me.astro'
+import Experience from './_experience.astro'
+import Education from './_education.astro'
+import Projects from './_projects.astro'
+import LatestPosts from './_blogs.astro'
+import CallToAction from '../../components/CallToAction.astro'
 ---
 
 <DefaultLayout title="Home">
   <Hero client:load />
 
-  <AboutMe/>
-  <Experience/>
+  <AboutMe />
+  <Education />
+  <Experience />
 
-  <Projects/>
-  <!--<Education/>-->
+  <Projects />
   <LatestPosts />
   <CallToAction />
-
 </DefaultLayout>
 
 <style lang="scss" is:global>

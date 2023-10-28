@@ -1,6 +1,7 @@
 .cursor::after {
     content: "";
     display: inline-block;
+    z-index: -1;
     width: 2px;
     height: 1em;
     /* background-color:#abb2bf; */

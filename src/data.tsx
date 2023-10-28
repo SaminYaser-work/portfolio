@@ -1,6 +1,4 @@
 import { FaGithub, FaRegAddressBook } from 'react-icons/fa'
-import { AiFillTwitterCircle } from 'react-icons/ai'
-import { BsLinkedin } from 'react-icons/bs'
 import { SiMaildotru } from 'react-icons/si'
 import { RiTwitterXFill } from 'react-icons/ri'
 import { TfiLinkedin } from 'react-icons/tfi'
@@ -10,6 +8,7 @@ const iconSize = 30
 export const cv_link = 'https://drive.google.com/file/d/1rk1Gz1D9vmN2NfAGTafvFaSg_gU3FRkE/view?usp=sharing'
 export const gh = 'https://github.com/SaminYaser-work'
 
+export const resumeHover = 'Download My Resume'
 
 export const getSocialLinks = (iconSize: number) => [
   {
@@ -20,7 +19,7 @@ export const getSocialLinks = (iconSize: number) => [
   {
     icon: <FaRegAddressBook size={iconSize} />,
     link: cv_link,
-    hover: 'Download My Resume',
+    hover: resumeHover,
   },
   {
     icon: <TfiLinkedin size={iconSize} />,
@@ -39,6 +38,15 @@ export const getSocialLinks = (iconSize: number) => [
   },
 ]
 
+export const cv_alt_link =
+  'https://docs.google.com/spreadsheets/d/1db7KXLb-Rtw34cF_Zr0ot3YaqEKoOKDfEUYvN7mIW-Q/edit?usp=sharing'
+
+export const cv_mail_link =
+  'mailto:saminyaserwork@gmail.com?Body=Dear%20Samin%2C%0A%0ACan%20you%20please%20send%20me%20your%20CV%3F'
+
+export const google_doc_cms =
+  'https://script.google.com/macros/s/AKfycbydPvmFkqunUDjXHyHb6Wo4YE3UP3IwhbEcZS7VrsGcD-D9xy75VDCrwXzLLBnELLcWZg/exec'
+
 export const jobInfo = [
   {
     icon: 'ic:baseline-engineering',
@@ -50,7 +58,7 @@ export const jobInfo = [
       'Work with a variety of different languages, platforms, frameworks, and IoT-related technologies such as Sprint Boot, Laravel, AngularJS, Apache Kafka, MQTT, etc.',
       'Gather a deep understanding of system architecture, leading the effort to create comprehensive system documentation and deployment on remote servers.',
     ],
-    skills : [
+    skills: [
       'Java',
       'Spring Boot',
       'Laravel',
@@ -64,7 +72,7 @@ export const jobInfo = [
       'Bash',
       'AWS',
       'ELK',
-    ]
+    ],
   },
   {
     icon: 'ic:baseline-person',
@@ -76,19 +84,14 @@ export const jobInfo = [
       'Successfully completed an extensive course on cloud computing and have acquired the corresponding certification.',
       'The full-stack application was effectively deployed to the cloud infrastructure.',
     ],
-    skills : [
-      'AWS',
-      'Azure',
-      'Docker',
-      'Laravel',
-    ]
+    skills: ['AWS', 'Azure', 'Docker', 'Laravel'],
   },
 ]
 
 export const educationInfo = [
   {
     icon: 'fa-solid:user-graduate',
-    title: 'American International University-Bangladesh',
+    title: 'American International University - Bangladesh',
     subtitle: 'BSc in Computer Science and Engineering',
     timeline: '2019-2023',
   },
