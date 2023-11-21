@@ -229,6 +229,13 @@ declare module 'astro:content' {
   collection: "project";
   data: InferEntrySchema<"project">
 } & { render(): Render[".mdx"] };
+"quran-cli.mdx": {
+	id: "quran-cli.mdx";
+  slug: "quran-cli";
+  body: string;
+  collection: "project";
+  data: InferEntrySchema<"project">
+} & { render(): Render[".mdx"] };
 "traffichain.mdx": {
 	id: "traffichain.mdx";
   slug: "traffichain";

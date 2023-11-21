@@ -1,0 +1,67 @@
+---
+title: 'quran-cli'
+date: '2023-11-21'
+draft: false
+description: 'Get the English translation of the verbatim word of Allah, the only God worthy of worship, right in your terminal.'
+ghUrl: 'https://github.com/SaminYaser-work/quran-cli'
+tags: ['bash', 'linux']
+image: /src/assets/img/project/quran-cli/main.png
+featured: false
+---
+
+
+import Blockquote from "../../components/Blockquote.astro";
+import PostMetadata from "../../components/PostMetadata.astro";
+import ImageWithCaption from "../../components/ImageWithCaption.astro";
+import main from "../../assets/img/project/quran-cli/main.png";
+import p1 from "../../assets/img/project/quran-cli/1.png";
+
+# {props.data.title}
+
+<PostMetadata
+  time={props.time}
+  date={props.date}
+  description={props.data.description}
+  ghUrl={props.data.ghUrl}
+/>
+
+<ImageWithCaption
+  src={main}
+  caption="quran-cli"
+/>
+
+{/* <Blockquote type="info"> */}
+{/*     The project is open source and available on [GitHub]() */}
+{/* </Blockquote> */}
+
+## Project Overview
+"quran-cli" allows you to read the translation of Quran (with footnotes) in your terminal. It is written in pure bash and can be used by anyone who has a basic knowledge of the terminal and no internet is required! 
+
+<ImageWithCaption
+  src={p1}
+  caption="quran-cli"
+/>
+
+<br/>
+For now only the English translation by Saheeh International is available. I plan to add more translations in the future, insha'Allah.
+
+### Installation
+```bash
+curl https://raw.githubusercontent.com/SaminYaser-work/quran-cli/master/install | sh
+```
+
+### Current Features
+For the usage information, visit the <a target="_blank" href="https://github.com/SaminYaser-work/quran-cli/blob/master/README.md">Github Readme</a>.
+
+- Get full surah or a particular ayah by verse number, or a range of verses
+- Turn on/off footnotes, simple mode
+- Surah information
+- Bookmark ayahs
+
+### Developing
+Unit tests have been written for the project using BATS and shellcheck is used for linting. Instructions on installing BATS can be found <a href="https://bats-core.readthedocs.io/en/stable/tutorial.html#quick-installation" target="_blank">here</a>.
+<br/>
+Run the unit tests:
+```bash
+./test/bats/bin/bats test/test.bats
+```
