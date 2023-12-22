@@ -134,6 +134,7 @@ export const skills = [
   'Angular',
   'TailwindCSS',
   'JQuery',
+  'Wordpress',
   'Bootstrap',
   'Laravel',
   'Spring Boot',
@@ -166,9 +167,10 @@ export const skills = [
 ]
 
 export const callToActionText =
-  "I'm currently looking for new opportunities. Whether you have a proposition or just want to say hi, I'll try my best to get back to you!"
+  "Although I'm currently not looking for new opportunities, feel free to reach out if you want to say hi."
 
 /*
+  "I'm currently looking for new opportunities. Whether you have a proposition or just want to say hi, I'll try my best to get back to you!"
 
       'Write modern, performant, maintainable code for a HRM system that is used by more than 30K concurrent users daily.',
       'Work with a variety of different languages, platforms, frameworks, and IoT devices such as Sprint Boot, Laravel, AngularJS, DotNet Core, MQTT, etc.',
