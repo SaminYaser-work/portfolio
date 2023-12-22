@@ -51,8 +51,21 @@ export const jobInfo = [
   {
     icon: 'ic:baseline-engineering',
     title: 'Junior Software Engineer',
+    subtitle: 'WPXPO',
+    timeline: 'November, 2023 - Present',
+    description: [
+      'Develop and maintain high-quality WordPress themes and plugins using ReactJS, PHP, and other relevant technologies.',
+      'Ensure the performance, reliability, and maintainability of the themes and plugins with more than 30K downloads.',
+      'Collaborate with the design team to implement visually appealing and intuitive interfaces.',
+      'Troubleshoot and resolve issues, optimize code for maximum speed and scalability.',
+    ],
+    skills: ['PHP', 'JavaScript', 'TypeScript', 'Sass', 'ReactJS', 'Wordpress', 'Woocommerce', 'MySQL', 'NGINX', 'Git'],
+  },
+  {
+    icon: 'ic:baseline-engineering',
+    title: 'Junior Software Engineer',
     subtitle: 'Inovace Technologies Ltd.',
-    timeline: 'May, 2023 - Present',
+    timeline: 'May, 2023 - October, 2023',
     description: [
       'Write modern, performant, maintainable code for a HRM system that is used by more than 30K concurrent users daily.',
       'Work with a variety of different languages, platforms, frameworks, and IoT-related technologies such as Sprint Boot, Laravel, AngularJS, Apache Kafka, MQTT, etc.',
