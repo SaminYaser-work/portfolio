@@ -44,11 +44,5 @@
     "react-dom": "^18.2.0",
     "react-icons": "^4.12.0",
     "react-tooltip": "^5.26.2"
-  },
-  "pnpm": {
-    "overrides": {
-      "vite-imagetools": "^6.2.7",
-      "sharp": "^0.33.0"
-    }
   }
 }
