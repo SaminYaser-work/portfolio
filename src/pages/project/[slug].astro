@@ -5,7 +5,7 @@ import type { CollectionEntry } from 'astro:content'
 import { Breadcrumbs, BreadcrumbsItem } from 'accessible-astro-components'
 import '../_mdx_styles.css'
 
-// export const prerender = true
+export const prerender = true
 
 export async function getStaticPaths({ paginate }) {
   const allBlogPosts = await getCollection('project')
