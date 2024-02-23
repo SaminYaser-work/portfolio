@@ -1,43 +1,41 @@
 ---
-import { getCollection } from "astro:content";
-import Section from "../../components/Section.astro";
-import ContentMedia from "../../components/ContentMedia.astro";
+import { getCollection } from 'astro:content'
+import Section from '../../components/Section.astro'
+import ContentMedia from '../../components/ContentMedia.astro'
 
-const featuredProjects = await getCollection("project", (project) => project.data.featured);
+const featuredProjects = await getCollection('project', (project) => project.data.featured)
 featuredProjects.sort((a, b) => {
-  return new Date(b.data.date) - new Date(a.data.date);
-});
+  return new Date(b.data.date) - new Date(a.data.date)
+})
 ---
-<Section title="Projects">
-  <div class="w-fit mx-auto">
 
-    <div class="flex flex-col justify-center gap-32 mx-auto w-fit">
+<Section title="Projects">
+  <div class="mx-auto w-fit">
+    <div class="mx-auto flex w-fit flex-col justify-center gap-32">
       {
         featuredProjects.map((project, idx) => (
-          <ContentMedia imgSrc={project.data.image}
-                        url={'/project/' + project.slug}
-                        title={project.data.title}
-                        tags={project.data.tags}
+          <ContentMedia
+            imgSrc={project.data.image}
+            url={'/project/' + project.slug}
+            title={project.data.title}
+            tags={project.data.tags}
           >
-            <p class="text-2xl">
-              {
-                project.data.description
-              }
-            </p>
+            <p class="text-2xl">{project.data.description}</p>
           </ContentMedia>
         ))
       }
-
     </div>
   </div>
-  <div class="w-full mt-16">
+  <div class="mt-16 w-full">
     <a
       href="/project"
-      class="float-right !no-underline ml-auto py-2 px-4 border border-onemagenta  rounded-lg cursor-pointer font-bold group cta-button1">
-        <span
-          class="!text-oneblack dark:!text-onewhite group-hover:!text-oneblack transition-colors duration-200 ease-in-out">
-          See All Projects &rarr;
-        </span>
+      class="cta-button1 group float-right ml-auto cursor-pointer rounded-lg border border-onemagenta px-4 py-2 font-bold !no-underline"
+    >
+      <span
+        class="!text-oneblack transition-colors duration-200 ease-in-out group-hover:!text-oneblack dark:!text-onewhite"
+      >
+        See All Projects &rarr;
+      </span>
     </a>
   </div>
 </Section>

@@ -5,7 +5,7 @@ import type { CollectionEntry } from 'astro:content'
 import { Breadcrumbs, BreadcrumbsItem } from 'accessible-astro-components'
 import '../_mdx_styles.css'
 
-export const prerender = true;
+// export const prerender = true;
 
 export async function getStaticPaths({ paginate }) {
   const allBlogPosts = await getCollection('blog')
@@ -35,7 +35,6 @@ const { Content } = await post.render()
 const wpm = 225
 const words = post.body.trim().split(/\s+/).length
 const time = Math.ceil(words / wpm)
-
 ---
 
 <DefaultLayout title={post.data.title} description={post.data.description} image={post.data.image.src}>
@@ -64,7 +63,6 @@ const time = Math.ceil(words / wpm)
     <h6 class="text-xl">Leave a Comment</h6>
     <section class="giscus"></section>
   </div>
-
 </DefaultLayout>
 
 <style lang="scss">
@@ -91,21 +89,21 @@ const time = Math.ceil(words / wpm)
   })
 </script>
 
-<script  
-        is:inline
-        src="https://giscus.app/client.js"
-        data-repo="SaminYaser-work/portfolio"
-        data-repo-id="R_kgDOKYENvQ"
-        data-category="Comments"
-        data-category-id="DIC_kwDOKYENvc4Cdc21"
-        data-mapping="url"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="preferred_color_scheme"
-        data-lang="en"
-        data-loading="lazy"
-        crossorigin="anonymous"
-        async>
-</script>
+<script
+  is:inline
+  src="https://giscus.app/client.js"
+  data-repo="SaminYaser-work/portfolio"
+  data-repo-id="R_kgDOKYENvQ"
+  data-category="Comments"
+  data-category-id="DIC_kwDOKYENvc4Cdc21"
+  data-mapping="url"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="preferred_color_scheme"
+  data-lang="en"
+  data-loading="lazy"
+  crossorigin="anonymous"
+  async
+></script>

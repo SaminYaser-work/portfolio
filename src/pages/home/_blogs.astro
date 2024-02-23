@@ -1,11 +1,12 @@
 ---
-import Section from "../../components/Section.astro";
-import { getCollection } from "astro:content";
-import CustomCard from "../../components/CustomCard.astro";
+import Section from '../../components/Section.astro'
+import { getCollection } from 'astro:content'
+import CustomCard from '../../components/CustomCard.astro'
 
-const latestBlogs = await getCollection("blog", (blog) => !blog.data.draft);
-latestBlogs.sort((a, b) => new Date(b.data.date) - new Date(a.data.date)).slice(0, 3);
+const latestBlogs = await getCollection('blog', (blog) => !blog.data.draft)
+latestBlogs.sort((a, b) => new Date(b.data.date) - new Date(a.data.date)).slice(0, 3)
 ---
+
 <Section title="Latest Posts">
   <ul id="blogs" class="my-3">
     {
@@ -20,31 +21,33 @@ latestBlogs.sort((a, b) => new Date(b.data.date) - new Date(a.data.date)).slice(
       ))
     }
   </ul>
-  <div class="w-full mt-16">
+  <div class="mt-16 w-full">
     <a
       href="/blog"
-      class="float-right !no-underline ml-auto py-2 px-4 border border-onemagenta  rounded-lg cursor-pointer font-bold group cta-button1">
-        <span
-          class="!text-oneblack dark:!text-onewhite group-hover:!text-oneblack transition-colors duration-200 ease-in-out">
-          See All Blog Posts &rarr;
-        </span>
+      class="cta-button1 group float-right ml-auto cursor-pointer rounded-lg border border-onemagenta px-4 py-2 font-bold !no-underline"
+    >
+      <span
+        class="!text-oneblack transition-colors duration-200 ease-in-out group-hover:!text-oneblack dark:!text-onewhite"
+      >
+        See All Blog Posts &rarr;
+      </span>
     </a>
   </div>
 </Section>
 
 <style lang="scss">
-    #blogs {
-        display: grid;
-        grid-template-columns: 1fr;
-        grid-gap: 4rem;
+  #blogs {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-gap: 4rem;
 
-        @media (min-width: 550px) {
-            grid-template-columns: repeat(2, 1fr);
-            grid-gap: 2rem;
-        }
-
-        @media (min-width: 950px) {
-            grid-template-columns: repeat(3, 1fr);
-        }
+    @media (min-width: 550px) {
+      grid-template-columns: repeat(2, 1fr);
+      grid-gap: 2rem;
     }
+
+    @media (min-width: 950px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
 </style>

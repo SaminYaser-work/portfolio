@@ -5,7 +5,7 @@ import type { CollectionEntry } from 'astro:content'
 import { Breadcrumbs, BreadcrumbsItem } from 'accessible-astro-components'
 import '../_mdx_styles.css'
 
-export const prerender = true
+// export const prerender = true
 
 export async function getStaticPaths({ paginate }) {
   const allBlogPosts = await getCollection('project')
@@ -84,21 +84,21 @@ const time = Math.ceil(words / wpm)
   }
 </style>
 
-<script  
-        is:inline
-        src="https://giscus.app/client.js"
-        data-repo="SaminYaser-work/portfolio"
-        data-repo-id="R_kgDOKYENvQ"
-        data-category="Comments"
-        data-category-id="DIC_kwDOKYENvc4Cdc21"
-        data-mapping="url"
-        data-strict="0"
-        data-reactions-enabled="1"
-        data-emit-metadata="0"
-        data-input-position="top"
-        data-theme="preferred_color_scheme"
-        data-lang="en"
-        data-loading="lazy"
-        crossorigin="anonymous"
-        async>
-</script>
+<script
+  is:inline
+  src="https://giscus.app/client.js"
+  data-repo="SaminYaser-work/portfolio"
+  data-repo-id="R_kgDOKYENvQ"
+  data-category="Comments"
+  data-category-id="DIC_kwDOKYENvc4Cdc21"
+  data-mapping="url"
+  data-strict="0"
+  data-reactions-enabled="1"
+  data-emit-metadata="0"
+  data-input-position="top"
+  data-theme="preferred_color_scheme"
+  data-lang="en"
+  data-loading="lazy"
+  crossorigin="anonymous"
+  async
+></script>
