@@ -1,0 +1,271 @@
+---
+title: 'Type-safe Wordpress Block Attributes with TypeScript and JSDoc'
+date: '2024-02-23'
+draft: false
+description: 'Working with WordPress block attributes can be a pain. TypeScript and JSDoc can help you with that. Here is how.'
+tags: ['wordpress', 'typescript', 'javascript']
+image: /src/assets/img/blog/typesafe-attr/main.png
+---
+
+import ImageWithCaption from '../../components/ImageWithCaption.astro'
+import PostMetadata from '../../components/PostMetadata.astro'
+import Blockquote from '../../components/Blockquote.astro'
+
+{/* Images */}
+import mainImg from '../../assets/img/blog/typesafe-attr/main.png'
+import error2 from '../../assets/img/blog/typesafe-attr/error2.png'
+import autocmp1 from '../../assets/img/blog/typesafe-attr/autocmp1.png'
+import autocmp2 from '../../assets/img/blog/typesafe-attr/autocmp2.png'
+
+
+# {props.data.title}
+
+<PostMetadata time={props.time} date={props.date} description={props.data.description} />
+
+<ImageWithCaption src={mainImg} alt="block attributes with typescript"  />
+
+## Introduction
+[Block attributes](https://developer.wordpress.org/block-editor/reference-guides/block-api/block-attributes/) in WordPress are used to define and control the behavior of a block. They are essentially properties that you can use to customize a block and its content. Attributes can be used to store and control various aspects of a block, such as: the content of the block, settings and configurations, styling options etc.
+Attributes are defined in the block's `block.json` or in the `registerBlockType` function in JavaScript, and they can be of various types, such as **strings, numbers, objects, arrays, and booleans**. They are automatically passed to the block's `edit` and `save` functions, and we can use them there as well as manipulate them.
+
+<br/>
+
+One of the _gripes_ I have with the block attributes is that they are not typed, at least for now. This means that you don't get any type checking or autocompletion when working with them. It is manageable if you have a few attributes, but as the number of attributes grows, it becomes a pain to manage them. You shouldn't have more than a few attributes per block anyway, but sometimes you have to. For example, I was working on building a block will manage popups and I had more than 50 attributes. If I had to manage the attributes manually, and it would be awful. I would have to keep track of the types and default values of each attribute, which would have been error-prone and time-consuming. In this article, I will show you a neat trick on how added type checking and autocompletion to block attributes  with **TypeScript** and **JSDoc**!
+
+## Setting up TypeScript
+
+I assume you have already setup a block using `create-block` package. If not, you can follow the [official documentation](https://developer.wordpress.org/block-editor/reference-guides/packages/packages-create-block/) to create a block. After you are done, you can install TypeScript in your project by running the following command.
+
+```shell
+npm install --save-dev typescript
+```
+
+Next up, we shall configure the settings for TypeScript. Create a `tsconfig.json` file in the root of your project and paste in the following configuration.
+
+```json
+{
+	"compilerOptions": {
+		"allowJs": true,
+		"checkJs": true,
+		"strict": true,
+		"jsx": "react-jsx",
+		"resolveJsonModule": true,
+		"esModuleInterop": true,
+		"noEmit": true
+	},
+	"include": ["./src/**/*"],
+}
+
+```
+
+Here's a short explanation on what these options do. 
+
+- `allowJs`, `checkJs` and `strict` allows JavaScript files to be compiled and type-checked. 
+
+- `"jsx": "react-jsx"` specifies the JSX factory to use for JSX syntax. 
+
+- `"resolveJsonModule": true` Allows importing of JSON modules from TypeScript files. Why do we need this? We will see later 🤫
+
+- `"esModuleInterop": true` Enables a more compatible CommonJS/AMD module emit and finally,
+
+- `"noEmit": true` stops the compiler from emitting output files like JavaScript source code or declaration files because we only want to check the types.
+
+<Blockquote type="info">
+	You can set `"strict"` to `false` in the `tsconfig.json` file if you are working with an existing project and want to gradually introduce TypeScript and not get overwhelmed by all the errors and warnings in your IDE.
+</Blockquote>
+
+
+## Defining Some Attributes
+
+Let's define some attributes for our block. Open the `block.json` file and add the following attributes.
+
+
+```json
+{
+	"attributes": {
+			"title": {
+				"type": "string",
+				"default": ""
+			},
+
+			"content": {
+				"type": "string",
+				"default": ""
+			},
+			"color": {
+				"type": "string",
+				"default": "#ffffff"
+			},
+
+			"fontSize": {
+				"type": "number",
+				"default": "16"
+			}
+	}
+}
+```
+
+## Typing the block attributes (Noob way 😅)
+
+The most obvious way to type the block attributes is to use TypeScript interfaces. Simply create a `types.ts` file in the `src` directory and define the types there for both the `attributes` object and the `setAttributes` function.
+
+```typescript
+export type Attributes {
+	title: string;
+	content: string;
+	color: string;
+	fontSize: number;
+}
+
+export type SetAttributesType = (attributes: Partial<Attributes>) => void;
+```
+
+<br/>
+Then, import the types with JSDoc in your JavaScript file.
+
+```javascript
+/**
+ * @typedef {Object} Props
+ * @property {import('./types').AttributeType} attributes
+ * @property {import('./types').SetAttributesType} setAttributes
+ */
+
+/**
+ *
+ * @param {Props} props
+ * @returns {JSX.Element}
+ */
+export default function Edit({ attributes, setAttributes }) {
+  //...
+}
+
+
+```
+
+<br/>
+Done! Enjoy your auto completions and type checking. 🎉
+
+<ImageWithCaption src={autocmp1} caption="Auto-completions for Block Attributes"  isMaxWidthFull={true} />
+<ImageWithCaption src={error2} caption="Warnings when you make a mistake"  isMaxWidthFull={true} />
+
+## Typing the block attributes (Advanced 😎)
+
+The problem with the previous approach is that it requires you to _manually_ keep the TypeScript types in sync with the block attributes. A better approach is to generate the TypeScript types from the `block.json` file. This way, the TypeScript types will always be in sync with the block attributes. To do this, simply import the `block.json` file and infer the type from there. This is why we needed `"resolveJsonModule": true` in the `tsconfig.json` file 😄
+
+```typescript
+import { attributes } from "../block.json";
+
+type BlockAttributesKeys = keyof typeof attributes;
+
+export type AttributeType = {
+	[K in BlockAttributesKeys]: "enum" extends keyof (typeof attributes)[K]
+		? (typeof attributes)[K]["enum"] extends Array<infer T>
+			? T
+			: never
+		: "default" extends keyof (typeof attributes)[K]
+		? (typeof attributes)[K]["default"]
+		: "type" extends keyof (typeof attributes)[K]
+		? (typeof attributes)[K]["type"]
+		: any;
+};
+
+export type SetAttributesType = (attributes: Partial<AttributeType>) => void;
+
+```
+
+<br/>
+It can also pick up the default values from the `block.json` file. This way, you don't have to manually specify the default values in the TypeScript types. Like for example, I have fairly complex `containerBackground` attribute.
+
+```json
+{
+	"containerBorder": {
+		"type": "object",
+		"default": {
+			"width": {
+				"top": 0,
+				"right": 0,
+				"bottom": 0,
+				"left": 0,
+				"unit": "px"
+			},
+			"type": "solid",
+			"color": "#555d66",
+			"openBorder": 0
+		}
+	}
+}
+```
+
+
+<ImageWithCaption src={autocmp2} caption="Auto-completion for Complex Attribute"  isMaxWidthFull={true} />
+
+### Problem with Enum Types
+You will notice that the `AttributeType` type has a problem with `enum` types. It doesn't pick up the enum values from the `block.json` file. For example: if you have an attribute like this in the `block.json` file:
+```json
+	"test1": {
+		"enum": ["a", "b", "c"]
+	},
+```
+
+<br/>
+Then, `test1` should be of type `"a" | "b" | "c"`, but it's not. It't just `string`. This is because TypeScript doesn't support inferring string literal types from JSON files. There is no way other than manually specifying the enum types in the TypeScript types. This is a bit of a bummer, but it's not a big deal if you only have a few enum types. Here's how you can do it and this is the _**final version**_ of the `types.ts` file. I have also added a few helper types to make the code more readable.
+
+```ts
+import { attributes } from "../block.json";
+
+// Define your enum types here
+type Test1EnumType = 1 | "b" | "c";
+type Test2EnumType = "a" | "b" | "c";
+
+type EnumMapping = {
+	test1: Test1EnumType;
+	test2: Test2EnumType;
+};
+
+// Helper types
+type GetValueTypeFromKey<T, K> = K extends keyof typeof attributes
+	? T extends keyof (typeof attributes)[K]
+		? (typeof attributes)[K][T]
+		: never
+	: never;
+
+type DoesKeyExist<T, K> = K extends keyof typeof attributes
+	? T extends keyof (typeof attributes)[K]
+		? true
+		: false
+	: false;
+
+export type AttributeType = {
+	[K in keyof typeof attributes]: K extends keyof EnumMapping
+		? EnumMapping[K]
+		: DoesKeyExist<"default", K> extends true
+		? GetValueTypeFromKey<"default", K>
+		: DoesKeyExist<"type", K> extends true
+		? GetValueTypeFromKey<"type", K>
+		: any;
+};
+
+export type SetAttributesType = (attributes: Partial<AttributeType>) => void;
+```
+
+```js
+// Importing and applying the types in the JavaScript file
+/**
+ * @typedef {Object} Props
+ * @property {import('./types').AttributeType} attributes
+ * @property {import('./types').SetAttributesType} setAttributes
+ */
+
+/**
+ *
+ * @param {Props} props
+ * @returns {JSX.Element}
+ */
+export default function Edit({ attributes, setAttributes }) {
+  //...
+}
+```
+
+## Conclusion
+
+That's it! You now have type checking and auto-completion for your block attributes. This will make your life easier and your code more robust. You can now easily manage and manipulate your block attributes without worrying about making mistakes. I hope you found this article helpful. Happy coding! 🚀

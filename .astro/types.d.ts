@@ -143,6 +143,13 @@ declare module 'astro:content' {
   collection: "blog";
   data: InferEntrySchema<"blog">
 } & { render(): Render[".mdx"] };
+"Typesafe Wordpress Block Attributes.mdx": {
+	id: "Typesafe Wordpress Block Attributes.mdx";
+  slug: "typesafe-wordpress-block-attributes";
+  body: string;
+  collection: "blog";
+  data: InferEntrySchema<"blog">
+} & { render(): Render[".mdx"] };
 };
 "project": {
 "agrosmart.mdx": {

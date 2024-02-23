@@ -5,16 +5,20 @@ export interface Props {
   src: any,
   alt: string,
   caption?: string,
+  rounded?: boolean
+  isMaxWidthFull?: boolean,
 }
 
 const {
   src = '',
   alt = '',
-  caption
+  caption,
+  rounded = true,
+  isMaxWidthFull = false,
 } = Astro.props
 ---
 
 <figure class="my-8">
-  <Image src={src} alt={alt === '' ? caption : alt} />
+  <Image src={src} alt={alt === '' ? caption : alt} class={`${isMaxWidthFull && 'max-w-full' } ${rounded ? '' : 'rounded-none' } `} />
   {caption && <figcaption class="text-center text-gray-500 dark:text-onewhite !text-2xl pt-3">Figure: {caption}</figcaption>}
 </figure>
