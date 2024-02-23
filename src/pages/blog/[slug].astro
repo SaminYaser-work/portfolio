@@ -1,8 +1,11 @@
 ---
 import DefaultLayout from '../../layouts/DefaultLayout.astro'
-import { getCollection, CollectionEntry, getEntry } from 'astro:content'
+import { getCollection, getEntry } from 'astro:content'
+import type { CollectionEntry } from 'astro:content'
 import { Breadcrumbs, BreadcrumbsItem } from 'accessible-astro-components'
-import '../../../public/mdx-styles.css'
+import './mdx-styles.css'
+
+export const prerender = true;
 
 export async function getStaticPaths({ paginate }) {
   const allBlogPosts = await getCollection('blog')
@@ -32,9 +35,10 @@ const { Content } = await post.render()
 const wpm = 225
 const words = post.body.trim().split(/\s+/).length
 const time = Math.ceil(words / wpm)
+
 ---
 
-<DefaultLayout title="Blog" description="description">
+<DefaultLayout title={post.data.title} description={post.data.description} image={post.data.image.src}>
   <section class="my-12">
     <div class="container">
       <Breadcrumbs>

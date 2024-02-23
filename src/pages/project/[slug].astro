@@ -35,8 +35,9 @@ const time = Math.ceil(words / wpm);
 ---
 
 <DefaultLayout
-        title="Blog"
-        description="description"
+        title={post.data.title}
+        description={post.data.description}
+        image={post.data.image.src}
 >
     <section class="my-12">
         <div class="container">
