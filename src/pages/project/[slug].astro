@@ -33,7 +33,9 @@ if (!post) {
   return Astro.redirect('/404')
 }
 
-const { Content } = await post.render()
+const { Content, headings } = await post.render()
+
+console.log(headings)
 
 const readingTime = Math.ceil(post.body.trim().split(/\s+/).length / WPM)
 ---
@@ -59,6 +61,7 @@ const readingTime = Math.ceil(post.body.trim().split(/\s+/).length / WPM)
         })}
         time={readingTime}
         data={post.data}
+        headings={headings}
       />
     </div>
   </article>

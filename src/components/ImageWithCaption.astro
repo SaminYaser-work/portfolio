@@ -16,13 +16,15 @@ const { src = '', alt = '', caption, rounded = true, isMaxWidthFull = false } = 
   <Image
     src={src}
     alt={alt === '' ? caption : alt}
-    class={`${isMaxWidthFull ? 'max-w-full' : ''} ${rounded ? '' : 'rounded-none'} `}
+    class={`w-full h-auto ${isMaxWidthFull ? 'max-w-full' : ''} ${rounded ? '' : 'rounded-none'} `}
     widths={[240, 540, 720, src.width]}
     sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px, ${src.width}px`}
   />
   {
     caption && (
-      <figcaption class="pt-3 text-center !text-2xl text-gray-500 dark:text-onewhite">Figure: {caption}</figcaption>
+      <figcaption class="!text-md pt-3 text-center text-gray-500 dark:text-onewhite md:!text-2xl">
+        <span class="font-bold">Figure:</span> {caption}
+      </figcaption>
     )
   }
 </figure>

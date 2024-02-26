@@ -33,7 +33,7 @@ code {
 }
 
 img {
-    @apply prose md:prose-xl lg:prose-2xl mx-auto rounded-3xl
+    @apply prose md:prose-xl lg:prose-2xl mx-auto rounded-sm md:rounded-md
 }
 
 li > p {
