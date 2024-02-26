@@ -1,24 +1,28 @@
 ---
-import {Image} from 'astro:assets'
+import { Image } from 'astro:assets'
 
 export interface Props {
-  src: any,
-  alt: string,
-  caption?: string,
+  src: any
+  alt: string
+  caption?: string
   rounded?: boolean
-  isMaxWidthFull?: boolean,
+  isMaxWidthFull?: boolean
 }
 
-const {
-  src = '',
-  alt = '',
-  caption,
-  rounded = true,
-  isMaxWidthFull = false,
-} = Astro.props
+const { src = '', alt = '', caption, rounded = true, isMaxWidthFull = false } = Astro.props
 ---
 
-<figure class="my-8">
-  <Image src={src} alt={alt === '' ? caption : alt} class={`${isMaxWidthFull && 'max-w-full' } ${rounded ? '' : 'rounded-none' } `} />
-  {caption && <figcaption class="text-center text-gray-500 dark:text-onewhite !text-2xl pt-3">Figure: {caption}</figcaption>}
+<figure class="my-4 md:my-8">
+  <Image
+    src={src}
+    alt={alt === '' ? caption : alt}
+    class={`${isMaxWidthFull ? 'max-w-full' : ''} ${rounded ? '' : 'rounded-none'} `}
+    widths={[240, 540, 720, src.width]}
+    sizes={`(max-width: 360px) 240px, (max-width: 720px) 540px, (max-width: 1600px) 720px, ${src.width}px`}
+  />
+  {
+    caption && (
+      <figcaption class="pt-3 text-center !text-2xl text-gray-500 dark:text-onewhite">Figure: {caption}</figcaption>
+    )
+  }
 </figure>

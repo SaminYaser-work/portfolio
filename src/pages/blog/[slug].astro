@@ -1,11 +1,12 @@
 ---
-import DefaultLayout from '../../layouts/DefaultLayout.astro'
+import DefaultLayout from '@/layouts/DefaultLayout.astro'
 import { getCollection, getEntry } from 'astro:content'
 import type { CollectionEntry } from 'astro:content'
 import { Breadcrumbs, BreadcrumbsItem } from 'accessible-astro-components'
-import ShareButtons from '../../components/ShareButtons.astro'
-import '../_mdx_styles.css'
-import Comments from '../../components/Comments.tsx'
+import ShareButtons from '@/components/ShareButtons.astro'
+import '@/pages/_mdx_styles.css'
+import Comments from '@/components/Comments.tsx'
+import { WPM } from '@/utils/constants'
 
 export const prerender = true
 
@@ -34,9 +35,7 @@ if (!post) {
 
 const { Content } = await post.render()
 
-const wpm = 250
-const words = post.body.trim().split(/\s+/).length
-const readingTime = Math.ceil(words / wpm)
+const readingTime = Math.ceil(post.body.trim().split(/\s+/).length / WPM)
 ---
 
 <DefaultLayout title={post.data.title} description={post.data.description} image={post.data.image.src}>
