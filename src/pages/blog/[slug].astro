@@ -3,7 +3,7 @@ import DefaultLayout from '@/layouts/DefaultLayout.astro'
 import { getCollection, getEntry } from 'astro:content'
 import type { CollectionEntry } from 'astro:content'
 import { Breadcrumbs, BreadcrumbsItem } from 'accessible-astro-components'
-import ShareButtons from '@/components/ShareButtons.astro'
+import ShareButtons from '@/components/ShareButtons.tsx'
 import '@/pages/_mdx_styles.css'
 import Comments from '@/components/Comments.tsx'
 import { WPM } from '@/utils/constants'
@@ -63,7 +63,7 @@ const readingTime = Math.ceil(post.body.trim().split(/\s+/).length / WPM)
 
   <div class="container !mt-16">
     <div class="flex flex-col justify-center align-middle">
-      <ShareButtons client:visible title={post.data.title} />
+      <ShareButtons client:only="react" title={post.data.title} />
 
       <Comments client:only="react" />
     </div>
