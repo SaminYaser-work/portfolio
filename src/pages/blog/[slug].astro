@@ -63,7 +63,7 @@ const readingTime = Math.ceil(post.body.trim().split(/\s+/).length / WPM)
 
   <div class="container !mt-16">
     <div class="flex flex-col justify-center align-middle">
-      <ShareButtons title={post.data.title} />
+      <ShareButtons client:visible title={post.data.title} />
 
       <Comments client:only="react" />
     </div>
