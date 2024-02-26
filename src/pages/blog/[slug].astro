@@ -3,7 +3,9 @@ import DefaultLayout from '../../layouts/DefaultLayout.astro'
 import { getCollection, getEntry } from 'astro:content'
 import type { CollectionEntry } from 'astro:content'
 import { Breadcrumbs, BreadcrumbsItem } from 'accessible-astro-components'
+import ShareButtons from '../../components/ShareButtons.astro'
 import '../_mdx_styles.css'
+import Comments from '../../components/Comments.tsx'
 
 export const prerender = true
 
@@ -32,9 +34,9 @@ if (!post) {
 
 const { Content } = await post.render()
 
-const wpm = 225
+const wpm = 250
 const words = post.body.trim().split(/\s+/).length
-const time = Math.ceil(words / wpm)
+const readingTime = Math.ceil(words / wpm)
 ---
 
 <DefaultLayout title={post.data.title} description={post.data.description} image={post.data.image.src}>
@@ -56,12 +58,16 @@ const time = Math.ceil(words / wpm)
         day: 'numeric',
       })}
       data={post.data}
-      time={time}
+      time={readingTime}
     />
   </article>
+
   <div class="container !mt-16">
-    <h6 class="text-xl">Leave a Comment</h6>
-    <section class="giscus"></section>
+    <div class="flex flex-col justify-center align-middle">
+      <ShareButtons url={Astro.url.toString()} title={post.data.title} />
+
+      <Comments client:only="react" />
+    </div>
   </div>
 </DefaultLayout>
 
@@ -88,22 +94,3 @@ const time = Math.ceil(words / wpm)
     links.forEach((link) => (link.target = '_blank'))
   })
 </script>
-
-<script
-  is:inline
-  src="https://giscus.app/client.js"
-  data-repo="SaminYaser-work/portfolio"
-  data-repo-id="R_kgDOKYENvQ"
-  data-category="Comments"
-  data-category-id="DIC_kwDOKYENvc4Cdc21"
-  data-mapping="url"
-  data-strict="0"
-  data-reactions-enabled="1"
-  data-emit-metadata="0"
-  data-input-position="top"
-  data-theme="preferred_color_scheme"
-  data-lang="en"
-  data-loading="lazy"
-  crossorigin="anonymous"
-  async
-></script>
