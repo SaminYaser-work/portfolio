@@ -1,7 +1,7 @@
 ---
-import { jobInfo } from "../../data";
-import Section from "../../components/Section.astro";
 import Feature from "../../components/Feature.astro";
+import Section from "../../components/Section.astro";
+import { jobInfo } from "../../data";
 ---
 <Section title="Experience">
   <div class="grid grid-cols-1 gap-14">
@@ -10,7 +10,7 @@ import Feature from "../../components/Feature.astro";
         return (
           <Feature icon={job.icon} title={job.title} subtitle={job.subtitle}
                    timeline={job.timeline} skills={job.skills}>
-            <ul class="list-disc text-justify">
+            <ul class="text-justify list-disc text-pretty">
               {
                 job.description.map(desc => {
                   return (

@@ -1,6 +1,6 @@
 import { FaGithub, FaRegAddressBook } from 'react-icons/fa'
-import { SiMaildotru } from 'react-icons/si'
 import { RiTwitterXFill } from 'react-icons/ri'
+import { SiMaildotru } from 'react-icons/si'
 import { TfiLinkedin } from 'react-icons/tfi'
 
 const iconSize = 30
@@ -54,12 +54,27 @@ export const jobInfo = [
     subtitle: 'WPXPO',
     timeline: 'November, 2023 - Present',
     description: [
-      'Develop and maintain high-quality WordPress themes and plugins using ReactJS, PHP, and other relevant technologies.',
-      'Ensure the performance, reliability, and maintainability of the themes and plugins with more than 30K downloads.',
+      "Develop and deploy major updates and new features for the company's flagship plugin, PostX, enhancing functionality and user experience for more than 40K users",
+      'Enhanced the React and PHP server performance of the WooCommerce based plugin, WowProduct (Formerly ProductX) by 40% within the first 4 months of joining the team',
+      'Spearheaded the design and development of "WowOptin", a wordpress plugin to generate lead and perform conversion optimization to help website owners grow their email lists and increase sales.',
+      'Updated the codebase to newer of React, optimized and automated the build processes and enforced improved coding standards, significantly enhancing overall code quality and maintainability.',
+      'Conduct interviews and provide training for new recruits, ensuring they are well-integrated into the team and equipped with the necessary skills.',
       'Collaborate with the design team to implement visually appealing and intuitive interfaces.',
-      'Troubleshoot and resolve issues, optimize code for maximum speed and scalability.',
+      'Troubleshoot and resolve issues while collaborating with support team.',
     ],
-    skills: ['PHP', 'JavaScript', 'TypeScript', 'Sass', 'ReactJS', 'Wordpress', 'Woocommerce', 'MySQL', 'NGINX', 'Git'],
+    skills: [
+      'PHP',
+      'TypeScript',
+      'Sass',
+      'ReactJS',
+      'Wordpress',
+      'Woocommerce',
+      'MySQL',
+      'NGINX',
+      'NextJS',
+      'Webpack',
+      'Gulp',
+    ],
   },
   {
     icon: 'ic:baseline-engineering',
@@ -70,6 +85,11 @@ export const jobInfo = [
       'Write modern, performant, maintainable code for a HRM system that is used by more than 30K concurrent users daily.',
       'Work with a variety of different languages, platforms, frameworks, and IoT-related technologies such as Sprint Boot, Laravel, AngularJS, Apache Kafka, MQTT, etc.',
       'Gather a deep understanding of system architecture, leading the effort to create comprehensive system documentation and deployment on remote servers.',
+      'Successfully identified and eliminated bottlenecks in critical workflows and Implemented database optimizations, reducing query response times by 86% and improving overall system performance',
+      'Solely responsible for the first integration of Face Recognition attendance device, FastFace, used by thousands of people everyday, making it the companies best-selling product.',
+      'Major contributor in the development of full-scale duplicate fingerprint detection system for BRAC Education Program consisting more than 10K young children.',
+      'Successfully implemented hardened password validation and expiration, JWT refresh token, Activity log etc. to make the system PCIDSS compatible.',
+      'Demonstrated a deep understanding of system architecture, leading the effort to create comprehensive system documentation and deploying applications to BRAC Bank’s on-premise servers.',
     ],
     skills: [
       'Java',
