@@ -54,13 +54,13 @@ export const jobInfo = [
     subtitle: 'WPXPO',
     timeline: 'November, 2023 - Present',
     description: [
-      "Develop and deploy major updates and new features for the company's flagship plugin, PostX, enhancing functionality and user experience for more than 40K users",
-      'Enhanced the React and PHP server performance of the WooCommerce based plugin, WowProduct (Formerly ProductX) by 40% within the first 4 months of joining the team',
+      "Develop and deploy major updates and new features for the company's flagship product, PostX, enhancing functionality and user experience for more than 40K active users",
+      'Enhanced the React and PHP server performance of the WooCommerce based product, WowStore (Formerly ProductX) by 40% within the first 4 months of joining the team',
       'Spearheaded the design and development of "WowOptin", a wordpress plugin to generate lead and perform conversion optimization to help website owners grow their email lists and increase sales.',
-      'Updated the codebase to newer of React, optimized and automated the build processes and enforced improved coding standards, significantly enhancing overall code quality and maintainability.',
+      'Updated the codebase to newer version of React, optimized and automated the build processes and enforced improved coding standards, significantly enhancing overall code quality and maintainability.',
       'Conduct interviews and provide training for new recruits, ensuring they are well-integrated into the team and equipped with the necessary skills.',
       'Collaborate with the design team to implement visually appealing and intuitive interfaces.',
-      'Troubleshoot and resolve issues while collaborating with support team.',
+      'Troubleshoot and resolve issues while collaborating with the support team.',
     ],
     skills: [
       'PHP',
@@ -74,6 +74,8 @@ export const jobInfo = [
       'NextJS',
       'Webpack',
       'Gulp',
+      'Playwright',
+      'PHPUnit'
     ],
   },
   {
