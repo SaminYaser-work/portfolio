@@ -50,11 +50,11 @@ export const google_doc_cms =
 export const jobInfo = [
   {
     icon: 'ic:baseline-engineering',
-    title: 'Junior Software Engineer',
+    title: 'Software Engineer',
     subtitle: 'WPXPO',
     timeline: 'November, 2023 - Present',
     description: [
-      "Develop and deploy major updates and new features for the company's flagship product, PostX, enhancing functionality and user experience for more than 40K active users",
+      "Develop and deploy major updates and new features for the company's flagship product, PostX, enhancing functionality and user experience for more than 45K active users",
       'Enhanced the React and PHP server performance of the WooCommerce based product, WowStore (Formerly ProductX) by 40% within the first 4 months of joining the team',
       'Spearheaded the design and development of "WowOptin", a wordpress plugin to generate lead and perform conversion optimization to help website owners grow their email lists and increase sales.',
       'Updated the codebase to newer version of React, optimized and automated the build processes and enforced improved coding standards, significantly enhancing overall code quality and maintainability.',
@@ -75,7 +75,7 @@ export const jobInfo = [
       'Webpack',
       'Gulp',
       'Playwright',
-      'PHPUnit'
+      'PHPUnit',
     ],
   },
   {
