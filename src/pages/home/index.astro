@@ -1,41 +1,40 @@
 ---
-import DefaultLayout from '../../layouts/DefaultLayout.astro'
-import Hero from '../../components/Hero/Hero'
-import '@fontsource-variable/jetbrains-mono'
+import "@fontsource-variable/jetbrains-mono";
+import Hero from "../../components/Hero/Hero";
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
 
-import AboutMe from './_about-me.astro'
-import Experience from './_experience.astro'
-import Education from './_education.astro'
-import Projects from './_projects.astro'
-import LatestPosts from './_blogs.astro'
-import CallToAction from '../../components/CallToAction.astro'
+import CallToAction from "../../components/CallToAction.astro";
+import AboutMe from "./_about-me.astro";
+import LatestPosts from "./_blogs.astro";
+import Experience from "./_experience.astro";
+import Projects from "./_projects.astro";
 ---
 
 <DefaultLayout title="Home">
-  <Hero client:load />
+    <Hero client:load />
 
-  <AboutMe />
-  <Education />
-  <Experience />
+    <AboutMe />
+    <Experience />
+    <!-- <Education /> -->
 
-  <Projects />
-  <LatestPosts />
-  <CallToAction />
+    <Projects />
+    <LatestPosts />
+    <CallToAction />
 </DefaultLayout>
 
 <style lang="scss" is:global>
-  .cta-button1 {
-    $grad_color: #c678dd;
+    .cta-button1 {
+        $grad_color: #c678dd;
 
-    background: {
-      image: linear-gradient(45deg, $grad_color 50%, transparent 50%);
-      position: 100%;
-      size: 400%;
-    }
-    transition: background 300ms ease-in-out;
+        background: {
+            image: linear-gradient(45deg, $grad_color 50%, transparent 50%);
+            position: 100%;
+            size: 400%;
+        }
+        transition: background 300ms ease-in-out;
 
-    &:hover {
-      background-position: 0;
+        &:hover {
+            background-position: 0;
+        }
     }
-  }
 </style>

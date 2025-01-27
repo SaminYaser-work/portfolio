@@ -125,8 +125,7 @@ export const jobInfo = [
 
 export const educationInfo = [
     {
-        // icon: 'fa-solid:user-graduate',
-        icon: "ic:baseline-person",
+        icon: "fa-solid:user-graduate",
         title: "American International University - Bangladesh",
         subtitle: "BSc in Computer Science and Engineering",
         timeline: "2019-2023",
