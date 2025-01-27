@@ -1,6 +1,6 @@
 ---
 import DefaultLayout from '../layouts/DefaultLayout.astro'
-import { Icon } from 'astro-icon'
+import { Icon } from 'astro-icon/components';
 import {
   Accordion,
   AccordionItem,
@@ -16,7 +16,7 @@ import {
 
 <DefaultLayout title="Accessible Components">
   <section class="my-12">
-    <div class="space-content container">
+    <div class="container space-content">
       <h1>Accessible Components</h1>
       <p class="text-2xl">
         This theme has a lot of extra a11y components provided by the <a
@@ -25,7 +25,7 @@ import {
       </p>
     </div>
   </section>
-  <section class="mb-12 mt-32">
+  <section class="mt-32 mb-12">
     <div class="container">
       <div class="grid grid-cols-1 gap-32 md:grid-cols-2">
         <div class="space-content">

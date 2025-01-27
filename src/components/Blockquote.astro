@@ -1,35 +1,41 @@
 ---
-import {Icon} from "astro-icon";
+import { Icon } from "astro-icon/components";
 
 export interface Props {
-  type: "info" | "warning" | "success";
+    type: "info" | "warning" | "success";
 }
 
 const typeToIcon = {
-  info: "ic:baseline-info",
-  warning: "ic:baseline-warning",
-  success: "ic:baseline-check",
+    info: "ic:baseline-info",
+    warning: "ic:baseline-warning",
+    success: "ic:baseline-check",
 };
 
 const typeToColor = {
-  info: "oneblue",
-  warning: "onelightyellow",
-  success: "onegreen",
+    info: "oneblue",
+    warning: "onelightyellow",
+    success: "onegreen",
 };
 
-const {type} = Astro.props
+const { type } = Astro.props;
 ---
 
 <>
-<blockquote class={`border-l-4 border-dashed border-l-${typeToColor[type]}`}>
-  <Icon name={typeToIcon[type]} size="3rem" class={"text-" + typeToColor[type]} />
-    <slot class="!italic !text-sm !text-onegrey1" />
-</blockquote>
+    <blockquote
+        class={`border-l-4 border-dashed border-l-${typeToColor[type]}`}
+    >
+        <Icon
+            name={typeToIcon[type]}
+            size="3rem"
+            class={"text-" + typeToColor[type]}
+        />
+        <slot class="!italic !text-sm !text-onegrey1" />
+    </blockquote>
 </>
 
 <style lang="scss">
-  blockquote {
-    padding-left: 2rem;
-    margin-block: 3.5rem;
-  }
+    blockquote {
+        padding-left: 2rem;
+        margin-block: 3.5rem;
+    }
 </style>
