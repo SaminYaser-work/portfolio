@@ -66,7 +66,7 @@ const Dialog = ({ isOpen, onClose }: DialogProps) => {
             <div className="z-50 inline-block transform overflow-hidden rounded-lg bg-onegrey2 text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle">
               <div className="bg-onewhite px-4 pb-4 pt-5 dark:bg-onegrey2 sm:p-6 sm:pb-4">
                 <div className="flex flex-col items-center justify-center">
-                  <div className="mx-auto flex h-12 w-12 flex-shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
+                  <div className="mx-auto flex h-12 w-12 shrink-0 items-center justify-center rounded-full bg-blue-100 sm:mx-0 sm:h-10 sm:w-10">
                     {dialogContent.isError ? (
                       <svg
                         xmlns="http://www.w3.org/2000/svg"
@@ -103,7 +103,7 @@ const Dialog = ({ isOpen, onClose }: DialogProps) => {
                   <a
                     href={cv_alt_link}
                     target="_blank"
-                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-onegreen px-4 py-2 text-base font-bold !text-white !no-underline shadow-sm hover:bg-lime-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-onegreen px-4 py-2 text-base font-bold text-white! no-underline! shadow-sm hover:bg-lime-600 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                     onClick={onClose}
                   >
                     Try Alt. Link
@@ -111,7 +111,7 @@ const Dialog = ({ isOpen, onClose }: DialogProps) => {
                   <a
                     href={cv_mail_link}
                     target="_blank"
-                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-onemagenta px-4 py-2 text-base font-bold !text-white !no-underline shadow-sm hover:bg-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
+                    className="inline-flex w-full justify-center rounded-md border border-transparent bg-onemagenta px-4 py-2 text-base font-bold text-white! no-underline! shadow-sm hover:bg-violet-500 focus:outline-none focus:ring-2 focus:ring-violet-500 focus:ring-offset-2 sm:ml-3 sm:w-auto sm:text-sm"
                     onClick={openEmailLink}
                   >
                     Email me

@@ -13,7 +13,7 @@ const AnchorTag = ({ href, children }: { href: string; children: React.ReactNode
   >
     {cloneElement(children as React.ReactElement, {
       className:
-        'w-8 h-8 group-hover:scale-[0.8] transition-transform duration-500 ease-in-out fill-[color:var(--font-color)]',
+        'w-8 h-8 group-hover:scale-[0.8] transition-transform duration-500 ease-in-out fill-(--font-color)',
     })}
   </a>
 )

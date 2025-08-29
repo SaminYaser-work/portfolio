@@ -7,5 +7,6 @@ Live at: [https://yaser-dev.vercel.app/](https://yaser-dev.vercel.app/)
 
 ## TODO
 
-- Upgrade to Astro
-- Upgrade tailwindcss
+- [x] Upgrade to Astro
+- [x] Upgrade tailwindcss
+- Giscus dark mode

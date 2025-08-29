@@ -1,144 +1,139 @@
 ---
-import '@astrojs/tailwind/base.css'
-import '../assets/scss/globals.scss'
-import SiteMeta from '../components/SiteMeta.astro'
-import { SEOMetadata } from 'astro-seo-metadata';
-import Header from '../components/Header.astro'
-import Footer from '../components/Footer.tsx'
+import { SEOMetadata } from "astro-seo-metadata";
+import "../assets/global.css";
+import "../assets/scss/globals.scss";
+import Footer from "../components/Footer.tsx";
+import Header from "../components/Header.astro";
 import SocialSideBar from "../components/SocialSideBar/SocialSideBar";
 
 export interface Props {
-  title?: string
-  description?: string
-  url?: string
-  image?: string
-  author?: string
-  showFooter?: boolean
+    title?: string;
+    description?: string;
+    url?: string;
+    image?: string;
+    author?: string;
+    showFooter?: boolean;
 }
 
 const {
-  title = "Samin Yaser's Portfolio & Blog",
-  description = 'Samin Yaser is a software engineer and a tech enthusiast.',
-  url = 'https://yaser-dev.vercel.app',
-  image = '/social-preview-image.png',
-  author = 'Samin Yaser',
-  showFooter = true,
-} = Astro.props
+    title = "Samin Yaser's Portfolio & Blog",
+    description = "Samin Yaser is a software engineer and a tech enthusiast.",
+    url = "https://yaser-dev.vercel.app",
+    image = "/social-preview-image.png",
+    author = "Samin Yaser",
+    showFooter = true,
+} = Astro.props;
 ---
 
 <html lang="en" dir="ltr">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+        <meta http-equiv="X-UA-Compatible" content="ie=edge" />
 
-    <SEOMetadata
-    siteName={'Samin Yaser\'s Portfolio & Blog'}
-    title={title}
-    description={description}
-    image={image}
-    favicon={'/favicon2.svg'}
-    author={author}
-    copyright="ISC"
-    astroSitemap={true}
-    canonicalUrl={Astro.url.toString()}
-    type={'website'}
-    astroGenerator={true}
-  />
+        <SEOMetadata
+            siteName={"Samin Yaser's Portfolio & Blog"}
+            title={title}
+            description={description}
+            image={image}
+            favicon={"/favicon2.svg"}
+            author={author}
+            copyright="ISC"
+            astroSitemap={true}
+            canonicalUrl={Astro.url.toString()}
+            type={"website"}
+            astroGenerator={true}
+        />
 
-  
+        <slot name="in-head" />
+    </head>
+    <body>
+        <Header />
+        <main id="main-content">
+            <SocialSideBar client:media="(min-width: 1280px)" />
+            <slot />
+        </main>
+        {showFooter && <Footer client:visible />}
+        <style lang="scss" is:global>
+            // theme settings
+            :root {
+                --radius-small: 3px;
+                --radius-large: 6px;
+                --gap-default: 2rem;
+                --font-measure: 70ch;
+                /*--font-family-default: 'Open Sans', sans-serif;*/
+                /*--font-family-special: 'Open Sans', sans-serif;*/
+                // light theme
+                /*--font-color: var(--neutral-900);*/
+                /*--action-color: var(--primary-300);*/
+                /*--action-color-state: var(--primary-500);*/
+                /*--background: var(--neutral-100);*/
+                /*--primary-background: var(--primary-100);*/
+                /*--neutral-background: var(--neutral-200);*/
 
-    <slot name="in-head"/>
-  </head>
-  <body>
-    <Header />
-    <main id="main-content">
-      <SocialSideBar client:media="(min-width: 1280px)" />
-      <slot />
-    </main>
-    {
-      showFooter && <Footer client:visible/>
-    }
-    <style lang="scss" is:global>
-      // theme settings
-      :root {
-        --radius-small: 3px;
-        --radius-large: 6px;
-        --gap-default: 2rem;
-        --font-measure: 70ch;
-        /*--font-family-default: 'Open Sans', sans-serif;*/
-        /*--font-family-special: 'Open Sans', sans-serif;*/
-        // light theme
-        /*--font-color: var(--neutral-900);*/
-        /*--action-color: var(--primary-300);*/
-        /*--action-color-state: var(--primary-500);*/
-        /*--background: var(--neutral-100);*/
-        /*--primary-background: var(--primary-100);*/
-        /*--neutral-background: var(--neutral-200);*/
+                --font-color: var(--color-oneblack);
+                --action-color: var(--color-onemagenta);
+                --action-color-state: var(--primary-500);
+                --background: var(--neutral-100);
+                --primary-background: var(--primary-100);
+                --neutral-background: var(--neutral-200);
+            }
 
-        --font-color: theme(colors.oneblack);
-        --action-color: theme(colors.onemagenta);
-        --action-color-state: var(--primary-500);
-        --background: var(--neutral-100);
-        --primary-background: var(--primary-100);
-        --neutral-background: var(--neutral-200);
-      }
+            // dark color scheme overrides
+            .darkmode {
+                /*--font-color: var(--neutral-100);*/
+                /*--action-color: var(--secondary-100);*/
+                /*--action-color-state: var(--secondary-500);*/
+                /*--background: var(--dark-100);*/
+                /*--primary-background: var(--primary-500);*/
+                /*--neutral-background: var(--neutral-900);*/
 
-      // dark color scheme overrides
-      .darkmode {
-        /*--font-color: var(--neutral-100);*/
-        /*--action-color: var(--secondary-100);*/
-        /*--action-color-state: var(--secondary-500);*/
-        /*--background: var(--dark-100);*/
-        /*--primary-background: var(--primary-500);*/
-        /*--neutral-background: var(--neutral-900);*/
+                --font-color: var(--color-onewhite);
+                --action-color: var(--color-onecyan);
+                --action-color-state: var(--secondary-500);
+                --background: var(--color-oneblack);
+                --primary-background: var(--primary-500);
+                --neutral-background: var(--neutral-900);
+            }
 
-        --font-color: theme(colors.onewhite);
-        --action-color: theme(colors.onecyan);
-        --action-color-state: var(--secondary-500);
-        --background: theme(colors.oneblack);
-        --primary-background: var(--primary-500);
-        --neutral-background: var(--neutral-900);
-      }
+            // sticky footer on low content pages
+            html,
+            body {
+                height: 100%;
+                overflow-x: hidden;
+            }
 
-      // sticky footer on low content pages
-      html,
-      body {
-        height: 100%;
-        overflow-x: hidden;
-      }
+            body {
+                display: flex;
+                flex-direction: column;
+                color: var(--font-color);
+                background-color: var(--background);
 
-      body {
-        display: flex;
-        flex-direction: column;
-        color: var(--font-color);
-        background-color: var(--background);
+                main {
+                    flex: 1 0 auto;
+                }
 
-        main {
-          flex: 1 0 auto;
-        }
+                footer {
+                    flex-shrink: 0;
+                }
+            }
 
-        footer {
-          flex-shrink: 0;
-        }
-      }
+            pre {
+                padding: 1rem;
+                border-radius: 0.35rem;
+                border: 2px solid var(--action-color);
+            }
 
-      pre {
-        padding: 1rem;
-        border-radius: 0.35rem;
-        border: 2px solid var(--action-color);
-      }
+            body .pagination a {
+                &:hover,
+                &:focus-visible {
+                    background-color: var(--action-color-state);
 
-      body .pagination a {
-        &:hover,
-        &:focus-visible {
-          background-color: var(--action-color-state);
-
-          svg path {
-            stroke: white;
-          }
-        }
-      }
-    </style>
-  </body>
+                    svg path {
+                        stroke: white;
+                    }
+                }
+            }
+        </style>
+    </body>
 </html>

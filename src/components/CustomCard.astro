@@ -13,7 +13,7 @@ interface Props {
 const { url = '#', img = 'https://fakeimg.pl/640x360', title = 'Default title', footer = 'Your name' , tags} = Astro.props
 ---
 
-<a href={url} class="!no-underline">
+<a href={url} class="no-underline!">
 <div class="card">
   <div class="card__image">
     <Image src={img} alt="blog image" />
@@ -21,7 +21,7 @@ const { url = '#', img = 'https://fakeimg.pl/640x360', title = 'Default title', 
   <div class="card__content">
     <div class="flex flex-wrap gap-2 items-start">
       {tags && tags.map((tag) => (
-        <span class="!inline-block !bg-gray-200 !rounded-full !px-3 !py-1 !text-sm !font-semibold !text-gray-700 !mr-2 dark:!bg-slate-700 dark:!text-gray-100">
+        <span class="inline-block! bg-gray-200! rounded-full! px-3! py-1! text-sm! font-semibold! text-gray-700! mr-2! dark:bg-slate-700! dark:text-gray-100!">
           {tag}
         </span>
       ))}

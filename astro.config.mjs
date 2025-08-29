@@ -2,8 +2,8 @@
 
 import mdx from "@astrojs/mdx";
 import react from "@astrojs/react";
-import tailwind from "@astrojs/tailwind";
 import vercel from "@astrojs/vercel";
+import tailwindcss from "@tailwindcss/vite";
 import compress from "astro-compress";
 import icon from "astro-icon";
 import metaTags from "astro-meta-tags";
@@ -13,9 +13,6 @@ export default defineConfig({
     compressHTML: true,
     integrations: [
         mdx(),
-        tailwind({
-            applyBaseStyles: false,
-        }),
         compress(),
         react(),
         metaTags(),
@@ -29,6 +26,7 @@ export default defineConfig({
         }),
     ],
     vite: {
+        plugins: [tailwindcss()],
         ssr: {
             noExternal: ["react-icons"],
         },
