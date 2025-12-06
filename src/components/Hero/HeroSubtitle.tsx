@@ -2,12 +2,7 @@ import { useEffect, useRef } from "react";
 // @ts-ignore
 import styles from "./HeroSubtitle.module.css";
 
-const data = [
-    "Software Engineer",
-    "Web Developer",
-    "ML Researcher",
-    "Blockchain Developer",
-];
+const data = ["Software Engineer", "Full-stack Web Developer"];
 
 export default function Subtitle() {
     const ref = useRef<HTMLSpanElement>(null);

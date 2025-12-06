@@ -19,7 +19,7 @@ const {
 ---
 
 <div class="flex flex-col gap-4 feature">
-    <div class="content">
+    <div class="content space-y-4 px-4">
         <div class="flex items-start justify-start gap-5">
             <Icon class="self-center size-16" name={icon} />
             <div>
@@ -35,12 +35,11 @@ const {
                 </h6>
             </div>
         </div>
-        <p class="mt-5">
-            <slot
-                >Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic,
-                corporis.</slot
-            >
-        </p>
+
+        <slot
+            >Lorem ipsum dolor sit amet consectetur adipisicing elit. Hic,
+            corporis.</slot
+        >
         <div class="mt-5">
             {
                 skills.length > 0 && (

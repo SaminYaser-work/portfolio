@@ -55,9 +55,10 @@ export const jobInfo = [
         timeline: "November, 2023 - Present",
         description: [
             "Develop and deploy major updates and new features for the company's flagship product, PostX, enhancing functionality and user experience for more than 45K active users",
-            "Enhanced the React and PHP server performance of the WooCommerce based product, WowStore (Formerly ProductX) by 40% within the first 4 months of joining the team",
             'Spearheaded the design and development of "WowOptin", a wordpress plugin to generate lead and perform conversion optimization to help website owners grow their email lists and increase sales.',
-            "Updated the codebase to newer version of React, optimized and automated the build processes and enforced improved coding standards, significantly enhancing overall code quality and maintainability.",
+            'Played a key role in the development of "WowShipping", a WooCommerce extension that streamlines shipping processes for online stores, improving efficiency and customer satisfaction.',
+            "Enhanced the React and PHP server performance of the WooCommerce based product, WowStore (Formerly ProductX) by 40% within the first 4 months of joining the team",
+            "Updated the tech stack, optimized and automated the build processes via CICD pipeline and enforced improved coding standards, significantly enhancing overall code quality and maintainability.",
             "Conduct interviews and provide training for new recruits, ensuring they are well-integrated into the team and equipped with the necessary skills.",
             "Collaborate with the design team to implement visually appealing and intuitive interfaces.",
             "Troubleshoot and resolve issues while collaborating with the support team.",
@@ -70,7 +71,9 @@ export const jobInfo = [
             "Wordpress",
             "Woocommerce",
             "MySQL",
+            "MongoDB",
             "NGINX",
+            "Express",
             "NextJS",
             "Webpack",
             "Gulp",
@@ -160,6 +163,7 @@ export const skills = [
   'Bootstrap',
   'Laravel',
   'Spring Boot',
+  'Express',
   'Node.js',
   'Flask',
   'FastAPI',
@@ -173,26 +177,22 @@ export const skills = [
   'Numpy',
   'Pandas',
   'Matplotlib',
-  'Ethers.js',
-  'Hardhat',
-  'Truffle',
   'JavaScript',
   'TypeScript',
   'Java',
   'Python',
   'PHP',
-  'Solidity',
   'Git',
   'Docker',
   'Bash',
-  'Selenium',
 ]
 
 export const callToActionText =
-  "Although I'm currently not looking for new opportunities, feel free to reach out if you want to say hi."
+  "I'm currently looking for new opportunities. Whether you have a proposition or just want to say hi, I'll try my best to get back to you!"
 
 /*
   "I'm currently looking for new opportunities. Whether you have a proposition or just want to say hi, I'll try my best to get back to you!"
+  "Although I'm currently not looking for new opportunities, feel free to reach out if you want to say hi."
 
       'Write modern, performant, maintainable code for a HRM system that is used by more than 30K concurrent users daily.',
       'Work with a variety of different languages, platforms, frameworks, and IoT devices such as Sprint Boot, Laravel, AngularJS, DotNet Core, MQTT, etc.',

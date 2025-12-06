@@ -9,4 +9,11 @@ Live at: [https://yaser-dev.vercel.app/](https://yaser-dev.vercel.app/)
 
 - [x] Upgrade to Astro
 - [x] Upgrade tailwindcss
-- Giscus dark mode
+- [x] Giscus dark mode
+
+- Fix various style issues
+    - Spacing issues
+
+- Move home to root
+
+- Take ideas from here: https://docs.google.com/spreadsheets/d/1EGRT9yiERDnPuc_p3KzERbEKK_n4BeoqyxoTF6Sk6YQ/edit?gid=0#gid=0

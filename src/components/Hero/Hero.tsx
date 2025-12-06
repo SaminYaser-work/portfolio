@@ -51,10 +51,13 @@ export default function Hero() {
                         }}
                         target="_blank"
                         referrerPolicy="no-referrer"
-                        className="group relative mb-2 mr-2 mt-10 inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-onedarkred to-oneblue p-0.5 text-xl font-medium !text-oneblack no-underline! hover:text-white! focus:outline-none focus:ring-4 focus:ring-onelightred group-hover:from-onedarkred group-hover:to-oneblue dark:!text-onewhite dark:hover:!text-oneblack"
+                        className="group mt-10 relative inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-onedarkred to-oneblue p-0.5 text-xl font-medium !text-oneblack no-underline! hover:text-white! focus:outline-none focus:ring-4 focus:ring-onelightred group-hover:from-onedarkred group-hover:to-oneblue dark:!text-onewhite dark:hover:!text-oneblack"
                     >
-                        <span className="relative rounded-md bg-white px-5 py-2.5 transition-all duration-75 ease-in group-hover:bg-opacity-0 dark:bg-oneblack">
-                            Download Resume
+                        <span className="relative inline-flex overflow-hidden rounded-md">
+                            <span className="absolute inset-0 bg-gradient-to-br from-onedarkred to-oneblue opacity-0 transition-opacity duration-500 ease-out group-hover:opacity-100" />
+                            <span className="relative bg-white px-5 py-2.5 transition-colors duration-500 ease-out text-oneblack group-hover:bg-transparent group-hover:!text-white dark:bg-oneblack dark:text-onewhite">
+                                Download Resume
+                            </span>
                         </span>
                     </a>
                 </div>

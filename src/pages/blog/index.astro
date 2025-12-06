@@ -1,81 +1,75 @@
 ---
-import DefaultLayout from "../../layouts/DefaultLayout.astro";
+import { Breadcrumbs, BreadcrumbsItem } from "accessible-astro-components";
 import { getCollection } from "astro:content";
-import { Breadcrumbs, BreadcrumbsItem, Pagination } from "accessible-astro-components";
 import CustomCard from "../../components/CustomCard.astro";
+import DefaultLayout from "../../layouts/DefaultLayout.astro";
 
 let blogs = await getCollection("blog", (blog) => !blog.data.draft);
 
 blogs.sort(
-  (a, b) =>
-    Math.floor(new Date(b.data.date).getTime() / 1000) -
-    Math.floor(new Date(a.data.date).getTime() / 1000)
+    (a, b) =>
+        Math.floor(new Date(b.data.date).getTime() / 1000) -
+        Math.floor(new Date(a.data.date).getTime() / 1000)
 );
 ---
 
 <DefaultLayout
-  title="Blog"
-  description="An example of a blog with dynamic content fetched from JSONPlaceholder using the title, body and userId."
+    title="Blog"
+    description="An example of a blog with dynamic content fetched from JSONPlaceholder using the title, body and userId."
 >
-  <section class="my-12">
-    <div class="container">
-      <Breadcrumbs>
-        <BreadcrumbsItem
-          href="/"
-          label="Home"
-        />
-        <BreadcrumbsItem
-          href="/blog"
-          label="Blog"
-        />
-      </Breadcrumbs>
-    </div>
-  </section>
+    <section class="my-12">
+        <div class="container">
+            <Breadcrumbs>
+                <BreadcrumbsItem href="/" label="Home" />
+                <BreadcrumbsItem href="/blog" label="Blog" />
+            </Breadcrumbs>
+        </div>
+    </section>
 
-  <section class="my-12">
-    <div class="container">
-      <!--<p class="text-sm"><em>Post {page.start + 1} through {page.end + 1} of {page.total} total posts</em></p>-->
-      <h1 class="text-4xl font-bold mb-6">Blog Posts</h1>
-      <ul class="my-3">
-        {
-          blogs.map((blog) => (
-            <CustomCard
-              title={blog.data.title}
-              description={blog.data.description}
-              img={blog.data.image}
-              url={`/blog/${blog.slug}`}
-              tags={blog.data.tags}
-            />
-          ))
-        }
-      </ul>
-      <!--<div class="mt-12 grid place-content-center">-->
-      <!--    <Pagination-->
-      <!--            firstPage={page.url.prev ? '/blog' : null}-->
-      <!--            previousPage={page.url.prev ? page.url.prev : null}-->
-      <!--            nextPage={page.url.next ? page.url.next : null}-->
-      <!--            lastPage={page.url.next ? `/blog/${Math.round(page.total / page.size)}` : null}-->
-      <!--            currentPage={page.currentPage}-->
-      <!--            totalPages={Math.round(page.total / page.size)}-->
-      <!--    />-->
-      <!--</div>-->
-    </div>
-  </section>
+    <section class="my-12">
+        <div class="container">
+            <!--<p class="text-sm"><em>Post {page.start + 1} through {page.end + 1} of {page.total} total posts</em></p>-->
+            <h1 class="text-4xl font-bold mb-6">Blog Posts</h1>
+            <ul class="my-3">
+                {
+                    blogs.map((blog) => (
+                        <CustomCard
+                            title={blog.data.title}
+                            description={blog.data.description}
+                            img={blog.data.image}
+                            url={`/blog/${blog.slug}`}
+                            tags={blog.data.tags}
+                        />
+                    ))
+                }
+            </ul>
+            <!--<div class="mt-12 grid place-content-center">-->
+            <!--    <Pagination-->
+            <!--            firstPage={page.url.prev ? '/blog' : null}-->
+            <!--            previousPage={page.url.prev ? page.url.prev : null}-->
+            <!--            nextPage={page.url.next ? page.url.next : null}-->
+            <!--            lastPage={page.url.next ? `/blog/${Math.round(page.total / page.size)}` : null}-->
+            <!--            currentPage={page.currentPage}-->
+            <!--            totalPages={Math.round(page.total / page.size)}-->
+            <!--    />-->
+            <!--</div>-->
+        </div>
+    </section>
 </DefaultLayout>
 
 <style lang="scss">
-  ul {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-gap: 4rem;
+    ul {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-gap: 4rem;
 
-    @media (min-width: 550px) {
-      grid-template-columns: repeat(2, 1fr);
-      grid-gap: 2rem;
-    }
+        @media (min-width: 550px) {
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 2rem;
+        }
 
-    @media (min-width: 950px) {
-      grid-template-columns: repeat(3, 1fr);
+        @media (min-width: 950px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
     }
-  }
 </style>
