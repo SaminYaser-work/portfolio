@@ -2,7 +2,6 @@
 
 import { useState } from "react";
 import { cv_link } from "../../data.tsx";
-import Dialog from "../Dialog.tsx";
 import Subtitle from "./HeroSubtitle";
 
 export default function Hero() {
@@ -21,7 +20,7 @@ export default function Hero() {
         >
             <section className="flex h-screen flex-col items-center justify-center">
                 <div className="flex grow flex-col items-center justify-center gap-3">
-                    <h3 className="text-sm text-onegrey2 md:text-2xl lg:text-4xl">
+                    <div className="text-sm text-onegrey2 md:text-2xl lg:text-4xl">
                         <span>
                             &#47;&#47; <span className="not-italic">👋</span>
                             &nbsp;
@@ -29,9 +28,9 @@ export default function Hero() {
                                 Assasalamu Alaikum, I&apos;m
                             </span>
                         </span>
-                    </h3>
+                    </div>
                     <h1
-                        className="group text-center font-mono text-4xl font-bold md:text-8xl lg:text-9xl"
+                        className="group text-center font-mono text-4xl! font-bold md:text-6xl! lg:text-9xl!"
                         style={{ fontFamily: "JetBrains Mono Variable" }}
                     >
                         <span className="inline-block text-onelightyellow duration-200 ease-in-out group-hover:-translate-x-2 ">
@@ -45,11 +44,6 @@ export default function Hero() {
                     <Subtitle />
                     <a
                         href={cv_link}
-                        onClick={(e) => {
-                            e.preventDefault();
-                            setIsOpen(true);
-                        }}
-                        target="_blank"
                         referrerPolicy="no-referrer"
                         className="group mt-10 relative inline-flex cursor-pointer items-center justify-center overflow-hidden rounded-lg bg-gradient-to-br from-onedarkred to-oneblue p-0.5 text-xl font-medium !text-oneblack no-underline! hover:text-white! focus:outline-none focus:ring-4 focus:ring-onelightred group-hover:from-onedarkred group-hover:to-oneblue dark:!text-onewhite dark:hover:!text-oneblack"
                     >
@@ -62,7 +56,7 @@ export default function Hero() {
                     </a>
                 </div>
             </section>
-            <Dialog isOpen={isOpen} onClose={closeDialog} />
+            {/* <Dialog isOpen={isOpen} onClose={closeDialog} /> */}
         </div>
     );
 }

@@ -2,11 +2,6 @@
 
 ---
 
-<script is:inline>
-    const skipToHome = localStorage.getItem("first_load");
-    if (skipToHome) window.location.href = "/home";
-</script>
-
 <div id="container" class="hidden">
     <div id="terminal">
         <!-- Terminal Bar -->
@@ -48,43 +43,66 @@
 </div>
 
 <script>
-    const container = document.getElementById("container") as HTMLDivElement;
-    const text = "npm run dev";
-    const prompt = document.getElementById(
-        "terminal__prompt--text"
-    ) as HTMLSpanElement;
-    const cursor = document.getElementById(
-        "terminal__prompt--cursor"
-    ) as HTMLSpanElement;
-    const output1 = document.getElementById(
-        "terminal__body--output1"
-    ) as HTMLDivElement;
-    const output2 = document.getElementById(
-        "terminal__body--output2"
-    ) as HTMLDivElement;
-    container.style.display = "block";
-    (async function () {
-        await new Promise((resolve) => setTimeout(resolve, 500));
+    const showTerminal = () => {
+        const container = document.getElementById(
+            "container"
+        ) as HTMLDivElement;
+        const text = "npm run dev";
+        const prompt = document.getElementById(
+            "terminal__prompt--text"
+        ) as HTMLSpanElement;
+        const cursor = document.getElementById(
+            "terminal__prompt--cursor"
+        ) as HTMLSpanElement;
+        const output1 = document.getElementById(
+            "terminal__body--output1"
+        ) as HTMLDivElement;
+        const output2 = document.getElementById(
+            "terminal__body--output2"
+        ) as HTMLDivElement;
+        container.style.display = "block";
 
-        for (let i = 0; i < text.length; i++) {
-            await new Promise((resolve) => setTimeout(resolve, 140));
-            prompt.textContent += text[i];
-        }
-        await new Promise((resolve) => setTimeout(resolve, 800));
-        cursor.style.display = "none";
+        const fadeOutAndHide = () => {
+            const handleAnimationEnd = () => {
+                container.style.display = "none";
+                container.classList.remove("fade-out");
+                container.removeEventListener(
+                    "animationend",
+                    handleAnimationEnd
+                );
+            };
 
-        await new Promise((resolve) => setTimeout(resolve, 1000));
-        output1.classList.remove("hidden");
+            container.addEventListener("animationend", handleAnimationEnd);
+            container.classList.add("fade-out");
+        };
 
-        await new Promise((resolve) => setTimeout(resolve, 1200));
-        output2.classList.remove("hidden");
+        (async function () {
+            await new Promise((resolve) => setTimeout(resolve, 500));
 
-        await new Promise((resolve) => setTimeout(resolve, 2000));
-        container.style.animation = "fadeinout 1s linear forwards";
+            for (let i = 0; i < text.length; i++) {
+                await new Promise((resolve) => setTimeout(resolve, 140));
+                prompt.textContent += text[i];
+            }
+            await new Promise((resolve) => setTimeout(resolve, 800));
+            cursor.style.display = "none";
 
-        localStorage.setItem("first_load", "true");
-        window.location.href = "/home";
-    })();
+            await new Promise((resolve) => setTimeout(resolve, 1000));
+            output1.classList.remove("hidden");
+
+            await new Promise((resolve) => setTimeout(resolve, 1200));
+            output2.classList.remove("hidden");
+
+            await new Promise((resolve) => setTimeout(resolve, 2000));
+            fadeOutAndHide();
+            localStorage.setItem("yaserbd_show_intro", "true");
+        })();
+    };
+
+    const skipToHome = localStorage.getItem("yaserbd_show_intro");
+
+    if (!skipToHome) {
+        showTerminal();
+    }
 </script>
 
 <style type="text/css">
@@ -198,6 +216,10 @@
         animation: blink 600ms linear infinite;
     }
 
+    .fade-out {
+        animation: fadeout 0.8s ease forwards;
+    }
+
     @keyframes blink {
         0% {
             background: #ffffff;
@@ -216,13 +238,12 @@
         }
     }
 
-    @keyframes fadeinout {
-        50% {
+    @keyframes fadeout {
+        0% {
             opacity: 1;
         }
         100% {
             opacity: 0;
-            display: none;
         }
     }
 

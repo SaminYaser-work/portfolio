@@ -35,8 +35,6 @@ if (!post) {
 
 const { Content, headings } = await post.render();
 
-console.log(headings);
-
 const readingTime = Math.ceil(post.body.trim().split(/\s+/).length / WPM);
 ---
 
@@ -74,7 +72,7 @@ const readingTime = Math.ceil(post.body.trim().split(/\s+/).length / WPM);
         </article>
 
         <div class="container mt-16!">
-            <div class="flex flex-col justify-center align-middle">
+            <div class="flex flex-col justify-center align-middle gap-8">
                 <ShareButtons client:only="react" title={post.data.title} />
 
                 <Comments client:only="react" />

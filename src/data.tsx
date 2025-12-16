@@ -5,7 +5,8 @@ import { TfiLinkedin } from 'react-icons/tfi'
 
 const iconSize = 30
 
-export const cv_link = 'https://drive.google.com/file/d/1rk1Gz1D9vmN2NfAGTafvFaSg_gU3FRkE/view?usp=sharing'
+export const cv_link =
+    "https://www.dropbox.com/scl/fi/czn06wzq0h30v0l9qvrr1/Samin-Yaser.pdf?rlkey=5igim5u3gj4aztcccitex6kfh&st=ukhvvz7e&dl=1";
 export const gh = 'https://github.com/SaminYaser-work'
 
 export const resumeHover = 'Download My Resume'

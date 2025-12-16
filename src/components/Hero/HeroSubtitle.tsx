@@ -1,3 +1,5 @@
+/** @format */
+
 import { useEffect, useRef } from "react";
 // @ts-ignore
 import styles from "./HeroSubtitle.module.css";
@@ -51,17 +53,17 @@ export default function Subtitle() {
     }, []);
 
     return (
-        <h2 className="text-lg font-bold text-center text-md md:text-2xl lg:text-4xl">
+        <div className="font-bold text-center text-sm md:text-2xl lg:text-4xl mt-3">
             <div>
                 <span className="text-onelightred">console</span>.
                 <span className="text-oneblue">log</span>(
                 <span className={"text-onegreen"}>
-          &ldquo;
+                    &ldquo;
                     <span ref={ref} className={styles.cursor}></span>
                     &rdquo;
-        </span>
+                </span>
                 );
             </div>
-        </h2>
+        </div>
     );
 }
