@@ -1,0 +1,39 @@
+/** @format */
+
+/* Tailwind CSS v4 entrypoint */
+@import "tailwindcss";
+@plugin "@tailwindcss/typography";
+
+/* Recreate custom dark mode selector that previously existed in tailwind.config.js (darkMode: ['class', '.darkmode']) */
+@custom-variant dark (&:where(.dark, .dark *), &:where(.darkmode, .darkmode *));
+
+/* Define design tokens using the new @theme layer (Tailwind v4) */
+@theme {
+    --color-oneblack: #282c34;
+    --color-onewhite: #abb2bf;
+    --color-onelightred: #e06c75;
+    --color-onedarkred: #be5046;
+    --color-onegreen: #98c379;
+    --color-onelightyellow: #e5c07b;
+    --color-onedarkyellow: #d19a66;
+    --color-oneblue: #61afef;
+    --color-onemagenta: #c678dd;
+    --color-onecyan: #56b6c2;
+    --color-onegrey1: #4b5263;
+    --color-onegrey2: #5c6370;
+}
+
+/* Optional: map legacy custom properties (used in layout) to Tailwind theme colors */
+:root {
+    /* Light theme defaults */
+    --color-font-light: var(--color-oneblack);
+    --color-action-light: var(--color-onemagenta);
+    --color-action-dark: var(--color-onecyan);
+    --color-bg-dark: var(--color-oneblack);
+    --color-font-dark: var(--color-onewhite);
+}
+
+/* Support existing .darkmode class for dark mode (Tailwind v4 prefers media or class strategies) */
+.darkmode {
+    color-scheme: dark;
+}

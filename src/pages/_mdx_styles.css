@@ -1,39 +1,18 @@
-/*article {*/
-/*    @apply prose md:prose-xl xl:prose-2xl dark:prose-invert !container*/
-/*}*/
+/** @format */
 
-h2, h3, h4, h5, h6 {
-    @apply mt-10 mb-3 prose dark:prose-invert md:prose-xl lg:prose-2xl text-onemagenta
-}
+@reference "../assets/global.css";
 
-a {
-    @apply outline-2 outline-offset-1 focus-visible:no-underline focus-visible:outline-dashed;
-}
-
-
-p, ul, li {
-    @apply prose md:prose-xl lg:prose-2xl dark:prose-invert text-justify
-}
-
-p, ul, li {
-    max-width: 100% !important;
-}
+/* a {
+    @apply focus:outline-2 outline-offset-1 focus-visible:no-underline focus-visible:outline-dashed;
+} */
 
 article li::before {
-    content: '➤ ';
-    color: theme('colors.onemagenta');
+    content: "➤ ";
+    color: var(--color-onemagenta);
 }
 
 pre {
-    @apply my-5
-}
-
-code {
-    @apply prose md:prose-xl lg:prose-2xl dark:prose-invert
-}
-
-img {
-    @apply prose md:prose-xl lg:prose-2xl mx-auto rounded-sm md:rounded-md
+    @apply my-5;
 }
 
 li > p {
@@ -41,30 +20,32 @@ li > p {
 }
 
 blockquote p {
-    @apply !italic !text-gray-500 dark:!text-gray-400
+    @apply !italic !text-gray-500 dark:!text-gray-400;
 }
 
 table {
-    @apply table-auto border-collapse border border-gray-200 dark:border-gray-700
+    @apply table-auto border-collapse border border-gray-200 dark:border-gray-700;
 }
 
-th, td {
-    @apply border border-gray-200 dark:border-gray-700 px-4 py-2
+th,
+td {
+    @apply border border-gray-200 dark:border-gray-700 px-4 py-2;
 }
 
 th {
-    @apply bg-gray-50 dark:bg-onegrey1
+    @apply bg-gray-50 dark:bg-onegrey1;
 }
 
 td {
-    @apply bg-gray-100 dark:bg-gray-900
+    @apply bg-gray-100 dark:bg-gray-900;
 }
 
 /* Katex fix */
-html, body {
+html,
+body {
     height: auto;
 }
 
 #latex-eq {
-    @apply text-2xl my-5
+    @apply text-2xl my-5;
 }

@@ -1,13 +1,23 @@
 ---
 import "@fontsource-variable/jetbrains-mono";
-import DefaultLayout from "../layouts/DefaultLayout.astro";
-import Home from "./home/home.astro";
+import Hero from "../../components/Hero/Hero";
+
+import CallToAction from "../../components/CallToAction.astro";
+import AboutMe from "./_about-me.astro";
+import LatestPosts from "./_blogs.astro";
+import Experience from "./_experience.astro";
+import Projects from "./_projects.astro";
 ---
 
-<DefaultLayout title="Home">
-    <!-- <Terminal /> -->
-    <Home />
-</DefaultLayout>
+<Hero client:load />
+
+<AboutMe />
+<Experience />
+<!-- <Education /> -->
+
+<Projects />
+<LatestPosts />
+<CallToAction />
 
 <style lang="scss" is:global>
     .cta-button1 {

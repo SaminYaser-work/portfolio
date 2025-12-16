@@ -1,95 +1,105 @@
 ---
-import DefaultLayout from '@/layouts/DefaultLayout.astro'
-import { getCollection, getEntry } from 'astro:content'
-import type { CollectionEntry } from 'astro:content'
-import { Breadcrumbs, BreadcrumbsItem } from 'accessible-astro-components'
-import ShareButtons from '@/components/ShareButtons.tsx'
-import '@/pages/_mdx_styles.css'
-import Comments from '@/components/Comments.tsx'
-import { WPM } from '@/utils/constants'
+import DefaultLayout from "@/layouts/DefaultLayout.astro";
+import { getCollection, getEntry } from "astro:content";
+import type { CollectionEntry } from "astro:content";
+import { Breadcrumbs, BreadcrumbsItem } from "accessible-astro-components";
+import ShareButtons from "@/components/ShareButtons.tsx";
+import "@/pages/_mdx_styles.css";
+import Comments from "@/components/Comments.tsx";
+import { WPM } from "@/utils/constants";
 
-export const prerender = true
+export const prerender = true;
 
 export async function getStaticPaths({ paginate }) {
-  const allBlogPosts = await getCollection('blog')
-  return allBlogPosts.map((post) => ({
-    params: {
-      slug: post.slug,
-    },
-    props: {
-      post: post,
-    },
-  }))
+    const allBlogPosts = await getCollection("blog");
+    return allBlogPosts.map((post) => ({
+        params: {
+            slug: post.slug,
+        },
+        props: {
+            post: post,
+        },
+    }));
 }
 
 export interface Props {
-  post: CollectionEntry<'blog'>
+    post: CollectionEntry<"blog">;
 }
 
-const { slug } = Astro.params
-const post = await getEntry('blog', slug)
+const { slug } = Astro.params;
+const post = await getEntry("blog", slug);
 
 if (!post) {
-  return Astro.redirect('/404')
+    return Astro.redirect("/404");
 }
 
-const { Content } = await post.render()
+const { Content } = await post.render();
 
-const readingTime = Math.ceil(post.body.trim().split(/\s+/).length / WPM)
+const readingTime = Math.ceil(post.body.trim().split(/\s+/).length / WPM);
 ---
 
-<DefaultLayout title={post.data.title} description={post.data.description} image={post.data.image.src}>
-  <section class="my-12">
-    <div class="container">
-      <Breadcrumbs>
-        <BreadcrumbsItem href="/" label="Home" />
-        <BreadcrumbsItem href="/blog" label="Blog" />
-        <BreadcrumbsItem currentPage={true} label={post.slug} />
-      </Breadcrumbs>
-    </div>
-  </section>
-  <article class="container my-12">
-    <Content
-      date={post.data.date.toLocaleDateString('en-US', {
-        weekday: 'long',
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-      })}
-      data={post.data}
-      time={readingTime}
-    />
-  </article>
+<div class="blog-container">
+    <DefaultLayout
+        title={post.data.title}
+        description={post.data.description}
+        image={post.data.image.src}
+    >
+        <section class="my-12">
+            <div class="container">
+                <Breadcrumbs>
+                    <BreadcrumbsItem href="/" label="Home" />
+                    <BreadcrumbsItem href="/blog" label="Blog" />
+                    <BreadcrumbsItem currentPage={true} label={post.slug} />
+                </Breadcrumbs>
+            </div>
+        </section>
+        <article
+            class="container prose md:prose-xl lg:prose-2xl prose-headings:text-onemagenta dark:prose-invert prose-img:rounded-sm prose-img:md:rounded-md"
+        >
+            <Content
+                date={post.data.date.toLocaleDateString("en-US", {
+                    weekday: "long",
+                    year: "numeric",
+                    month: "long",
+                    day: "numeric",
+                })}
+                data={post.data}
+                time={readingTime}
+            />
+        </article>
 
-  <div class="container !mt-16">
-    <div class="flex flex-col justify-center align-middle">
-      <ShareButtons client:only="react" title={post.data.title} />
+        <div class="container mt-16!">
+            <div class="flex flex-col justify-center align-middle gap-8">
+                <ShareButtons client:only="react" title={post.data.title} />
 
-      <Comments client:only="react" />
-    </div>
-  </div>
-</DefaultLayout>
+                <Comments client:only="react" />
+            </div>
+        </div>
+    </DefaultLayout>
+</div>
 
 <style lang="scss">
-  ul {
-    display: grid;
-    grid-template-columns: 1fr;
-    grid-gap: 4rem;
+    ul {
+        display: grid;
+        grid-template-columns: 1fr;
+        grid-gap: 4rem;
 
-    @media (min-width: 550px) {
-      grid-template-columns: repeat(2, 1fr);
-      grid-gap: 2rem;
-    }
+        @media (min-width: 550px) {
+            grid-template-columns: repeat(2, 1fr);
+            grid-gap: 2rem;
+        }
 
-    @media (min-width: 950px) {
-      grid-template-columns: repeat(3, 1fr);
+        @media (min-width: 950px) {
+            grid-template-columns: repeat(3, 1fr);
+        }
     }
-  }
 </style>
 
 <script>
-  document.addEventListener('DOMContentLoaded', () => {
-    const links = Array.from(document.querySelectorAll('article a')) as HTMLAnchorElement[]
-    links.forEach((link) => (link.target = '_blank'))
-  })
+    document.addEventListener("DOMContentLoaded", () => {
+        const links = Array.from(
+            document.querySelectorAll("article a")
+        ) as HTMLAnchorElement[];
+        links.forEach((link) => (link.target = "_blank"));
+    });
 </script>
