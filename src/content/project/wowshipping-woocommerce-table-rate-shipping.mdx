@@ -1,0 +1,145 @@
+---
+title: 'WowShipping: A WooCommerce Table Rate Shipping Plugin with Live Rates'
+date: '2026-07-10'
+draft: false
+description: 'How I built WowShipping, a WooCommerce table rate shipping plugin with conditional pricing, seven carrier integrations, and 3D box packing.'
+bbUrl: 'https://bitbucket.org/wpstabon/table-rate-shipping/src/master/'
+wpUrl: 'https://wordpress.org/plugins/wow-table-rate-shipping/'
+liveUrl: 'https://tastewp.com/plugin/wow-table-rate-shipping'
+tags: ['WooCommerce', 'WordPress', 'PHP', 'React', 'API Integration']
+image: /src/assets/img/project/wowshipping/wowshipping-cover.png
+featured: false
+---
+
+import PostMetadata from '../../components/PostMetadata.astro'
+import ImageWithCaption from '../../components/ImageWithCaption.astro'
+import hero from '../../assets/img/project/wowshipping/wowshipping-cover.png'
+import rateRules from '../../assets/img/project/wowshipping/table-rate-rules.png'
+import conditions from '../../assets/img/project/wowshipping/shipping-conditions.png'
+import carrierRates from '../../assets/img/project/wowshipping/live-carrier-rates.png'
+import boxPackerFlow from '../../assets/img/project/wowshipping/boxpacker-flow.png'
+
+# {props.data.title}
+
+<PostMetadata
+  time={props.time}
+  date={props.date}
+  description={props.data.description}
+  bbUrl={props.data.bbUrl}
+  wpUrl={props.data.wpUrl}
+/>
+
+<ImageWithCaption
+  src={hero}
+  alt="WowShipping table rate example comparing shipping costs by country and weight with carrier integrations"
+  caption="WowShipping combines conditional table rates with live shipping services from major carriers."
+/>
+
+## Project overview
+
+I built WowShipping at WPXPO as a complete shipping engine for WooCommerce stores that have outgrown one flat delivery charge. A merchant can price shipping from cart weight, quantity, order value, destination, products, customer details, or time-based rules. When a table cannot model the real cost, the same checkout flow can request live rates from seven carriers.
+
+Almost 600 stores actively use the plugin, and its 17 WordPress.org reviews are all five stars. Behind those numbers is a system that spans a React administration app, a PHP rule and pricing engine, WooCommerce checkout integration, carrier APIs, package calculation, analytics, and automated releases.
+
+The engineering problem was larger than a settings form. Shipping logic has to produce the same answer across the cart, checkout, WooCommerce shipping zones, coupons, taxes, product variations, and third-party cart interfaces. Carrier quotes add credentials, network failures, package dimensions, currency, caching, and provider-specific APIs to that path. I designed and implemented the plugin across that full request lifecycle.
+
+## What WowShipping supports
+
+The product currently brings four shipping method types into one rule editor:
+
+- flexible table rates with fixed, incremental, or base-plus-additional pricing;
+- flat rates, including WooCommerce-style quantity and percentage expressions;
+- conditional free shipping;
+- live carrier rates from Australia Post, Canada Post, DHL Express, FedEx, Sendle, UPS, and USPS.
+
+WowShipping has more than 30 conditions across cart, product, customer, location, date, and time data. A rate can combine up to three conditions, while method-level display rules can group conditions with AND and OR logic. Merchants can also add handling fees, taxes, estimated delivery times, user visibility rules, carrier markups, and a fallback price for API failures.
+
+<ImageWithCaption
+  src={rateRules}
+  alt="WowShipping table rate editor with multiple condition rows and shipping costs"
+  caption="Each rate tier connects checkout data to a price, while the method controls how matching tiers are combined."
+/>
+
+This breadth matters because real shipping policies rarely depend on one field. A store may charge a fixed rate for the first five kilograms, add a fee for each kilogram after that, restrict the method to a destination, and hide it for a particular shipping class. WowShipping keeps those decisions in one visual rule instead of scattering them across snippets and separate plugins.
+
+## Designing the WooCommerce table rate shipping engine
+
+I separated condition resolution from comparison. The resolver turns the current WooCommerce context into typed values: cart totals become numbers, products and categories become collections, customer roles become strings, and date rules use the store's timezone. A second step applies the operator, such as equal, contains, greater than, or between.
+
+That split made the engine easier to extend. Adding a new condition does not require rewriting every pricing method. It also handles differences that a generic comparator would miss. A cart-weight rule compares one aggregate number, while a product-weight rule tests the relevant line items. Coupons need both the applied codes and whether any coupon grants free shipping. Time windows need to handle ranges that cross midnight.
+
+Condition groups preserve the merchant's intended logic. Conditions inside a group can use AND or OR, and groups can be combined into larger expressions. The same evaluator is reused by table-rate tiers, method display rules, free-shipping eligibility, and the Modern Cart integration.
+
+<ImageWithCaption
+  src={conditions}
+  alt="WowShipping interface listing cart, product, customer, location, and time-based shipping conditions"
+  caption="The condition model covers checkout totals, item properties, customer data, destinations, and store-time rules."
+/>
+
+Once a tier matches, the calculation layer supports three practical cost models:
+
+1. a fixed amount;
+2. an incremental amount for every unit of weight, quantity, price, or another supported value;
+3. a base amount for an initial range plus an additional charge for each later step.
+
+When several tiers match, the method can sum them or select the highest, lowest, first, or last result. Special actions can stop evaluation or deny the method. The final WooCommerce rate carries the label, cost, tax behavior, description, delivery estimate, rule ID, and rate metadata needed by checkout and analytics.
+
+## Normalizing seven carrier integrations
+
+Carrier APIs disagree on authentication, address formats, units, service codes, response shapes, and error behavior. I kept those differences behind a shared carrier interface. The checkout path creates a common shipment request, selects a provider adapter, and receives normalized rate objects.
+
+The flow is:
+
+1. read shippable WooCommerce items and apply configured defaults when weight or dimensions are missing;
+2. convert the cart into one or more packages;
+3. build a provider-neutral shipment request with origin, destination, currency, and declared values;
+4. call the selected carrier adapter;
+5. normalize provider responses into service name, cost, currency, delivery time, and diagnostic metadata;
+6. apply a fixed or percentage markup before adding the rate to WooCommerce.
+
+<ImageWithCaption
+  src={carrierRates}
+  alt="WowShipping live carrier rate settings with carrier selection, package details, markup, and fallback controls"
+  caption="Carrier settings combine provider credentials, packing strategy, selected services, markup, and failure behavior."
+/>
+
+The live-rate manager protects checkout from unnecessary network work. Its cache key includes the carrier, method, and a hash of the shipment request. The checkout integration uses a 60-second transient, and a cache-generation counter can invalidate existing entries when settings change. Debug mode bypasses the cache so an administrator can inspect fresh requests and provider errors.
+
+Failure behavior is explicit. If an API returns no usable quote, a merchant can hide the method or use a configured fixed or percentage fallback rate. Carrier logs go through WooCommerce's logger and are visible only when debug mode is enabled for an administrator or shop manager. Credentials are stored in non-autoloaded WordPress options and masked when represented for diagnostics.
+
+## Publishing BoxPackerLite for package calculation
+
+A carrier does not quote a cart; it quotes packages. WowShipping has four packing strategies:
+
+- one package per item;
+- a single combined package;
+- weight-limited packages;
+- custom boxes with three-dimensional packing.
+
+Custom boxes needed a real bin-packing algorithm, but the available library was heavier than I wanted for a commercial WordPress plugin and did not fit my PHP 7.4 compatibility target. I forked Doug Wright's BoxPacker, removed the test, documentation, and logging dependencies from the distributed package, made the complete library compatible with PHP 7.4, and published it as [`saminyaser/boxpackerlite`](https://packagist.org/packages/saminyaser/boxpackerlite). The [source is available on GitHub](https://github.com/SaminYaser-work/BoxPackerLite).
+
+The Composer package installs with `composer require saminyaser/boxpackerlite`. It has no runtime package dependency beyond `ext-json` and handles the four-dimensional version of the packing problem: three physical dimensions plus weight. The solver tests valid item orientations, builds stable layers, supports items that must stay flat, and redistributes weight across multiple boxes.
+
+<ImageWithCaption
+  src={boxPackerFlow}
+  alt="Flow diagram showing WooCommerce items entering BoxPackerLite and leaving as carrier-ready packed boxes"
+  caption="WowShipping adapts cart dimensions and weights for BoxPackerLite, then converts the packed result into carrier-ready package objects."
+/>
+
+I integrated the package behind adapters for WowShipping's item and box data transfer objects. The adapter converts WooCommerce dimensions from centimetres to millimetres and weights from kilograms to grams, subtracts configured padding from each box's internal dimensions, expands product quantities into packable items, and respects each box's maximum weight.
+
+After packing, the adapter converts the result back into WowShipping packages. It restores product quantities, includes the empty box weight, preserves declared values, and sends the selected outer box dimensions to the carrier. This avoids quoting every cart as one oversized package and gives each carrier API a package shape that matches the merchant's actual boxes.
+
+## Production work beyond rate calculation
+
+The admin interface is a React application built with `@wordpress/scripts`, WordPress data-view components, Tailwind CSS, and Chart.js. PHP REST endpoints supply searchable products, categories, coupons, users, roles, attributes, locations, settings, and analytics. Administrative routes check for WordPress or WooCommerce management capabilities.
+
+WowShipping also records the shipping rule attached to an order. Its analytics endpoints expose order logs, average shipping cost over a selected period, and rule usage percentages. That makes a shipping configuration inspectable after checkout rather than treating the selected rate as a black box.
+
+The release process packages the plugin and deploys tagged builds to the WordPress.org SVN repository through Bitbucket Pipelines. That closes the path from development to the public plugin without a separate manual packaging process.
+
+## Conclusion
+
+WowShipping is a complete checkout pricing system built around table rates. The difficult part was not adding more condition fields. It was keeping rule evaluation, package construction, carrier APIs, failures, taxes, coupons, and WooCommerce compatibility consistent in the same request path.
+
+I designed the full path: the React administration experience, PHP condition and pricing engine, WooCommerce rate output, live carrier integrations, caching and fallbacks, analytics, release automation, and the BoxPackerLite Composer package used for custom-box calculation. The result is a shipping engine that can model detailed store policies locally and reach external carriers when a rule table is not enough.
