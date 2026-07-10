@@ -5,18 +5,20 @@ interface Props {
   url?: string
   img?: string
   title?: string
+  imageAlt?: string
   footer: string
   tags?: string[]
   children?: HTMLElement | HTMLElement[]
 }
 
-const { url = '#', img = 'https://fakeimg.pl/640x360', title = 'Default title', footer = 'Your name' , tags} = Astro.props
+const { url = '#', img = 'https://fakeimg.pl/640x360', title = 'Default title', footer = 'Your name', tags } = Astro.props
+const imageAlt = Astro.props.imageAlt ?? `${title} cover image`
 ---
 
 <a href={url} class="no-underline!">
 <div class="card">
   <div class="card__image">
-    <Image src={img} alt="blog image" />
+    <Image src={img} alt={imageAlt} />
   </div>
   <div class="card__content">
     <div class="flex flex-wrap gap-2 items-start">

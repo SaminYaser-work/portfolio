@@ -28,7 +28,7 @@ export default function SocialSideBar() {
                 href={item.link}
                 target="_blank"
                 rel="noreferrer"
-                aria-label={item.hover}
+                aria-label={item.label}
                 className={'duration-300 ease-in-out hover:text-oneblue'}
                 onClick={(e) => {
                   if (item.hover === resumeHover) {

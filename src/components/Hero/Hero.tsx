@@ -25,7 +25,7 @@ export default function Hero() {
                             &#47;&#47; <span className="not-italic">👋</span>
                             &nbsp;
                             <span className={"font-mono italic"}>
-                                Assasalamu Alaikum, I&apos;m
+                                Assalamu Alaikum, I&apos;m
                             </span>
                         </span>
                     </div>

@@ -19,6 +19,7 @@ export default function Footer() {
                   href={item.link}
                   target="_blank"
                   rel="noreferrer"
+                  aria-label={item.label}
                   className="text-2xl text-onewhite hover:text-oneblue"
                 >
                   {item.icon}

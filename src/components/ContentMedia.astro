@@ -2,6 +2,7 @@
 import {Image} from 'astro:assets'
 
 const { imgSrc, reverseImg = false, url = '#', title = 'Title goes here', tags } = Astro.props
+const imageAlt = Astro.props.imageAlt ?? `${title} project preview`
 // {reverseImg ? <Media class="rounded-lg" src={imgSrc} /> : ''}
 ---
 
@@ -9,7 +10,7 @@ const { imgSrc, reverseImg = false, url = '#', title = 'Title goes here', tags }
   {
     !reverseImg ? (
       <a href={url} class="justify-self-center self-center no-underline!">
-        <Image src={imgSrc} alt="" />
+        <Image src={imgSrc} alt={imageAlt} />
       </a>
     ) : (
       ''

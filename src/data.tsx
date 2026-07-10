@@ -16,26 +16,31 @@ export const getSocialLinks = (iconSize: number) => [
     icon: <SiMaildotru size={iconSize} />,
     link: 'mailto:saminyaserwork@gmail.com?Body=Dear%20Samin%2C',
     hover: 'Contact Me via Email',
+    label: 'Email Samin Yaser',
   },
   {
     icon: <FaRegAddressBook size={iconSize} />,
     link: cv_link,
     hover: resumeHover,
+    label: 'Download Samin Yaser resume',
   },
   {
     icon: <TfiLinkedin size={iconSize} />,
     link: 'https://www.linkedin.com/in/realsaminyaser/',
     hover: 'Connect with Me',
+    label: 'View Samin Yaser on LinkedIn',
   },
   {
     icon: <FaGithub size={iconSize} />,
     link: gh,
     hover: 'Check Out My Work',
+    label: 'View Samin Yaser on GitHub',
   },
   {
     icon: <RiTwitterXFill size={iconSize} />,
     link: 'https://twitter.com/RealSaminYaser',
     hover: 'Follow Me',
+    label: 'View Samin Yaser on X',
   },
 ]
 
@@ -56,10 +61,10 @@ export const jobInfo = [
         timeline: "November, 2023 - Present",
         description: [
             "Develop and deploy major updates and new features for the company's flagship product, PostX, enhancing functionality and user experience for more than 45K active users",
-            'Spearheaded the design and development of "WowOptin", a wordpress plugin to generate lead and perform conversion optimization to help website owners grow their email lists and increase sales.',
+            'Spearheaded the design and development of "WowOptin", a WordPress plugin for lead generation and conversion optimization, helping website owners grow their email lists and increase sales.',
             'Played a key role in the development of "WowShipping", a WooCommerce extension that streamlines shipping processes for online stores, improving efficiency and customer satisfaction.',
             "Enhanced the React and PHP server performance of the WooCommerce based product, WowStore (Formerly ProductX) by 40% within the first 4 months of joining the team",
-            "Updated the tech stack, optimized and automated the build processes via CICD pipeline and enforced improved coding standards, significantly enhancing overall code quality and maintainability.",
+            "Updated the tech stack, optimized and automated the build processes via a CI/CD pipeline, and enforced improved coding standards, significantly enhancing overall code quality and maintainability.",
             "Conduct interviews and provide training for new recruits, ensuring they are well-integrated into the team and equipped with the necessary skills.",
             "Collaborate with the design team to implement visually appealing and intuitive interfaces.",
             "Troubleshoot and resolve issues while collaborating with the support team.",
@@ -69,7 +74,7 @@ export const jobInfo = [
             "TypeScript",
             "Sass",
             "ReactJS",
-            "Wordpress",
+            "WordPress",
             "Woocommerce",
             "MySQL",
             "MongoDB",
@@ -89,7 +94,7 @@ export const jobInfo = [
         timeline: "May, 2023 - October, 2023",
         description: [
             "Write modern, performant, maintainable code for a HRM system that is used by more than 30K concurrent users daily.",
-            "Work with a variety of different languages, platforms, frameworks, and IoT-related technologies such as Sprint Boot, Laravel, AngularJS, Apache Kafka, MQTT, etc.",
+            "Work with a variety of languages, platforms, frameworks, and IoT-related technologies such as Spring Boot, Laravel, AngularJS, Apache Kafka, and MQTT.",
             "Gather a deep understanding of system architecture, leading the effort to create comprehensive system documentation and deployment on remote servers.",
             "Successfully identified and eliminated bottlenecks in critical workflows and Implemented database optimizations, reducing query response times by 86% and improving overall system performance",
             "Solely responsible for the first integration of Face Recognition attendance device, FastFace, used by thousands of people everyday, making it the companies best-selling product.",
@@ -149,7 +154,7 @@ export const educationInfo = [
 ];
 
 export const aboutMe = `
-I'm Samin Yaser, a devoted and enthusiastic full-stack web developer with a creative mind and a strong dedication to transforming ideas into wonderfully functional websites and applications. My web development adventure began when I started my study for Computer Science degree. Since then, I've been on a never-ending drive to broaden my knowledge and improve my talents. I've had the pleasure of working on a wide range of projects, all of which have contributed to my development as a developer. Travelling on the path of the world of technology, my unquenchable curiosity drove me to investigate the fascinating worlds of machine learning and deep learning. This path into artificial intelligence has opened up new possibilities for me, allowing me to work on projects that use data-driven insights to construct intelligent, predictive systems. At the same time, the disruptive potential of blockchain and Web3 technologies piqued my interest. I saw their potential to decentralise, secure, and change businesses. This realisation drove me to enter the world of blockchain development, where I've been actively involved in the design and deployment of blockchain solutions. In my free time, I enjoy learning about new technologies. I also enjoy reading books about Computer Science and Islamic history and sciences.
+I'm Samin Yaser, a devoted and enthusiastic full-stack web developer with a creative mind and a strong dedication to transforming ideas into wonderfully functional websites and applications. My web development journey began when I started studying Computer Science. Since then, I've been on a never-ending drive to broaden my knowledge and improve my skills. I've had the pleasure of working on a wide range of projects, all of which have contributed to my development as a developer. Travelling on the path of the world of technology, my unquenchable curiosity drove me to investigate the fascinating worlds of machine learning and deep learning. This path into artificial intelligence has opened up new possibilities for me, allowing me to work on projects that use data-driven insights to construct intelligent, predictive systems. At the same time, the disruptive potential of blockchain and Web3 technologies piqued my interest. I saw their potential to decentralise, secure, and change businesses. This realisation drove me to enter the world of blockchain development, where I've been actively involved in the design and deployment of blockchain solutions. In my free time, I enjoy learning about new technologies. I also enjoy reading books about Computer Science and Islamic history and sciences.
 
 Choosing to work with me means working with a dynamic technologist who combines technical competence with innovative problem-solving abilities. I am a diligent worker who thrives under pressure and excels at dealing with complicated issues in a calm and imaginative manner. My agility keeps me ahead of developing technology, and my strong work ethic ensures that I fulfil deadlines and provide great outcomes. Collaboration is central to my work, and I approach each project with a visionary mindset, striving not just to address urgent demands but also to create long-term value. When you collaborate with me, you receive a partner that is committed to pushing limits, solving issues, and ensuring the success of your project.
 `
@@ -160,7 +165,7 @@ export const skills = [
   'Angular',
   'TailwindCSS',
   'JQuery',
-  'Wordpress',
+  'WordPress',
   'Bootstrap',
   'Laravel',
   'Spring Boot',
@@ -196,7 +201,7 @@ export const callToActionText =
   "Although I'm currently not looking for new opportunities, feel free to reach out if you want to say hi."
 
       'Write modern, performant, maintainable code for a HRM system that is used by more than 30K concurrent users daily.',
-      'Work with a variety of different languages, platforms, frameworks, and IoT devices such as Sprint Boot, Laravel, AngularJS, DotNet Core, MQTT, etc.',
+      'Work with a variety of different languages, platforms, frameworks, and IoT devices such as Spring Boot, Laravel, AngularJS, DotNet Core, MQTT, etc.',
       'Developed, maintained, and improved HRM system that used by 25000 users daily.',
       'Developed RESTful APIs, implemented JWT & Refresh token, enhanced password validation and many other security enhancements in HRM with Spring Boot',
       'Implemented new features in the Tipsoi attendance devices via Laravel and MQTT.',
