@@ -6,9 +6,14 @@
     @apply focus:outline-2 outline-offset-1 focus-visible:no-underline focus-visible:outline-dashed;
 } */
 
-article li::before {
+/* article ul li::before {
     content: "➤ ";
     color: var(--color-onemagenta);
+} */
+
+article  li::marker {
+    content: "➤ ";
+    color: var(--color-onemagenta) !important;
 }
 
 pre {

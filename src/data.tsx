@@ -62,6 +62,7 @@ export const jobInfo = [
         description: [
             "Develop and deploy major updates and new features for the company's flagship product, PostX, enhancing functionality and user experience for more than 45K active users",
             'Spearheaded the design and development of "WowOptin", a WordPress plugin for lead generation and conversion optimization, helping website owners grow their email lists and increase sales.',
+            'Created "WowInvoice", an all-in-one WooCommerce plugin that automates EU VAT-compliant PDF invoices, packing slips, shipping labels, and other order documents.',
             'Played a key role in the development of "WowShipping", a WooCommerce extension that streamlines shipping processes for online stores, improving efficiency and customer satisfaction.',
             "Enhanced the React and PHP server performance of the WooCommerce based product, WowStore (Formerly ProductX) by 40% within the first 4 months of joining the team",
             "Updated the tech stack, optimized and automated the build processes via a CI/CD pipeline, and enforced improved coding standards, significantly enhancing overall code quality and maintainability.",
