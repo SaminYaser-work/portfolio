@@ -1,0 +1,156 @@
+---
+title: "WordPress Plugin Submission Review with wp-lazy-review"
+date: "2026-07-12"
+draft: false
+description: "How I turned WordPress.org plugin review lessons into wp-lazy-review, an AI agent skill for finding submission issues before reviewers do."
+tags: ["WordPress", "AI Agents", "PHP", "Security", "Code Review"]
+image: /src/assets/img/blog/wp-lazy-review/hero.png
+---
+
+import PostMetadata from "../../components/PostMetadata.astro";
+import ImageWithCaption from "../../components/ImageWithCaption.astro";
+import hero from "../../assets/img/blog/wp-lazy-review/hero.png";
+
+# {props.data.title}
+
+<PostMetadata
+  time={props.time}
+  date={props.date}
+  description={props.data.description}
+/>
+
+<ImageWithCaption
+  src={hero}
+  alt="Code editor showing an AI agent checking a WordPress plugin for SQL injection, input validation, output escaping, nonce security, and coding standards before packaging"
+  caption="wp-lazy-review inspects WordPress plugin code against a submission-focused checklist before packaging."
+  isMaxWidthFull={true}
+/>
+
+Submitting a plugin to WordPress.org exposed problems that ordinary feature testing had not caught. While preparing [WowInvoice](https://wordpress.org/plugins/wowinvoice/), I worked through issues around WordPress coding standards, input handling, output escaping, security checks, and APIs that plugin reviewers expect authors to use.
+
+I did not want that experience to stay buried in review emails or memory. I turned it into [`wp-lazy-review`](https://github.com/SaminYaser-work/wp-lazy-review), an AI agent skill that reviews WordPress plugin code before submission. It looks for the kinds of issues that can delay approval, reports them by severity, and applies direct fixes when the change is safe and local.
+
+I later used the skill while preparing another plugin that has not been officially announced. WordPress.org accepted that plugin on the first submission. One acceptance cannot prove that every future plugin will pass, but it gave me useful evidence that the review checklist catches real submission risks early.
+
+## Install and use wp-lazy-review
+
+The skill is available through the [`skills`](https://skills.sh/) CLI. Install it for the coding agent you use. Add `--global` to make it available across all of your projects.
+
+### Claude Code
+
+Install the skill globally for Claude Code:
+
+```shell
+npx skills add SaminYaser-work/wp-lazy-review --skill wp-lazy-review --agent claude-code --global --yes
+```
+
+Open Claude Code from the root of the WordPress plugin, then invoke the installed skill directly:
+
+```text
+/wp-lazy-review Review this plugin for WordPress.org submission. Inspect every PHP file, fix safe issues, and report anything that still needs manual work.
+```
+
+Claude Code can also select the skill from a normal request because its description contains WordPress review triggers. Using `/wp-lazy-review` removes any ambiguity when I want this exact workflow.
+
+### Codex
+
+Install the same skill globally for Codex:
+
+```shell
+npx skills add SaminYaser-work/wp-lazy-review --skill wp-lazy-review --agent codex --global --yes
+```
+
+Start Codex in the plugin directory. Mention the skill with `$wp-lazy-review` to invoke it explicitly:
+
+```text
+$wp-lazy-review Review this plugin for WordPress.org submission. Check the PHP files one at a time, apply safe fixes, and give me the final verdict.
+```
+
+In Codex CLI or the IDE extension, `/skills` lists installed skills and typing `$` opens the skill picker. Codex may also select `wp-lazy-review` automatically when a request matches its description, but the explicit mention makes the intended review process clear.
+
+Both examples install the skill at user scope. Remove `--global` to keep it inside the current project. The project-scoped locations are `.claude/skills/` for Claude Code and `.agents/skills/` for Codex.
+
+## Why I built a WordPress plugin submission review skill
+
+Plugin development and plugin submission review answer different questions. Product testing asks whether a feature works. A WordPress.org review also asks whether the implementation follows platform conventions and handles data safely.
+
+A working admin action may still lack a nonce or capability check. A rendered value may look correct while remaining vulnerable to cross-site scripting because it was not escaped at output. A remote request may work through cURL but bypass the WordPress HTTP API expected in plugin code.
+
+These issues are easy to repeat across projects because they live in many small decisions. I wanted an agent to perform the first pass with the same strict checklist every time. That leaves me to inspect the important fixes and test behavior instead of repeatedly searching for familiar patterns by hand.
+
+The word "lazy" describes the reviewer persona, not the depth of the checks. The agent acts like an experienced reviewer with a large queue. It flags suspicious code quickly, prefers a direct correction, and avoids redesigning unrelated product logic.
+
+## How wp-lazy-review scans a plugin
+
+The skill processes PHP files one at a time and runs four ordered review passes.
+
+### PHP errors and fatal risks
+
+The first pass looks for code that can fail or process unsafe input. It checks direct superglobal access, missing nonce verification, undefined variables, unprepared database queries, unsafe deserialization, PHP closing tags, and dangerous functions such as `eval()`.
+
+Starting here is intentional. Formatting matters, but a remote execution path or SQL injection risk should not wait behind a whitespace warning.
+
+### WordPress coding standards
+
+The second pass checks conventions that commonly matter during plugin review. It looks for unique prefixes, translatable user-facing strings, escaped output, proper script and style enqueueing, Options API usage, and WordPress wrappers for HTTP and filesystem operations.
+
+For example, a request implemented with `curl_*` is flagged in favor of `wp_remote_get()` or `wp_remote_post()`. A direct file write is redirected toward `WP_Filesystem`. These are platform integration decisions, not cosmetic style changes.
+
+### Security checks
+
+The security pass connects input, authorization, and output. It checks AJAX and form handlers for CSRF protection, verifies capability checks on privileged actions, scans database calls for unescaped values, and looks for hardcoded credentials or command execution functions.
+
+This separation helps the agent explain why a line is risky. A value from `$_POST` may require unslashing and sanitization when it enters the system, a capability check before it changes state, and escaping when it is rendered later. One generic "sanitize your data" warning would hide those separate boundaries.
+
+### Deprecated WordPress APIs
+
+The final scan catches functions that should be replaced before submission. The skill includes mappings for older APIs such as `get_currentuserinfo()` and `wpdb::escape()` so the report can name the modern alternative instead of returning a vague deprecation warning.
+
+## The fix strategy stays deliberately narrow
+
+I designed the skill to fix submission blockers without turning a review into an uncontrolled refactor. It follows a simple priority order:
+
+1. Remove remote execution and shell calls.
+2. Prepare database queries.
+3. Add nonce and capability checks.
+4. Sanitize input and escape output.
+5. Replace deprecated functions.
+6. Clean up coding-standard violations.
+
+A safe one-line correction is applied inline. If the required change would alter the architecture, the skill removes the unsafe block and leaves a reason in the code rather than inventing a new feature design.
+
+The input handling pattern is a good example:
+
+```php
+$val = isset( $_POST['field'] )
+    ? sanitize_text_field( wp_unslash( $_POST['field'] ) )
+    : '';
+```
+
+The check handles a missing field, reverses WordPress-added slashes, and sanitizes the value for its expected text context. The same approach is encoded in the skill, so an agent does not need to reconstruct the sequence during every review.
+
+## Reports are short enough to act on
+
+Each file receives a list of findings followed by the complete corrected file. Findings use four severity levels: `CRITICAL`, `HIGH`, `MEDIUM`, and `LOW`. Every item includes a line number, a short explanation, and the applied fix or removal decision.
+
+The report ends with one verdict:
+
+- `APPROVED` when the scan finds no remaining blockers;
+- `RESUBMIT` when fixes were applied and the author should verify them;
+- `ESCALATE` when structural problems need a deeper rewrite.
+
+This format keeps the agent useful inside an active development workflow. I can review the risky findings first, inspect the full corrected file, run the plugin's normal checks, and test the affected behavior in WordPress.
+
+## What the first-submission acceptance proved
+
+The first-try acceptance for the unannounced plugin was the clearest practical test of the skill so far. I used checks derived from the WowInvoice submission experience on a different codebase, then submitted the resulting plugin through the normal WordPress.org process.
+
+The outcome does not make `wp-lazy-review` a replacement for the Plugin Check plugin, PHPCS, automated tests, manual security review, or WordPress.org's reviewers. It is a reusable preflight layer. Its value comes from combining platform-specific review heuristics with an agent that can inspect context and propose fixes.
+
+The skill is intentionally conservative, so false positives are possible. That is a reasonable trade when the final decision still belongs to the developer. A suspicious line is cheaper to inspect before submission than after a review cycle has started.
+
+## Reusing submission experience instead of repeating it
+
+`wp-lazy-review` began with a frustrating but useful set of submission issues. Encoding those lessons changed them from one project's cleanup work into a repeatable engineering tool.
+
+The repository contains the complete [SKILL.md](https://github.com/SaminYaser-work/wp-lazy-review/blob/master/SKILL.md), including its trigger conditions, ordered review passes, fix priorities, report contract, code patterns, and scope boundaries. I can now apply the same baseline to each WordPress plugin while keeping the final review and testing in human hands.
