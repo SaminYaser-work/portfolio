@@ -1,0 +1,95 @@
+<atomic-ownership-race class="race-lab">
+  <div class="race-copy">
+    <p class="eyebrow">Race-condition simulator</p>
+    <h3>Two workers, one key</h3>
+    <p>Advance the execution. The request tokens physically compete for one database gate.</p>
+  </div>
+
+  <div class="mode" role="group" aria-label="Coordination strategy">
+    <button type="button" data-mode="unsafe" aria-pressed="true">Read, then create</button>
+    <button type="button" data-mode="atomic" aria-pressed="false">Unique atomic claim</button>
+  </div>
+
+  <div class="race-board" data-mode="unsafe" data-step="0" data-result="active" aria-label="Animated ownership race between two workers">
+    <div class="route route-a"></div><div class="route route-b"></div>
+    <div class="worker worker-a"><span>A</span><strong>ready</strong></div>
+    <div class="database"><div class="db-top"></div><span>Scoped key</span><strong>absent</strong><small>unique gate</small></div>
+    <div class="worker worker-b"><span>B</span><strong>ready</strong></div>
+    <div class="claim-token token-a"><b>A</b><small>op_7F2</small></div>
+    <div class="claim-token token-b"><b>B</b><small>op_7F2</small></div>
+    <div class="lock-gate"><i></i><span>LOCK</span></div>
+    <div class="wait-wave"><i></i><i></i><i></i></div>
+    <div class="effect-tray"><span>protected effects</span><div><i>$</i><i>$</i></div></div>
+  </div>
+
+  <div class="event-log" aria-live="polite"><span>Step 0</span><p>Both workers receive the same logical operation.</p></div>
+  <div class="controls">
+    <button type="button" data-action="reset">Reset</button>
+    <button type="button" data-action="next">Next event <span aria-hidden="true">→</span></button>
+  </div>
+  <p class="lesson">The database must decide ownership. Application-level timing cannot.</p>
+</atomic-ownership-race>
+
+<script>
+  class AtomicOwnershipRace extends HTMLElement {
+    mode = 'unsafe'
+    step = 0
+    connectedCallback() {
+      this.renderStep()
+      this.querySelectorAll('[data-mode]').forEach((button) => button.addEventListener('click', () => {
+        this.mode = button.dataset.mode
+        this.step = 0
+        this.querySelectorAll('[data-mode]').forEach((item) => item.setAttribute('aria-pressed', String(item === button)))
+        this.renderStep()
+      }))
+      this.querySelector('[data-action="reset"]').addEventListener('click', () => { this.step = 0; this.renderStep() })
+      this.querySelector('[data-action="next"]').addEventListener('click', () => { this.step = Math.min(this.step + 1, 4); this.renderStep() })
+    }
+    renderStep() {
+      const unsafe = [
+        ['ready','absent','ready','Both workers receive the same logical operation.'],
+        ['reads absent','absent','ready','Worker A reaches the database, reads an empty key, then moves past the read.'],
+        ['reads absent','absent','reads absent','Worker B reaches the same empty read before A writes ownership.'],
+        ['creates effect','still absent','creates effect','Both tokens leave the database as owners and start the mutation.'],
+        ['completed','written late','completed','Two effect markers escape. The ownership record arrives after the decision.'],
+      ]
+      const atomic = [
+        ['ready','absent','ready','Both workers receive the same logical operation.'],
+        ['claims','A owns key','ready','A crosses the unique gate. The database closes it atomically behind A.'],
+        ['owns','A owns key','conflict waits','B reaches the gate, collides with the lock, and waits instead of becoming an owner.'],
+        ['creates effect','A owns key','waiting','Only A leaves the gate to perform the protected mutation.'],
+        ['returns result','completed','replays result','One effect returns. B follows the stored replay path instead of creating another.'],
+      ]
+      const row = (this.mode === 'unsafe' ? unsafe : atomic)[this.step]
+      const board = this.querySelector('.race-board')
+      board.setAttribute('data-mode', this.mode)
+      board.setAttribute('data-step', String(this.step))
+      board.setAttribute('data-result', this.step === 4 ? (this.mode === 'atomic' ? 'safe' : 'danger') : 'active')
+      this.querySelector('.worker-a strong').textContent = row[0]
+      this.querySelector('.database strong').textContent = row[1]
+      this.querySelector('.worker-b strong').textContent = row[2]
+      this.querySelector('.event-log span').textContent = `Step ${this.step}`
+      this.querySelector('.event-log p').textContent = row[3]
+      this.querySelector('.lesson').textContent = this.step === 4
+        ? this.mode === 'atomic'
+          ? 'One gate, one owner, one effect. The conflicting worker can only replay the stored result.'
+          : 'Two readers crossed an unguarded decision point. The late record cannot pull the second effect back.'
+        : 'The database must decide ownership. Application-level timing cannot.'
+    }
+  }
+  if (!customElements.get('atomic-ownership-race')) customElements.define('atomic-ownership-race', AtomicOwnershipRace)
+</script>
+
+<style>
+  .race-lab{--bg:#fff8e7;--panel:#fff;--board:#fffdf6;--text:#282c34;--muted:#685a43;--border:#d4a633;--db:#283447;--dbtext:#fff;--log:#f4e3b7;--blue:#2f80ed;--purple:#a24ac3;--green:#4d8b31;--red:#c43d4d;--gold:#a66500;display:block;margin:2.5rem 0;padding:clamp(1rem,3vw,2rem);border-radius:1.25rem;background:var(--bg);color:var(--text);border:1px solid var(--border);box-shadow:0 18px 55px rgba(90,67,20,.14);transition:background .25s,color .25s,border-color .25s}
+  :global(.darkmode) .race-lab{--bg:#1b2029;--panel:#242a35;--board:#12161d;--text:#f4f7fb;--muted:#b9c2cf;--border:#705c31;--db:#30394a;--dbtext:#fff;--log:#2c3442;--blue:#61afef;--purple:#c678dd;--green:#98c379;--red:#e06c75;--gold:#e5c07b;box-shadow:0 22px 65px rgba(0,0,0,.28)}
+  .eyebrow{margin:0!important;color:var(--gold);font:800 .75rem/1.2 system-ui;text-transform:uppercase;letter-spacing:.12em}.race-copy h3{margin:.2rem 0!important;color:var(--text)!important}.race-copy p:last-child{margin:.3rem 0 1rem!important;color:var(--muted);font-size:.95rem}.mode,.controls{display:flex;flex-wrap:wrap;gap:.65rem}.mode button,.controls button{cursor:pointer;border:1px solid var(--border);border-radius:.75rem;padding:.65rem .9rem;background:var(--panel);color:var(--text);font:750 .82rem/1.2 system-ui;transition:transform .18s,background .18s,box-shadow .18s}.mode button:hover,.controls button:hover{transform:translateY(-2px)}button:focus-visible{outline:3px solid color-mix(in srgb,var(--purple) 45%,transparent);outline-offset:2px}.mode button[aria-pressed="true"]{background:var(--db);color:var(--dbtext);border-color:var(--db)}.controls{justify-content:flex-end;margin-top:1rem}.controls button:last-child{background:var(--purple);border-color:var(--purple);color:#fff}
+  .race-board{position:relative;min-height:17rem;margin:1.2rem 0;overflow:hidden;border:1px solid var(--border);border-radius:1rem;background:radial-gradient(circle at 50% 45%,color-mix(in srgb,var(--blue) 10%,transparent),transparent 24%),var(--board)}.worker,.database{position:absolute;z-index:5;top:2.1rem;display:flex;min-height:6.2rem;flex-direction:column;align-items:center;justify-content:center;text-align:center;border-radius:1rem;border:2px solid var(--border);background:var(--panel);color:var(--text)}.worker{width:18%}.worker-a{left:3%}.worker-b{right:3%}.worker span{display:grid;place-items:center;width:2.2rem;height:2.2rem;margin-bottom:.35rem;border-radius:50%;background:var(--blue);color:#fff;font:900 .9rem/1 system-ui}.worker-b span{background:var(--purple)}.worker strong,.database strong{font:800 clamp(.65rem,1.4vw,.9rem)/1.2 system-ui}.database{left:39%;width:22%;border-color:var(--db);background:var(--db);color:var(--dbtext);box-shadow:0 12px 25px rgba(0,0,0,.2)}.database span,.database small{font:700 .58rem/1.2 system-ui;color:#cbd5e1}.database strong{margin:.38rem 0;color:var(--gold)}.db-top{position:absolute;top:-.45rem;width:64%;height:.8rem;border:2px solid var(--gold);border-radius:50%;background:var(--db)}
+  .route{position:absolute;z-index:1;top:8.55rem;height:3px;background:linear-gradient(90deg,var(--blue),var(--border))}.route-a{left:20%;width:20%}.route-b{right:20%;width:20%;background:linear-gradient(90deg,var(--border),var(--purple))}.claim-token{position:absolute;z-index:9;top:7.7rem;display:grid;place-items:center;min-width:3.5rem;padding:.35rem .45rem;border-radius:.65rem;color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.25);font:850 .58rem/1 system-ui;transition:left .65s cubic-bezier(.2,.9,.2,1),right .65s cubic-bezier(.2,.9,.2,1),top .55s cubic-bezier(.2,.9,.2,1),transform .55s,opacity .35s}.claim-token small{font-size:.45rem}.token-a{left:12%;background:var(--blue)}.token-b{right:12%;background:var(--purple)}
+  .lock-gate{position:absolute;z-index:10;left:61%;top:2.65rem;width:2.5rem;height:5rem;transform:translateX(-50%) scaleY(.1);transform-origin:top;opacity:0;border:3px solid var(--gold);border-radius:.3rem;background:repeating-linear-gradient(135deg,var(--db) 0 7px,var(--gold) 7px 10px);transition:transform .45s cubic-bezier(.2,1.4,.4,1),opacity .2s}.lock-gate i{position:absolute;left:50%;top:-1.15rem;width:1.4rem;height:1.5rem;transform:translateX(-50%);border:3px solid var(--gold);border-bottom:0;border-radius:.8rem .8rem 0 0}.lock-gate span{position:absolute;left:50%;bottom:.35rem;transform:translateX(-50%);padding:.16rem .25rem;background:var(--db);color:#fff;font:900 .45rem/1 system-ui}.wait-wave{position:absolute;z-index:8;left:63%;top:3.65rem}.wait-wave i{position:absolute;width:1.7rem;height:1.7rem;border:2px solid var(--red);border-radius:50%;opacity:0}.effect-tray{position:absolute;left:34%;right:34%;bottom:1rem;text-align:center;color:var(--muted);font:750 .58rem/1 system-ui}.effect-tray>div{display:flex;justify-content:center;gap:.5rem;margin-top:.4rem}.effect-tray i{display:grid;place-items:center;width:2rem;height:2rem;border-radius:50%;background:var(--green);color:#fff;font:900 .8rem/1 system-ui;opacity:0;transform:translateY(18px) scale(.2);transition:opacity .3s,transform .55s cubic-bezier(.2,1.7,.4,1)}
+  .race-board[data-step="1"] .token-a,.race-board[data-step="2"] .token-a{left:43%;transform:scale(1.08)}.race-board[data-step="2"] .token-b{right:43%;transform:scale(1.08)}.race-board[data-step="3"] .token-a,.race-board[data-step="4"] .token-a{left:35%;top:10.8rem}.race-board[data-mode="unsafe"][data-step="3"] .token-b,.race-board[data-mode="unsafe"][data-step="4"] .token-b{right:35%;top:10.8rem}.race-board[data-mode="atomic"][data-step="2"] .token-b,.race-board[data-mode="atomic"][data-step="3"] .token-b{right:39%;animation:token-collision .55s ease}.race-board[data-mode="atomic"][data-step="4"] .token-b{right:16%;top:10.8rem}.race-board[data-mode="atomic"]:is([data-step="1"],[data-step="2"],[data-step="3"],[data-step="4"]) .lock-gate{opacity:1;transform:translateX(-50%) scaleY(1)}.race-board[data-mode="atomic"]:is([data-step="2"],[data-step="3"]) .wait-wave i{animation:wait-ring 1.2s infinite}.race-board[data-mode="atomic"] .wait-wave i:nth-child(2){animation-delay:.25s}.race-board[data-mode="atomic"] .wait-wave i:nth-child(3){animation-delay:.5s}.race-board[data-mode="unsafe"][data-step="4"] .effect-tray i,.race-board[data-mode="unsafe"][data-step="3"] .effect-tray i{opacity:1;transform:none}.race-board[data-mode="atomic"]:is([data-step="3"],[data-step="4"]) .effect-tray i:first-child{opacity:1;transform:none}.race-board[data-result="danger"]{animation:danger-board .55s ease}.race-board[data-result="danger"] .effect-tray i{background:var(--red)}.race-board[data-result="safe"] .database{animation:safe-db .8s ease}.race-board[data-result="safe"] .token-b{background:var(--green)}
+  .event-log{display:grid;grid-template-columns:auto 1fr;gap:.8rem;align-items:center;padding:.8rem 1rem;border-radius:.8rem;background:var(--log);color:var(--text)}.event-log span{color:var(--gold);font:850 .7rem/1 system-ui;text-transform:uppercase}.event-log p,.lesson{margin:0!important;font-size:.85rem}.lesson{margin-top:1rem!important;padding-left:.8rem;border-left:3px solid var(--purple);font-weight:750;color:var(--text)}
+  @keyframes token-collision{40%{transform:translateX(-10px) rotate(-6deg)}65%{transform:translateX(7px) rotate(4deg)}}@keyframes wait-ring{0%{opacity:.7;transform:scale(.2)}100%{opacity:0;transform:scale(2)}}@keyframes danger-board{25%,75%{transform:translateX(-4px)}50%{transform:translateX(4px);box-shadow:0 0 0 5px color-mix(in srgb,var(--red) 25%,transparent)}}@keyframes safe-db{50%{box-shadow:0 0 0 12px color-mix(in srgb,var(--green) 25%,transparent)}}
+  @media(max-width:650px){.race-board{min-height:19rem}.worker{top:1.5rem;width:25%}.worker-a{left:2%}.worker-b{right:2%}.database{top:1.5rem;left:36%;width:28%}.route-a{left:26%;width:11%}.route-b{right:26%;width:11%}.token-a{left:14%}.token-b{right:14%}.race-board[data-step="1"] .token-a,.race-board[data-step="2"] .token-a{left:42%}.race-board[data-step="2"] .token-b{right:42%}.race-board[data-step="3"] .token-a,.race-board[data-step="4"] .token-a{left:25%;top:11.5rem}.race-board[data-mode="unsafe"][data-step="3"] .token-b,.race-board[data-mode="unsafe"][data-step="4"] .token-b{right:25%;top:11.5rem}.effect-tray{left:20%;right:20%;bottom:1.2rem}.controls{justify-content:stretch}.controls button{flex:1}}
+  @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+</style>

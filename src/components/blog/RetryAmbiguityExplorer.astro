@@ -1,0 +1,127 @@
+<retry-ambiguity-explorer class="retry-lab">
+  <div class="lab-heading">
+    <div>
+      <p class="eyebrow">Interactive mental model</p>
+      <h3>What did the timeout mean?</h3>
+      <p class="lede">Choose the hidden server state, watch the first attempt, then send a retry.</p>
+    </div>
+    <span class="status-pill" aria-live="polite">Choose a scenario</span>
+  </div>
+
+  <div class="scenario-picker" role="group" aria-label="Server outcome after a client timeout">
+    <button type="button" data-scenario="not-started" aria-pressed="false">Not started</button>
+    <button type="button" data-scenario="running" aria-pressed="false">Still running</button>
+    <button type="button" data-scenario="committed" aria-pressed="false">Committed, reply lost</button>
+  </div>
+
+  <div class="stage" data-scenario="idle" data-retry="idle" aria-live="polite">
+    <div class="lane-labels" aria-hidden="true"><span>Client</span><span>Unreliable network</span><span>Server + database</span></div>
+    <div class="network-map" aria-hidden="true">
+      <div class="client-node"><span>client</span></div>
+      <div class="wire"></div>
+      <div class="timeout-gate"><span>deadline</span></div>
+      <div class="server-node"><span>?</span><small>server</small></div>
+      <div class="request-packet first"><b>POST</b><small>op_7F2</small></div>
+      <div class="request-packet retry"><b>RETRY</b><small>op_7F2</small></div>
+      <div class="response-packet">201</div>
+      <div class="commit-pulse"><i></i><i></i><i></i></div>
+      <div class="work-spinner"></div>
+      <div class="duplicate-effects"><i>$</i><i>$</i></div>
+      <div class="stored-record"><span>op_7F2</span><strong>one result</strong></div>
+    </div>
+    <div class="outcome-card">
+      <div><p class="outcome-title">Client view</p><p>No response arrived before the deadline.</p></div>
+      <div><p class="outcome-title">Hidden server truth</p><p class="server-truth">Select a scenario to run the first attempt.</p></div>
+    </div>
+  </div>
+
+  <div class="retry-choice">
+    <p><strong>Now retry the operation.</strong> Which identity should travel with it?</p>
+    <div role="group" aria-label="Retry identity choice">
+      <button type="button" data-retry-choice="new">Send a new key</button>
+      <button type="button" data-retry-choice="same">Reuse the stable key</button>
+    </div>
+    <p class="verdict" aria-live="polite">Choose a server scenario first, then launch each retry.</p>
+  </div>
+</retry-ambiguity-explorer>
+
+<script>
+  class RetryAmbiguityExplorer extends HTMLElement {
+    scenario = ''
+
+    connectedCallback() {
+      const truths = {
+        'not-started': ['Nothing started.', 'The packet disappears before the mutation begins.'],
+        running: ['Work is still active.', 'The server keeps processing after the client gives up waiting.'],
+        committed: ['The mutation committed.', 'The response travels back, hits the deadline, and disappears.'],
+      }
+      const stage = this.querySelector('.stage')
+      const status = this.querySelector('.status-pill')
+      const truth = this.querySelector('.server-truth')
+      const verdict = this.querySelector('.verdict')
+
+      const restartMotion = (attribute, value) => {
+        stage.setAttribute(attribute, 'idle')
+        void stage.offsetWidth
+        stage.setAttribute(attribute, value)
+      }
+
+      this.querySelectorAll('[data-scenario]').forEach((button) => {
+        button.addEventListener('click', () => {
+          this.scenario = button.dataset.scenario
+          this.querySelectorAll('[data-scenario]').forEach((item) => item.setAttribute('aria-pressed', String(item === button)))
+          const [headline, detail] = truths[this.scenario]
+          status.textContent = button.textContent
+          truth.innerHTML = `<strong>${headline}</strong> ${detail}`
+          verdict.className = 'verdict'
+          verdict.textContent = 'The client still sees only a timeout. Launch a retry below.'
+          stage.setAttribute('data-retry', 'idle')
+          restartMotion('data-scenario', this.scenario)
+        })
+      })
+
+      this.querySelectorAll('[data-retry-choice]').forEach((button) => {
+        button.addEventListener('click', () => {
+          if (!this.scenario) {
+            verdict.textContent = 'Choose a server scenario first.'
+            return
+          }
+          const same = button.dataset.retryChoice === 'same'
+          this.querySelectorAll('[data-retry-choice]').forEach((item) => item.setAttribute('aria-pressed', String(item === button)))
+          restartMotion('data-retry', same ? 'same' : 'new')
+          verdict.className = `verdict ${same ? 'safe' : 'danger'}`
+          verdict.textContent = same
+            ? 'The retry moves into the existing record. It can wait for, recover, or replay the original result without creating a second identity.'
+            : this.scenario === 'not-started'
+              ? 'This new key happens to produce one effect here, but the client could not know the original packet vanished. The rule is still unsafe.'
+              : 'The retry reaches the server as a separate operation. Watch the two effect markers appear because nothing joins the identities.'
+        })
+      })
+    }
+  }
+
+  if (!customElements.get('retry-ambiguity-explorer')) customElements.define('retry-ambiguity-explorer', RetryAmbiguityExplorer)
+</script>
+
+<style>
+  .retry-lab {
+    --lab-bg:#f7fbff; --lab-panel:#ffffff; --lab-stage:#eef6ff; --lab-border:#b8cae0; --lab-text:#172033;
+    --lab-muted:#53657a; --lab-button:#ffffff; --lab-button-text:#243247; --lab-line:#7f96af; --lab-card:#e5eef9;
+    --cyan:#087f8c; --blue:#2f80ed; --purple:#a24ac3; --yellow:#a45b00; --red:#c43d4d; --green:#3b7c2a;
+    display:block; margin:2.5rem 0; padding:clamp(1rem,3vw,2rem); border:1px solid var(--lab-border); border-radius:1.25rem;
+    color:var(--lab-text); background:radial-gradient(circle at 82% 0%,color-mix(in srgb,var(--blue) 12%,transparent),transparent 32%),var(--lab-bg);
+    box-shadow:0 20px 55px rgba(30,64,110,.14); transition:background .25s,color .25s,border-color .25s;
+  }
+  :global(.darkmode) .retry-lab { --lab-bg:#171a21; --lab-panel:#1c212b; --lab-stage:#0f1218; --lab-border:#475569; --lab-text:#f8fafc; --lab-muted:#aebdd0; --lab-button:#222733; --lab-button-text:#f8fafc; --lab-line:#526177; --lab-card:#202735; --cyan:#56b6c2; --blue:#61afef; --purple:#c678dd; --yellow:#e5c07b; --red:#e06c75; --green:#98c379; box-shadow:0 24px 70px rgba(15,23,42,.28); }
+  .lab-heading{display:flex;justify-content:space-between;gap:1rem;align-items:flex-start}.lab-heading h3{margin:.1rem 0 .5rem!important;color:var(--lab-text)!important}.eyebrow{margin:0!important;color:var(--cyan);font:800 .75rem/1.2 system-ui;text-transform:uppercase;letter-spacing:.12em}.lede{margin:0!important;max-width:58ch;color:var(--lab-muted);font-size:.95rem}.status-pill{flex:none;padding:.45rem .75rem;border-radius:999px;background:var(--lab-card);color:var(--yellow);font:800 .72rem/1 system-ui}
+  .scenario-picker,.retry-choice>div{display:flex;flex-wrap:wrap;gap:.65rem;margin:1.25rem 0}button{cursor:pointer;border:1px solid var(--lab-border);border-radius:.75rem;padding:.65rem .9rem;background:var(--lab-button);color:var(--lab-button-text);font:750 .82rem/1.2 system-ui;transition:transform .18s,background .18s,border-color .18s,box-shadow .18s}button:hover{transform:translateY(-2px);border-color:var(--blue)}button:focus-visible{outline:3px solid color-mix(in srgb,var(--blue) 45%,transparent);outline-offset:2px}button[aria-pressed="true"]{background:color-mix(in srgb,var(--blue) 18%,var(--lab-button));border-color:var(--blue);box-shadow:0 0 0 3px color-mix(in srgb,var(--blue) 18%,transparent)}
+  .stage{position:relative;overflow:hidden;padding:1rem;border-radius:1rem;background:var(--lab-stage);border:1px solid var(--lab-border)}.lane-labels{display:grid;grid-template-columns:1fr 1fr 1fr;color:var(--lab-muted);font:700 .68rem/1 system-ui}.lane-labels span:nth-child(2){text-align:center}.lane-labels span:last-child{text-align:right}
+  .network-map{position:relative;height:12rem;margin-top:.75rem}.client-node,.server-node{position:absolute;top:3.8rem;z-index:4;display:grid;place-items:center;width:4.2rem;height:4.2rem;border-radius:50%;font:850 .66rem/1 system-ui;box-shadow:0 8px 22px rgba(15,23,42,.18)}.client-node{left:.2rem;background:var(--purple);color:#fff}.server-node{right:.2rem;background:var(--lab-panel);border:2px solid var(--lab-line);color:var(--lab-text)}.server-node>span{font-size:1.1rem}.server-node small{font-size:.55rem;color:var(--lab-muted)}.wire{position:absolute;left:4.4rem;right:4.4rem;top:5.85rem;height:3px;background:var(--lab-line)}.wire:after{content:"";position:absolute;right:-1px;top:-5px;border:6px solid transparent;border-left-color:var(--lab-line)}
+  .timeout-gate{position:absolute;z-index:5;left:58%;top:1.4rem;bottom:2rem;border-left:3px dashed var(--red);opacity:.8}.timeout-gate span{position:absolute;top:-1.1rem;left:.35rem;color:var(--red);font:800 .62rem/1 system-ui}.request-packet{position:absolute;z-index:8;left:3.2rem;top:4.65rem;display:grid;place-items:center;min-width:3.25rem;padding:.35rem .5rem;border-radius:.55rem;background:var(--purple);color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.2);font:800 .62rem/1 system-ui;opacity:0}.request-packet small{font-size:.48rem;opacity:.85}.request-packet.retry{top:7.25rem;background:var(--blue)}.response-packet{position:absolute;z-index:7;right:4rem;top:3.65rem;padding:.35rem .55rem;border-radius:999px;background:var(--green);color:#fff;font:900 .62rem/1 system-ui;opacity:0}.commit-pulse{position:absolute;right:4.4rem;top:4.05rem;width:3.8rem;height:3.8rem}.commit-pulse i{position:absolute;inset:0;border:2px solid var(--green);border-radius:50%;opacity:0}.work-spinner{position:absolute;right:1.05rem;top:4.65rem;z-index:9;width:2.5rem;height:2.5rem;border:4px solid color-mix(in srgb,var(--yellow) 25%,transparent);border-top-color:var(--yellow);border-radius:50%;opacity:0}.duplicate-effects{position:absolute;right:4.6rem;top:8.1rem;z-index:9;display:flex;gap:.35rem}.duplicate-effects i{display:grid;place-items:center;width:1.75rem;height:1.75rem;border-radius:50%;background:var(--red);color:#fff;font:900 .75rem/1 system-ui;opacity:0}.stored-record{position:absolute;z-index:6;right:5rem;top:8.2rem;display:flex;gap:.35rem;align-items:center;padding:.4rem .6rem;border:2px solid var(--green);border-radius:.7rem;background:var(--lab-panel);color:var(--lab-text);font:700 .55rem/1 system-ui;opacity:0;transform:scale(.7)}.stored-record span{color:var(--green)}
+  .stage[data-scenario]:not([data-scenario="idle"]) .request-packet.first{animation:send-first 1.25s cubic-bezier(.2,.8,.2,1) both}.stage[data-scenario="not-started"] .request-packet.first{animation:vanish-before-server 1.1s ease-in both}.stage[data-scenario="running"] .work-spinner{animation:spin-work 1.8s .85s linear infinite}.stage[data-scenario="committed"] .server-node{animation:server-bump .45s 1s ease}.stage[data-scenario="committed"] .commit-pulse i{animation:ring 1.25s 1s ease-out}.stage[data-scenario="committed"] .commit-pulse i:nth-child(2){animation-delay:1.18s}.stage[data-scenario="committed"] .commit-pulse i:nth-child(3){animation-delay:1.36s}.stage[data-scenario="committed"] .response-packet{animation:lost-response 1.15s 1.25s ease-in-out both}
+  .stage[data-retry="same"] .request-packet.retry,.stage[data-retry="new"] .request-packet.retry{animation:send-retry 1.3s cubic-bezier(.2,.8,.2,1) both}.stage[data-retry="same"] .stored-record{animation:record-catch .7s 1.05s cubic-bezier(.2,1.6,.4,1) both}.stage[data-retry="same"] .server-node{animation:server-safe .75s 1s ease}.stage[data-retry="new"] .duplicate-effects i{animation:effect-pop .6s 1.05s cubic-bezier(.2,1.7,.4,1) both}.stage[data-retry="new"] .duplicate-effects i:nth-child(2){animation-delay:1.25s}.stage[data-retry="new"] .server-node{animation:server-danger .75s 1s ease}
+  .outcome-card{display:grid;grid-template-columns:1fr 1fr;gap:.8rem;padding:.8rem 1rem;border-radius:.8rem;background:var(--lab-card)}.outcome-card>div+div{padding-left:.8rem;border-left:1px solid var(--lab-border)}.outcome-card p{margin:.2rem 0!important;font-size:.8rem;color:var(--lab-text)}.outcome-title{color:var(--lab-muted)!important;font-weight:800}.retry-choice{margin-top:1.25rem}.retry-choice p{margin:.35rem 0!important;font-size:.9rem}.verdict{min-height:3rem;padding:.85rem 1rem;border-left:4px solid var(--lab-line);background:var(--lab-card);border-radius:.25rem .75rem .75rem .25rem;color:var(--lab-text);transition:background .25s,transform .25s}.verdict.safe{border-color:var(--green);animation:verdict-in .42s ease}.verdict.danger{border-color:var(--red);animation:verdict-in .42s ease}
+  @keyframes send-first{0%{left:3.2rem;opacity:0;transform:scale(.8)}12%{opacity:1}78%{left:calc(100% - 6.9rem);opacity:1;transform:scale(1)}100%{left:calc(100% - 6.9rem);opacity:0;transform:scale(.8)}}@keyframes vanish-before-server{0%{left:3.2rem;opacity:0}12%{opacity:1}65%{left:52%;opacity:1}100%{left:57%;opacity:0;transform:scale(.25) rotate(20deg)}}@keyframes lost-response{0%{right:4rem;opacity:0;transform:scale(.7)}15%{opacity:1}70%{right:39%;opacity:1}100%{right:41%;opacity:0;transform:scale(.25)}}@keyframes spin-work{0%{opacity:1;transform:rotate(0)}100%{opacity:1;transform:rotate(360deg)}}@keyframes ring{0%{opacity:.8;transform:scale(.25)}100%{opacity:0;transform:scale(1.8)}}@keyframes send-retry{0%{left:3.2rem;opacity:0;transform:translateY(10px) scale(.75)}12%{opacity:1}82%{left:calc(100% - 7rem);opacity:1;transform:translateY(0) scale(1)}100%{left:calc(100% - 7rem);opacity:0;transform:scale(.6)}}@keyframes record-catch{0%{opacity:0;transform:scale(.6) translateY(8px)}100%{opacity:1;transform:scale(1) translateY(0)}}@keyframes effect-pop{0%{opacity:0;transform:translateY(15px) scale(.2)}70%{opacity:1;transform:translateY(-5px) scale(1.2)}100%{opacity:1;transform:translateY(0) scale(1)}}@keyframes server-bump{50%{transform:scale(1.14)}}@keyframes server-safe{50%{box-shadow:0 0 0 10px color-mix(in srgb,var(--green) 22%,transparent)}}@keyframes server-danger{25%,75%{transform:translateX(-5px)}50%{transform:translateX(5px);box-shadow:0 0 0 10px color-mix(in srgb,var(--red) 20%,transparent)}}@keyframes verdict-in{0%{opacity:.4;transform:translateY(7px)}100%{opacity:1;transform:none}}
+  @media(max-width:640px){.lab-heading{display:block}.status-pill{display:inline-block;margin-top:.8rem}.lane-labels{font-size:.58rem}.network-map{height:11rem}.outcome-card{grid-template-columns:1fr}.outcome-card>div+div{padding:0;border:0}.timeout-gate{left:55%}.server-node{width:3.6rem;height:3.6rem}.wire{right:3.8rem}.request-packet{font-size:.55rem}}
+  @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+</style>

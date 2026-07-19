@@ -1,100 +1,109 @@
 ---
-import {Image} from 'astro:assets'
+import { Image } from "astro:assets";
 
 interface Props {
-  url?: string
-  img?: string
-  title?: string
-  imageAlt?: string
-  footer: string
-  tags?: string[]
-  children?: HTMLElement | HTMLElement[]
+  url?: string;
+  img?: string;
+  title?: string;
+  imageAlt?: string;
+  footer: string;
+  tags?: string[];
+  children?: HTMLElement | HTMLElement[];
 }
 
-const { url = '#', img = 'https://fakeimg.pl/640x360', title = 'Default title', footer = 'Your name', tags } = Astro.props
-const imageAlt = Astro.props.imageAlt ?? `${title} cover image`
+const {
+  url = "#",
+  img = null,
+  title = "Default title",
+  footer = "Your name",
+  tags,
+} = Astro.props;
+const imageAlt = Astro.props.imageAlt ?? `${title} cover image`;
 ---
 
 <a href={url} class="no-underline!">
-<div class="card">
-  <div class="card__image">
-    <Image src={img} alt={imageAlt} />
-  </div>
-  <div class="card__content">
-    <div class="flex flex-wrap gap-2 items-start">
-      {tags && tags.map((tag) => (
-        <span class="inline-block! bg-gray-200! rounded-full! px-3! py-1! text-sm! font-semibold! text-gray-700! mr-2! dark:bg-slate-700! dark:text-gray-100!">
-          {tag}
-        </span>
-      ))}
+  <div class="card">
+    <div class="card__image">
+      {img && <Image src={img} alt={imageAlt} />}
     </div>
-    <h3 class="leading-tight mt-3">
-      {title}
-    </h3>
-    <p>
-      <slot />
-    </p>
+    <div class="card__content">
+      <div class="flex flex-wrap gap-2 items-start">
+        {
+          tags &&
+            tags.map((tag) => (
+              <span class="inline-block! bg-gray-200! rounded-full! px-3! py-1! text-sm! font-semibold! text-gray-700! mr-2! dark:bg-slate-700! dark:text-gray-100!">
+                {tag}
+              </span>
+            ))
+        }
+      </div>
+      <h3 class="leading-tight mt-3">
+        {title}
+      </h3>
+      <p>
+        <slot />
+      </p>
+    </div>
   </div>
-</div>
 </a>
 
 <style is:global>
-    .card {
-        display: flex;
-        flex-direction: column;
-        border: 2px solid black;
-        border-radius: 0.5rem;
-        max-width: 60ch;
-        min-height: 100%;
-        position: relative;
-        overflow: hidden;
-        transition: box-shadow 0.15s ease-in-out;
-    }
+  .card {
+    display: flex;
+    flex-direction: column;
+    border: 2px solid black;
+    border-radius: 0.5rem;
+    max-width: 60ch;
+    min-height: 100%;
+    position: relative;
+    overflow: hidden;
+    transition: box-shadow 0.15s ease-in-out;
+  }
 
-    .card:hover,
-    .card:focus-within {
-        box-shadow: 0 0 0 0.25rem;
-    }
+  .card:hover,
+  .card:focus-within {
+    box-shadow: 0 0 0 0.25rem;
+  }
 
-    .card:focus-within a:focus {
-        text-decoration: none;
-        box-shadow: none;
-        outline: none;
-    }
+  .card:focus-within a:focus {
+    text-decoration: none;
+    box-shadow: none;
+    outline: none;
+  }
 
-    .card__image {
-        height: 10rem;
-    }
+  .card__image {
+    height: 10rem;
+  }
 
-    .card__image img {
-        height: 100%;
-        width: 100%;
-        object-fit: cover;
-    }
+  .card__image img {
+    height: 100%;
+    width: 100%;
+    object-fit: cover;
+  }
 
-    .card__content {
-        display: flex;
-        flex-direction: column;
-        flex-grow: 1;
-        padding: 1rem;
-    }
+  .card__content {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+    padding: 1rem;
+  }
 
-    .card__content a {
-        text-decoration: none;
-    }
+  .card__content a {
+    text-decoration: none;
+  }
 
-    .card__content a:focus {
-        text-decoration: underline;
-    }
+  .card__content a:focus {
+    text-decoration: underline;
+  }
 
-    .card__content a::after {
-        content: '';
-        position: absolute;
-        inset: 0;
-    }
+  .card__content a::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+  }
 
-    .card__content:last-child {
-        margin-top: auto;
-        padding-top: 2rem;
-    }
+  .card__content:last-child {
+    margin-top: auto;
+    padding-top: 2rem;
+  }
 </style>

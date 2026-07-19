@@ -1,0 +1,199 @@
+---
+title: 'Designing Idempotent APIs for Ambiguous Retries'
+date: '2026-07-19'
+draft: false
+description: 'A production-oriented model for stable request identity, atomic ownership, safe replay, external effects, retention, and failure recovery.'
+tags: ['Distributed Systems', 'API Design', 'Databases', 'Reliability', 'Production Engineering']
+image: /src/assets/img/blog/idempotent-apis/cover-card.png
+---
+
+import PostMetadata from '../../components/PostMetadata.astro'
+import ImageWithCaption from '../../components/ImageWithCaption.astro'
+import RetryAmbiguityExplorer from '../../components/blog/RetryAmbiguityExplorer.astro'
+import AtomicOwnershipRace from '../../components/blog/AtomicOwnershipRace.astro'
+import ExternalEffectRecovery from '../../components/blog/ExternalEffectRecovery.astro'
+import cover from '../../assets/img/blog/idempotent-apis/cover.png'
+import recordModel from '../../assets/img/blog/idempotent-apis/record-model.png'
+
+# {props.data.title}
+
+<PostMetadata time={props.time} date={props.date} description={props.data.description} />
+
+<ImageWithCaption
+  src={cover}
+  alt="Idempotent API retry flow connecting one client operation and stable key to one durable owner despite a timeout"
+  caption="A retry is safe when every transport attempt converges on the same durable operation identity."
+  isMaxWidthFull={true}
+/>
+
+A timeout does not tell me whether a mutation failed. The server may not have started it, may still be running it, or may have committed it before the response was lost. That uncertainty is what makes a blind retry dangerous for operations such as charging a card, creating an order, or provisioning infrastructure.
+
+The mental model I use is: **one logical operation needs one stable identity, one canonical input, and at most one protected effect**. Every transport attempt for that operation must converge on durable coordination. Idempotency is not just "send the same JSON again," and an idempotency key is not enough unless the effect is coordinated with it.
+
+<RetryAmbiguityExplorer />
+
+## Start with the logical operation
+
+A logical operation is the user's intent independent of HTTP attempts. "Charge this checkout once" is one operation even if the client sends `POST /charges` three times after timeouts.
+
+The client creates an idempotency key for that operation and reuses it for retries. The server interprets the key within a declared scope, for example:
+
+```text
+merchant_id + endpoint + idempotency_key
+```
+
+The scope matters because it defines where the key must be unique. A key used by two merchants should not accidentally join their requests, while reusing one key for two materially different operations within a merchant must not be allowed.
+
+The server binds the scoped key to:
+
+- a fingerprint of the canonical protected input;
+- an operation state;
+- the original response or a durable reference to its result.
+
+Canonical input contains every field that can change the protected effect, such as currency and amount for a charge. It excludes irrelevant transport details. Two independent charges can have identical JSON, so payload equality cannot identify intent. Conversely, when an existing key arrives with a different amount, that is not an update: it is conflicting key reuse and should be rejected.
+
+<ImageWithCaption
+  src={recordModel}
+  alt="Three-part idempotency record model showing scoped request identity, canonical input fingerprint, and a durable replayable outcome"
+  caption="The scoped key selects one durable record, the fingerprint protects the original intent, and the stored outcome makes replay possible."
+  isMaxWidthFull={true}
+/>
+
+## Make ownership atomic
+
+The central race appears when two workers receive the same new key concurrently. A read-then-create sequence is unsafe:
+
+```text
+A reads: key absent
+B reads: key absent
+A creates charge
+B creates charge
+```
+
+Both workers made a locally reasonable decision, but the business effect happened twice. The ownership decision needs a database-enforced uniqueness constraint on the scoped key.
+
+<AtomicOwnershipRace />
+
+For a short mutation stored in the same database as the idempotency record, I prefer one transaction:
+
+```text
+fingerprint = hash(canonicalize(protected_input))
+
+BEGIN
+inserted = INSERT idempotency(scope, key, fingerprint)
+           ON CONFLICT(scope, key) DO NOTHING
+
+if inserted:
+    charge = INSERT charge(...)
+    outcome = serialize(201, charge)
+    UPDATE idempotency
+       SET state = 'COMPLETED', outcome = outcome
+     WHERE scope = scope AND key = key
+    COMMIT
+    return outcome
+
+row = SELECT fingerprint, state, outcome
+        FROM idempotency
+       WHERE scope = scope AND key = key
+
+if row.fingerprint != fingerprint:
+    ROLLBACK
+    return 409 IDEMPOTENCY_KEY_REUSED
+
+COMMIT
+return row.outcome
+```
+
+The unique insert is the atomic fork. The winner owns the mutation. A conflicting transaction normally waits for the winner to commit or roll back. After commit, the loser reloads and returns the stored result. After rollback, no committed owner remains, so another transaction can claim the key.
+
+Keeping the key claim, local charge, and replayable result in one transaction closes a dangerous crash gap: the database effect cannot commit without the record needed to recognize its retry.
+
+## State the invariants before optimizing
+
+I would require these invariants within the documented scope and retention window:
+
+1. One scoped key maps to at most one canonical protected input.
+2. One scoped key creates at most one protected committed effect.
+3. A valid replay returns an outcome consistent with the original operation.
+4. The same key with materially different protected input is rejected.
+5. A performance optimization cannot create a second ownership authority.
+
+These rules make design reviews and incident diagnosis more concrete. A cache may speed up reads, for example, but it cannot replace the durable uniqueness constraint. Cache eviction or failover must not make an existing operation appear new.
+
+## External effects move the correctness boundary
+
+A local transaction works only when it controls the protected effect. A card authorization at an external provider cannot commit atomically with my database row.
+
+Consider this sequence:
+
+```text
+claim local key
+provider authorizes card
+worker crashes
+client retries
+```
+
+The stale local `IN_PROGRESS` row does not prove that authorization failed. Even an expired owner lease proves only that a worker may take over local coordination. It does not grant permission to repeat an ambiguous external effect.
+
+<ExternalEffectRecovery />
+
+A safer workflow stores a stable provider operation identity, ideally derived from the same logical-operation key. Recovery then proceeds as follows:
+
+1. A new worker acquires ownership with a lease, owner token, and atomic compare-and-swap.
+2. It queries the provider by the stable identity before issuing another authorization.
+3. If the authorization exists, it stores the provider reference and completes the local outcome.
+4. If the provider guarantees an idempotent retry for that identity, it may retry within that contract.
+5. If neither lookup nor idempotent retry can establish safety, it quarantines the operation for reconciliation.
+
+This trades some availability for correctness. For high-value payments, leaving an uncertain operation pending is usually safer than risking a duplicate charge.
+
+The same model applies to multi-step provisioning. If `POST /environments` creates a database and then a DNS record through separate providers, each external resource needs a stable step identity and a durable state transition. After a crash, recovery discovers completed steps before continuing. One top-level local key alone cannot prove whether either provider acted.
+
+## Scale independent operations, not one hot key
+
+An idempotency record is a coordination point. Requests for different keys should run in parallel, while retries for one key must converge and serialize as needed.
+
+The main production costs are:
+
+- a unique-index write for each new operation;
+- conflict waiting and replay reads for duplicates;
+- storage for fingerprints and outcomes;
+- cleanup after the retention window;
+- a hot key when many retries target one operation.
+
+Partitioning by a stable hash spreads different keys across database partitions. It cannot safely split one hot key because that would create competing ownership locations. For a retry storm on one key, request coalescing, bounded waiting, and backoff reduce repeated work while preserving one owner.
+
+Useful signals include p99 latency, unique-conflict wait time, replay count, hot-key frequency, stored-outcome size, idempotency-table size, mismatched-input rejection count, and cleanup lag. High latency should be diagnosed before adding generic capacity: more CPU does not fix a request waiting on a database lock.
+
+## Retention is part of the API promise
+
+Retention determines how long the server remembers an operation. Longer retention protects against later retries but costs index space, storage, backup capacity, and potentially privacy or compliance burden.
+
+If an API promises seven-day replay protection, deleting records after one day to save primary storage breaks the contract. A retry on day two can look new and repeat the effect.
+
+Moving older records to cheaper storage can be valid, but the handoff is part of the correctness design:
+
+- verify the secondary copy before deleting the primary row;
+- preserve unique lookup by the scoped key;
+- define whether retries query primary and then secondary, or use a routing index;
+- monitor copy lag and missing records;
+- fail safely when the secondary store is unavailable instead of treating "not found" as permission to create.
+
+The secondary store reduces primary pressure but adds lookup latency, another availability dependency, and consistency work. The trade-off is not simply storage versus speed; it is operational cost versus the strength and duration of the replay guarantee.
+
+## Practical review checklist
+
+Before calling a mutating endpoint idempotent, I check:
+
+- What exact logical operation does the key identify?
+- What is the key's namespace and retention window?
+- Which fields belong in the canonical-input fingerprint?
+- What database constraint atomically selects the owner?
+- Can the protected effect and replay record commit in one transaction?
+- If not, does every external system support stable idempotency or status lookup?
+- What happens after a crash with an ambiguous external outcome?
+- When must automation stop for reconciliation?
+- Can cleanup or tiered storage make a retained key temporarily undiscoverable?
+- Do performance changes preserve one scoped key, one protected effect?
+
+The practical takeaway is simple: **stable identity starts retry safety, but the correctness boundary must include the effect and its recovery path**. The difficult cases are not ordinary replays. They are concurrent first attempts, crashes between commits, external calls with ambiguous outcomes, and storage optimizations that accidentally forget an operation too early.

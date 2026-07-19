@@ -42,7 +42,7 @@ const readingTime = Math.ceil(post.body.trim().split(/\s+/).length / WPM);
     <DefaultLayout
         title={post.data.title}
         description={post.data.description}
-        image={post.data.image.src}
+        image={post.data.image?.src}
     >
         <section class="my-12">
             <div class="container">

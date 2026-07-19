@@ -1,0 +1,88 @@
+<external-effect-recovery class="recovery-lab">
+  <div class="intro">
+    <p class="eyebrow">Recovery decision explorer</p>
+    <h3>The worker crashed after the provider call</h3>
+    <p>Change the provider guarantees and watch the recovery probe take the only defensible path.</p>
+  </div>
+
+  <div class="recovery-map" data-path="quarantine" aria-label="Animated recovery path after an ambiguous provider call">
+    <svg class="paths" viewBox="0 0 1000 360" aria-hidden="true" preserveAspectRatio="none">
+      <path class="base-path" d="M145 85 C290 85 310 85 455 85" />
+      <path class="lookup-path" d="M145 260 C285 260 300 145 455 105 C620 60 720 80 830 95" />
+      <path class="retry-path" d="M145 260 C300 260 330 300 490 285 C650 270 705 220 820 105" />
+      <path class="quarantine-path" d="M145 260 C300 260 310 310 455 310" />
+    </svg>
+    <div class="node local"><span>1</span><strong>Local row</strong><small>IN_PROGRESS</small></div>
+    <div class="node provider"><span>2</span><strong>Provider</strong><small>effect unknown</small><i class="radar r1"></i><i class="radar r2"></i></div>
+    <div class="node worker"><span>3</span><strong>Recovery worker</strong><small>needs evidence</small></div>
+    <div class="node quarantine"><span>!</span><strong>Reconciliation</strong><small>stop automation</small></div>
+    <div class="probe"><b>?</b><small>op_7F2</small></div>
+    <div class="result-chip">provider result ✓</div>
+    <div class="retry-ring"><span>same ID</span></div>
+  </div>
+
+  <div class="switches">
+    <label><input type="checkbox" data-capability="lookup" /> <span><strong>Status lookup</strong><small>Provider can find an operation by stable ID</small></span></label>
+    <label><input type="checkbox" data-capability="retry" /> <span><strong>Idempotent retry</strong><small>Provider deduplicates the same stable ID</small></span></label>
+  </div>
+
+  <div class="decision" aria-live="polite">
+    <div class="decision-icon">!</div>
+    <div><p class="decision-label">Safe next action</p><strong>Quarantine for reconciliation</strong><p>Local lease expiry does not prove that the provider did nothing.</p></div>
+  </div>
+
+  <p class="boundary"><strong>Correctness boundary:</strong> local ownership plus provider evidence. A local row cannot describe an external commit by itself.</p>
+</external-effect-recovery>
+
+<script>
+  class ExternalEffectRecovery extends HTMLElement {
+    connectedCallback() {
+      this.querySelectorAll('input').forEach((input) => input.addEventListener('change', () => this.update()))
+      this.update()
+    }
+    update() {
+      const lookup = this.querySelector('[data-capability="lookup"]').checked
+      const retry = this.querySelector('[data-capability="retry"]').checked
+      const strong = this.querySelector('.decision strong')
+      const detail = this.querySelector('.decision p:last-child')
+      const icon = this.querySelector('.decision-icon')
+      const map = this.querySelector('.recovery-map')
+      const path = lookup ? (retry ? 'lookup-retry' : 'lookup') : retry ? 'retry' : 'quarantine'
+      map.setAttribute('data-path', 'idle')
+      void map.offsetWidth
+      map.setAttribute('data-path', path)
+      this.querySelectorAll('.switches label').forEach((label) => label.classList.toggle('enabled', label.querySelector('input').checked))
+      if (lookup) {
+        strong.textContent = 'Look up the operation before issuing another effect'
+        detail.textContent = retry
+          ? 'The probe finds the original result. If lookup returns an authoritative absence, the same ID can make one provider-safe retry.'
+          : 'The probe asks the provider for evidence and carries the existing result back. An uncertain absence still goes to reconciliation.'
+        icon.textContent = '↗'
+      } else if (retry) {
+        strong.textContent = 'Retry with the same provider operation ID'
+        detail.textContent = 'Watch the probe loop through the provider. Its stable ID makes the provider return one effect rather than create another.'
+        icon.textContent = '↻'
+      } else {
+        strong.textContent = 'Quarantine for reconciliation'
+        detail.textContent = 'The probe has no safe route to evidence or deduplication, so it moves away from the provider and stops automation.'
+        icon.textContent = '!'
+      }
+    }
+  }
+  if (!customElements.get('external-effect-recovery')) customElements.define('external-effect-recovery', ExternalEffectRecovery)
+</script>
+
+<style>
+  .recovery-lab{--bg:#fbf8ff;--panel:#fff;--map:#f5effb;--text:#231a2c;--muted:#665771;--border:#cbb8d8;--purple:#8f42ad;--cyan:#087f8c;--green:#4d8b31;--red:#c43d4d;--gold:#a65d00;--line:#9a87a8;display:block;margin:2.5rem 0;padding:clamp(1rem,3vw,2rem);border-radius:1.25rem;color:var(--text);background:linear-gradient(145deg,var(--bg),color-mix(in srgb,var(--purple) 6%,var(--bg)));border:1px solid var(--border);box-shadow:0 20px 58px rgba(75,39,94,.14);transition:background .25s,color .25s,border-color .25s}
+  :global(.darkmode) .recovery-lab{--bg:#181624;--panel:#282c34;--map:#0e1118;--text:#f8fafc;--muted:#b8c2d1;--border:#5d506b;--purple:#c678dd;--cyan:#56b6c2;--green:#98c379;--red:#e06c75;--gold:#e5c07b;--line:#64748b;box-shadow:0 22px 65px rgba(24,16,37,.3)}
+  .eyebrow{margin:0!important;color:var(--purple);font:800 .75rem/1.2 system-ui;text-transform:uppercase;letter-spacing:.12em}.intro h3{margin:.2rem 0!important;color:var(--text)!important}.intro p:last-child{margin:.35rem 0 1rem!important;color:var(--muted);font-size:.95rem}
+  .recovery-map{position:relative;height:22rem;overflow:hidden;border:1px solid var(--border);border-radius:1rem;background:radial-gradient(circle at 50% 22%,color-mix(in srgb,var(--purple) 10%,transparent),transparent 25%),var(--map)}.paths{position:absolute;inset:0;width:100%;height:100%}.paths path{fill:none;stroke:var(--line);stroke-width:4;stroke-dasharray:9 9;opacity:.35}.paths .base-path{stroke:var(--red);opacity:.5}.paths .lookup-path,.paths .retry-path,.paths .quarantine-path{opacity:.12;transition:opacity .25s,stroke .25s}.recovery-map[data-path^="lookup"] .lookup-path{opacity:.9;stroke:var(--cyan);animation:dash 1.1s linear infinite}.recovery-map[data-path="retry"] .retry-path{opacity:.9;stroke:var(--purple);animation:dash 1.1s linear infinite}.recovery-map[data-path="quarantine"] .quarantine-path{opacity:.9;stroke:var(--red);animation:dash 1.1s linear infinite}
+  .node{position:absolute;z-index:4;display:flex;width:10rem;min-height:4.8rem;flex-direction:column;align-items:center;justify-content:center;border:2px solid var(--border);border-radius:1rem;background:var(--panel);color:var(--text);box-shadow:0 10px 22px rgba(0,0,0,.12);text-align:center}.node>span{position:absolute;left:.55rem;top:.45rem;display:grid;place-items:center;width:1.35rem;height:1.35rem;border-radius:50%;background:var(--purple);color:#fff;font:900 .62rem/1 system-ui}.node strong{font:800 .78rem/1.2 system-ui}.node small{margin-top:.25rem;color:var(--muted);font:700 .58rem/1 system-ui}.local{left:4%;top:2.1rem}.provider{left:50%;top:2.1rem;transform:translateX(-50%);border-color:var(--gold)}.worker{left:4%;bottom:2rem}.quarantine{left:50%;bottom:1.5rem;transform:translateX(-50%);border-color:var(--red)}.provider .radar{position:absolute;inset:-.4rem;border:2px solid var(--cyan);border-radius:1.25rem;opacity:0}.retry-ring{position:absolute;z-index:2;right:6%;top:2rem;width:9rem;height:9rem;border:3px dashed var(--purple);border-radius:50%;opacity:0}.retry-ring:after{content:"";position:absolute;right:-.15rem;top:1rem;border:7px solid transparent;border-left-color:var(--purple);transform:rotate(-28deg)}.retry-ring span{position:absolute;right:-.2rem;bottom:.2rem;padding:.3rem .5rem;border-radius:999px;background:var(--panel);color:var(--purple);font:850 .55rem/1 system-ui}
+  .probe{position:absolute;z-index:9;left:12%;bottom:4.7rem;display:grid;place-items:center;min-width:3.2rem;padding:.35rem .45rem;border-radius:.65rem;background:var(--purple);color:#fff;box-shadow:0 8px 20px rgba(0,0,0,.25);font:900 .62rem/1 system-ui;opacity:0}.probe small{font-size:.45rem}.result-chip{position:absolute;z-index:8;left:51%;top:5.4rem;padding:.4rem .6rem;border-radius:999px;background:var(--green);color:#fff;font:850 .58rem/1 system-ui;opacity:0}.decision{display:grid;grid-template-columns:auto 1fr;gap:1rem;align-items:center;padding:1rem;border-radius:1rem;background:var(--panel);border:1px solid var(--border);color:var(--text);transition:background .25s}.decision-icon{display:grid;place-items:center;width:3rem;height:3rem;border-radius:50%;background:var(--purple);color:#fff;font:900 1.2rem/1 system-ui}.decision p{margin:.15rem 0!important;font-size:.78rem;color:var(--muted)}.decision .decision-label{color:var(--green);text-transform:uppercase;letter-spacing:.08em;font-weight:850}.decision strong{color:var(--text);font:800 .95rem/1.25 system-ui}
+  .recovery-map[data-path="quarantine"] .probe{animation:probe-quarantine 1.45s cubic-bezier(.2,.8,.2,1) both}.recovery-map[data-path="retry"] .probe{animation:probe-retry 2.1s cubic-bezier(.2,.8,.2,1) both}.recovery-map[data-path^="lookup"] .probe{animation:probe-lookup 2.2s cubic-bezier(.2,.8,.2,1) both}.recovery-map[data-path^="lookup"] .provider .radar{animation:radar 1.3s .7s ease-out}.recovery-map[data-path^="lookup"] .provider .r2{animation-delay:.95s}.recovery-map[data-path^="lookup"] .result-chip{animation:result-pop 1s 1.15s ease both}.recovery-map[data-path="retry"] .retry-ring{animation:ring-show 1.6s .35s linear both}.recovery-map[data-path="retry"] .provider{animation:provider-loop 1s .75s ease}.recovery-map[data-path="quarantine"] .quarantine{animation:quarantine-pulse .7s .85s ease}
+  .switches{display:grid;grid-template-columns:1fr 1fr;gap:.65rem;margin:1rem 0}.switches label{display:flex;gap:.7rem;align-items:flex-start;padding:.85rem;border:1px solid var(--border);border-radius:.75rem;background:var(--panel);color:var(--text);cursor:pointer;transition:transform .18s,border-color .18s,box-shadow .18s}.switches label:hover{transform:translateY(-2px)}.switches label.enabled{border-color:var(--purple);box-shadow:0 0 0 3px color-mix(in srgb,var(--purple) 15%,transparent)}.switches label>span{display:grid}.switches strong{font:800 .78rem/1.2 system-ui}.switches small{margin-top:.2rem;color:var(--muted);font:650 .65rem/1.25 system-ui}.switches input{width:1.15rem;height:1.15rem;accent-color:var(--purple);flex:none;margin-top:.05rem}.boundary{margin:1rem 0 0!important;padding:.85rem 1rem;border-left:3px solid var(--cyan);background:color-mix(in srgb,var(--cyan) 8%,transparent);font-size:.82rem;color:var(--muted)}
+  @keyframes dash{to{stroke-dashoffset:-18}}@keyframes probe-quarantine{0%{left:12%;bottom:4.7rem;opacity:0}10%{opacity:1}70%{left:46%;bottom:3.8rem;opacity:1}100%{left:48%;bottom:3.8rem;opacity:0;transform:scale(.5)}}@keyframes probe-lookup{0%{left:12%;bottom:4.7rem;opacity:0}8%{opacity:1}46%{left:48%;bottom:13.8rem;opacity:1;transform:rotate(0)}64%{left:72%;bottom:15rem;transform:rotate(8deg)}100%{left:12%;bottom:4.7rem;opacity:1;transform:rotate(0)}}@keyframes probe-retry{0%{left:12%;bottom:4.7rem;opacity:0}8%{opacity:1}40%{left:78%;bottom:13rem;transform:rotate(10deg)}62%{left:82%;bottom:7rem;transform:rotate(130deg)}82%{left:52%;bottom:13rem;transform:rotate(250deg)}100%{left:12%;bottom:4.7rem;opacity:1;transform:rotate(360deg)}}@keyframes radar{0%{opacity:.8;transform:scale(.65)}100%{opacity:0;transform:scale(1.45)}}@keyframes result-pop{0%,55%{opacity:0;transform:translateY(8px) scale(.5)}75%{opacity:1;transform:translateY(-5px) scale(1.08)}100%{opacity:1;transform:none}}@keyframes ring-show{0%{opacity:0;transform:rotate(0) scale(.8)}20%{opacity:.9}100%{opacity:.9;transform:rotate(360deg) scale(1)}}@keyframes provider-loop{50%{box-shadow:0 0 0 12px color-mix(in srgb,var(--purple) 22%,transparent)}}@keyframes quarantine-pulse{50%{box-shadow:0 0 0 12px color-mix(in srgb,var(--red) 22%,transparent)}}
+  @media(max-width:690px){.recovery-map{height:25rem}.node{width:8rem}.local,.worker{left:3%}.provider{left:auto;right:3%;transform:none}.quarantine{left:auto;right:3%;transform:none}.paths{display:none}.probe{left:12%}.switches{grid-template-columns:1fr}.retry-ring{right:3%;top:1.2rem}.recovery-map[data-path="quarantine"] .probe,.recovery-map[data-path="retry"] .probe,.recovery-map[data-path^="lookup"] .probe{animation-name:mobile-probe;animation-duration:1.4s}@keyframes mobile-probe{0%{left:12%;bottom:4.7rem;opacity:0}15%{opacity:1}70%{left:65%;bottom:13rem;opacity:1}100%{left:68%;bottom:13rem;opacity:0}}}
+  @media(max-width:560px){.decision{grid-template-columns:1fr}.decision-icon{width:2.4rem;height:2.4rem}}
+  @media(prefers-reduced-motion:reduce){*,*:before,*:after{animation-duration:.001ms!important;animation-iteration-count:1!important;transition-duration:.001ms!important}}
+</style>
