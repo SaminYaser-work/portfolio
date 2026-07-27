@@ -1,21 +1,12 @@
 import { Tooltip } from 'react-tooltip'
 import { getSocialLinks } from '../../data.tsx'
-import { resumeHover } from '../../data.tsx'
-import { useState } from 'react'
-import Dialog from '../Dialog.tsx'
 
 const socialLinks = getSocialLinks(25)
 
 export default function SocialSideBar() {
-  const [isOpen, setIsOpen] = useState(false)
-
-  function closeDialog() {
-    setIsOpen(false)
-  }
 
   return (
     <>
-      <Dialog isOpen={isOpen} onClose={closeDialog} />
       <aside className="fixed bottom-0 left-10 hidden xl:block">
         <ul className="after:content[''] flex flex-col items-center justify-center gap-2 after:block after:h-20 after:w-[2px] after:bg-onecyan">
           {socialLinks.map((item, index) => (
@@ -30,12 +21,6 @@ export default function SocialSideBar() {
                 rel="noreferrer"
                 aria-label={item.label}
                 className={'duration-300 ease-in-out hover:text-oneblue'}
-                onClick={(e) => {
-                  if (item.hover === resumeHover) {
-                    e.preventDefault()
-                    setIsOpen(true)
-                  }
-                }}
               >
                 {item.icon}
                 <Tooltip
