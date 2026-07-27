@@ -1,0 +1,199 @@
+---
+title: 'Propagating End-to-End Deadlines Through Service Call Chains'
+date: '2026-07-26'
+draft: false
+description: 'A production-oriented guide to shrinking request budgets, cancellation, deadline-aware admission, ambiguous mutations, and post-deadline waste.'
+tags: ['Distributed Systems', 'Reliability', 'API Design', 'Performance', 'Production Engineering']
+image: /src/assets/img/blog/deadline-propagation/cover-card.png
+---
+
+import PostMetadata from '../../components/PostMetadata.astro'
+import ImageWithCaption from '../../components/ImageWithCaption.astro'
+import cover from '../../assets/img/blog/deadline-propagation/cover.png'
+import budgetDerivation from '../../assets/img/blog/deadline-propagation/budget-derivation.png'
+import timeoutNotRollback from '../../assets/img/blog/deadline-propagation/timeout-not-rollback.png'
+import expiredWorkFeedbackLoop from '../../assets/img/blog/deadline-propagation/expired-work-feedback-loop.png'
+import wowinvoiceBulkExport from '../../assets/img/blog/deadline-propagation/wowinvoice-bulk-export-job.png'
+
+# {props.data.title}
+
+<PostMetadata time={props.time} date={props.date} description={props.data.description} />
+
+<ImageWithCaption
+  src={cover}
+  alt="One checkout request carrying a single shrinking deadline through client, gateway, checkout, and payment, with a possible provider commit after the parent deadline"
+  caption="Every hop spends from the same accepted expiry. A provider effect that crosses the deadline becomes an unknown outcome to reconcile, not proof of failure."
+  isMaxWidthFull={true}
+/>
+
+A timeout limits how long one caller waits at one boundary. It does not automatically limit the lifetime of the complete operation. If every service in a call chain starts a fresh timeout, a request can keep consuming capacity long after its result has become useless.
+
+The mental model I use is: **one request owns one shrinking time budget**. Every hop receives the accepted absolute deadline, subtracts elapsed time and an explicit return reserve, and gives a dependency no more than the useful budget that remains.
+
+A deadline is therefore a usefulness boundary, not a guarantee that work will finish and not proof that a timed-out mutation failed.
+
+## Timeout and deadline are different controls
+
+A timeout is a duration attached to one wait: for example, "wait up to 500 ms for payment." A deadline is an expiry point for the end-to-end operation: for example, "this checkout must finish by 10:15:30.250."
+
+The distinction matters when a request crosses several boundaries. Suppose a client allows two seconds total and the gateway has already spent 600 ms. Checkout has about 1.4 seconds left, not a new two-second allowance. If checkout gives inventory two seconds and inventory gives its database another two seconds, the local settings are individually bounded but the operation is not.
+
+At each dependency boundary, I derive the child allowance from the inherited deadline:
+
+```text
+remaining = deadline - now
+useful = max(0, remaining - return_reserve)
+child_timeout = min(dependency_cap, useful)
+```
+
+The return reserve covers work that must happen after the dependency returns: serialization, network return, cleanup, and recording an ambiguous outcome. The dependency cap is still useful because an unusually long parent budget should not make one downstream call unbounded.
+
+<ImageWithCaption
+  src={budgetDerivation}
+  alt="Deadline-budget derivation showing 700 milliseconds remaining minus a 100 millisecond return reserve, capped below 800 milliseconds, producing a 600 millisecond child timeout"
+  caption="The parent has 700 ms left. Protecting a 100 ms return reserve leaves 600 ms, so an 800 ms dependency cap cannot increase the child timeout."
+  isMaxWidthFull={true}
+/>
+
+If `useful` is zero, the service should not start the dependency. If the parent is already cancelled, a child derived from the parent should receive that cancellation too.
+
+## Preserve the deadline through the call tree
+
+A handler should narrow the parent's request context rather than detach work or create a later expiry. It should also recompute the budget immediately before a dependency call because queueing and local processing consume the same budget as execution.
+
+```text
+handleCheckout(parent):
+    if parent.cancelled: return CANCELLED
+
+    useful = parent.deadline - now() - checkoutReturnReserve
+    if useful <= 0: return DEADLINE_EXCEEDED
+
+    child = derive(parent, timeout=min(inventoryCap, useful))
+    try:
+        return inventory.reserve(child)
+    finally:
+        child.cancel()
+```
+
+Inventory can repeat the same pattern before calling its database. Deriving the child from the parent ensures that caller abandonment flows downward. Cancelling the child in a cleanup block also releases local timer and cancellation resources when the call finishes normally.
+
+At ingress, I would accept the earlier of a validated caller deadline and the service's own maximum. An already-expired deadline should be rejected. A public caller should not be able to force resource retention with an implausibly distant deadline. Trusted internal deadlines may carry useful policy, but they still should not override the service's safety maximum.
+
+## Production example: checkout reaches payment late
+
+Consider a checkout request with 360 ms remaining. Checkout reserves 60 ms to process and return the result, leaving a hard payment ceiling of 300 ms. Recent matching traffic shows payment latency at 280 ms for p95 and 520 ms for p99.
+
+The child timeout cannot exceed 300 ms. The p99 observation does not permit a 520 ms timeout because the parent budget is the hard boundary. The latency distribution informs a different decision: whether spending the available 300 ms is worthwhile.
+
+At normal load, admitting the call may be reasonable because most observed calls completed within that budget. During overload, rejecting calls this close to expiry may protect workers and provider capacity from likely-expiring work. The percentile is evidence, not a promise; the decision should account for how recent and representative the measurement is.
+
+The admission check must happen before payment starts. Once a provider has accepted a non-cancellable charge, expiry should end the caller's wait, but it cannot make the charge disappear.
+
+## Correctness invariants
+
+I would preserve these rules across implementations:
+
+1. A child operation never receives more time than its parent has remaining.
+2. Queue wait and local processing consume the original operation budget.
+3. Work does not knowingly start after its useful completion budget is exhausted.
+4. Inner work ends early enough to leave an explicit response and cleanup reserve.
+5. Parent cancellation reaches interruptible descendants.
+6. A timeout or cancellation is not reported as proof that a mutation did not commit.
+7. A retry consumes the original operation budget rather than silently resetting it.
+8. Ingress validation and clock assumptions are explicit.
+
+These invariants separate correctness from tuning. Reserve sizes, dependency caps, and admission thresholds can change as measurements improve, but no tuning should create a later child deadline or erase an uncertain mutation.
+
+## Failure modes I would look for
+
+### Resetting the budget at each hop
+
+A service receives a request late and starts its normal local timeout anyway. The correction is to preserve the accepted deadline and recompute what remains immediately before each dependency.
+
+### Breaking cancellation propagation
+
+A detached context or a driver that ignores cancellation lets work continue after the caller leaves. Child contexts should derive from the parent, and dependencies that cannot stop promptly need a separate hard bound.
+
+### Inverted timeout ordering
+
+A dependency runs until the outer request expires, leaving no time to return a response or record recovery state. The child timeout should end before the parent deadline by an explicit reserve.
+
+### Unsafe clock translation
+
+Repeatedly converting a remaining duration back into a new deadline can extend the request. Cross-service wall clocks can also differ. I would cap the deadline at ingress, preserve the accepted expiry, use a monotonic elapsed-time source inside one process, and monitor clock synchronization.
+
+### Treating timeout as rollback
+
+A database or provider can commit after the caller stops waiting. Reporting "failed" and issuing a fresh unkeyed mutation can duplicate the effect. The safe response is an unknown outcome backed by stable idempotency identity, durable workflow state, authoritative status lookup, or reconciliation.
+
+Detaching a non-cancellable mutation in memory is not durable ownership. If payment has already been accepted, the caller can stop waiting at its deadline while a persisted workflow records the operation and reconciliation proceeds independently of another user request.
+
+<ImageWithCaption
+  src={timeoutNotRollback}
+  alt="Payment timeline where the provider accepts at 900 milliseconds, the caller deadline expires at 1200 milliseconds, and the provider commits at 1350 milliseconds before durable reconciliation resolves the outcome"
+  caption="The wait ends at 1,200 ms, but the provider commits at 1,350 ms. Durable state and authoritative lookup must resolve the unknown outcome."
+  isMaxWidthFull={true}
+/>
+
+## When work should outlive the request: WowInvoice bulk exports
+
+Cancellation is not the right answer when a request has already transferred its work to a durable job. I used that pattern in [WowInvoice's bulk export feature](/project/wowinvoice-woocommerce-pdf-invoices/). Exporting documents for many WooCommerce orders can require order loading, data preparation, HTML rendering, PDF generation, combining files, and ZIP creation. Keeping the administrator's HTTP request open for that entire workload would tie the export to a browser connection and a normal WordPress request lifetime.
+
+The browser therefore makes a short REST request that validates the document type and runtime dependencies, stores a user-owned job with its filters and counters, and schedules it through WooCommerce Action Scheduler. The API rejects another active export for the same user. Once the job exists, the browser only reads progress or requests cancellation.
+
+<ImageWithCaption
+  src={wowinvoiceBulkExport}
+  alt="WowInvoice bulk export architecture separating a short REST request from a durable user-owned Action Scheduler job that records progress, checks cancellation, creates an archive, and restricts download to its owner"
+  caption="The HTTP request creates and returns a durable job. Action Scheduler owns the expensive export after the request ends, while persisted state keeps progress, cancellation, errors, and download authorization explicit."
+  isMaxWidthFull={true}
+/>
+
+The worker updates progress every five orders, checks for cancellation, records per-order failures, and gives duplicate filenames unique names. It can keep individual files or build a combined PDF, then packages the result into a ZIP archive. Status and download endpoints verify that the current user owns the job, and the archive cannot be downloaded before the job reaches `completed`.
+
+This fits the deadline model because it is an ownership transfer, not a silent deadline extension. The HTTP deadline bounds the create-job or status request. The export continues under its own durable lifecycle with explicit states such as `queued`, `processing`, `cancelling`, `completed`, `failed`, and `cancelled`. Closing the browser does not leave an untracked in-memory task behind. The trade-off is more lifecycle machinery, but the system gains observable progress, bounded web requests, cancellation, partial-failure reporting, and an authorized result.
+
+## Deadlines are also a capacity control
+
+Expired work is not free. It can hold workers, queue positions, connections, locks, and provider concurrency while producing a response nobody can use.
+
+In one illustrative checkout workload, 100 requests arrive per second. If 10% continue holding a database connection for an average of two seconds after their callers abandon them, they create about 20 concurrent useless operations. Against a 50-connection pool, that is 40% of the pool before useful work is counted.
+
+This can become a feedback loop:
+
+<ImageWithCaption
+  src={expiredWorkFeedbackLoop}
+  alt="Four-stage capacity feedback loop where expired work occupies resources, queues grow, more requests expire, and retries add attempt load"
+  caption="Expired work is self-amplifying: it consumes capacity, increases queue time, causes more expiry, and attracts retry traffic."
+  isMaxWidthFull={true}
+/>
+
+A worker should therefore recheck the deadline after dequeue. Under overload, admission can compare the useful budget with a conservative estimate of queue-plus-service time. Rejecting only when `remaining <= 0` avoids false rejection, but it admits requests that are almost certain to expire. A stricter threshold protects shared capacity but may reject a fast outlier that would have completed. That is a policy trade-off, not a universal constant.
+
+Useful production signals include:
+
+- remaining budget at each boundary;
+- queue wait;
+- deadline-exceeded counts by boundary;
+- cancellation-to-stop latency;
+- dependency work completing after the parent deadline;
+- worker and connection-pool occupancy;
+- useful success rate and shed rate.
+
+Latency alone is not enough. A service can return timeouts promptly while downstream work continues consuming resources.
+
+## Practical review checklist
+
+When reviewing a request path, I ask:
+
+- Where is the end-to-end deadline accepted and validated?
+- Does every child derive from the parent rather than reset the clock?
+- Is remaining budget recomputed after queueing and before each dependency?
+- What return and cleanup reserve is protected?
+- What happens when useful budget is already exhausted?
+- Does cancellation actually reach the database or provider driver?
+- Which operations cannot be cancelled after acceptance?
+- How is an uncertain mutation durably reconciled?
+- Which signals reveal post-deadline resource occupancy?
+- Does a retry spend the original budget?
+
+The practical takeaway is: **propagate one expiry point, narrow it at every boundary, and preserve the truth of uncertain effects**. Deadlines improve latency only when they also stop or reject useless work. For mutations that cannot be stopped, the deadline must be paired with durable ownership and reconciliation rather than a claim that timeout means failure.
